@@ -1,0 +1,10 @@
+{
+  "alwaysUpdateLinks": true,
+  "newLinkFormat": "shortest",
+  "useMarkdownLinks": false,
+  "attachmentFolderPath": "30-resources/attachments",
+  "newFileLocation": "folder",
+  "newFileFolderPath": "00-inbox",
+  "showUnsupportedFiles": true,
+  "strictLineBreaks": false
+}

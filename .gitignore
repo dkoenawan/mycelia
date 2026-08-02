@@ -1,0 +1,49 @@
+# ---------------------------------------------------------------------------
+# mycelia is a framework. What you run it on is YOUR configuration.
+#
+# The rule: this repository holds the fundamentals — structure, conventions,
+# schema, runners. It never holds an operator's estate, notes, or paths.
+# Anything named *.local.* is configuration and stays on the machine.
+# ---------------------------------------------------------------------------
+
+# --- Configuration: your estate, never committed ---------------------------
+control/*.local.yaml
+control/*.local.md
+control/roots.local.yaml
+
+# --- Vault content: your notes, never committed ----------------------------
+# The PARA directories ship with only their README explaining what belongs
+# inside. Everything the operator actually writes stays local.
+00-inbox/*
+10-projects/*
+20-areas/*
+30-resources/*
+40-archive/*
+daily/*
+!00-inbox/README.md
+!10-projects/README.md
+!20-areas/README.md
+!30-resources/README.md
+!40-archive/README.md
+!daily/README.md
+
+# The Sunday feedback channel is personal by definition.
+FEEDBACK.md
+
+# --- Runtime noise ---------------------------------------------------------
+logs/
+*.log
+
+# Obsidian per-machine UI state. app.json IS committed so the vault config
+# is reproducible for anyone who clones this.
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache
+.obsidian/graph.json
+
+# Extracted archives
+handoff/extracted/
+
+# OS noise
+.DS_Store
+Thumbs.db

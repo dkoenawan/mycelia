@@ -1,0 +1,134 @@
+# estate.example.yaml — the registry schema, by example.
+#
+# Copy to control/estate.local.yaml and describe your own jobs. That file is
+# gitignored: your estate is configuration, not part of the framework.
+#
+# WHY A REGISTRY EXISTS
+#
+# Scheduled agents fail silently. They write to log files nobody reads, and the
+# gap between "this stopped working" and "someone noticed" is measured in days.
+# A registry is the list of what *should* be true, so something can check whether
+# it still is. A job that is not registered is invisible, and invisible failures
+# are the expensive kind.
+#
+# Keep this file in sync with your actual scheduler. If they disagree, the
+# registry is wrong and the health check will report on a fiction.
+
+version: 1
+updated: 2026-01-01
+
+# Applied to any job that omits the field.
+defaults:
+  tier: standard
+  max_silence_hours: 30
+
+jobs:
+  # A job that does everything right. Use this as the template.
+  - id: site-daily-build
+    description: One incremental improvement per weekday to a static site.
+    repo: ${repos}/my-site
+    script: ${home}/scripts/site-daily-build.sh
+    schedule: "0 14 * * 1-5"
+
+    # A committed file holding progress state. This is what makes a missed day
+    # free: the next run reads the ledger and continues, rather than restarting
+    # or re-deciding. Without one, an agent has no memory between runs.
+    ledger: PROGRESS.md
+
+    # The command that must pass before work may land. This is what licenses
+    # autonomy — an agent that can prove its change is safe does not need a human
+    # in the loop. `null` means no safety net, so the job should open a PR rather
+    # than merge.
+    gate: "npm run build && npm run test"
+
+    # Whether the job commits its own work.
+    # `false` is a DEFECT, not a preference: an agent that edits files and exits
+    # will have its work destroyed by the next branch checkout, silently, while
+    # its logs still read as success.
+    commits: true
+
+    # A dedicated branch is safer than committing to main. It also makes the
+    # work reviewable in bulk if you ever want to look.
+    branch: main
+
+    log: ${logs}/site-daily-build.log
+
+    # Which model tier this job deserves. Routine, high-volume work does not need
+    # the most capable model. Declared even before a router exists — retrofitting
+    # this field across a dozen scripts later is expensive; declaring it is free.
+    tier: standard
+
+    # The health check flags the job if it has not run within this window.
+    # Set it slightly longer than the schedule interval.
+    max_silence_hours: 30
+
+    status: healthy
+
+  # A cheap, high-frequency job on a dedicated branch — the safest shape for
+  # unattended work in a repo you are actively developing in.
+  - id: docs-maintainer
+    description: Incremental documentation upkeep, one file per run.
+    repo: ${repos}/my-app
+    script: ${repos}/my-toolkit/scripts/maintain.sh
+    schedule: "0 13 * * 1-6"
+    ledger: docs/update-log.md
+    gate: null
+    commits: true
+    branch: chore/docs-maintenance
+    log: ${repos}/my-app/logs/maintain/
+    tier: cheap
+    max_silence_hours: 30
+    status: healthy
+    note: >-
+      Works on a dedicated branch and restores the original branch on exit, so it
+      never collides with whatever you have checked out. This is the pattern to
+      copy for any job that runs against a repo you also work in yourself.
+
+  # A deliberately broken example, kept because the failure it shows is the most
+  # common one in practice.
+  - id: example-broken-job
+    description: Illustrates the commits:false defect. Do not copy this shape.
+    repo: ${repos}/my-app
+    script: ${repos}/my-app/scripts/nightly-review.sh
+    schedule: "0 0 * * *"
+    ledger: docs/update-log.md
+    gate: null
+    commits: false
+    branch: null
+    log: ${repos}/my-app/logs/nightly-review.log
+    tier: cheap
+    max_silence_hours: 30
+    status: broken
+    note: >-
+      This job runs successfully every night and produces real improvements, then
+      loses them. Its prompt ends at "save the file" with no git step, so the work
+      survives only until the next branch switch. The logs report success the whole
+      time, which is what makes it dangerous: green output, zero durable output.
+      The fix is to give it a dedicated branch and commit named files before exit.
+
+# Known estate-wide risks. Recorded in the registry rather than in a planning
+# document, so they stay visible to whatever reads this file.
+risks:
+  - id: silent-auth-expiry
+    severity: high
+    detail: >-
+      Scheduled agents share one credential. When it expires, every job fails
+      within seconds of its next trigger, and because each one only writes to its
+      own log file, nothing reports the outage. Detect this by probing auth
+      directly on a schedule rather than inferring health from job exit codes.
+
+  - id: unlanded-finished-work
+    severity: medium
+    detail: >-
+      Work that is complete but unmerged is invisible to everyone including the
+      agent that produced it. Left alone, a later agent will keep improving the
+      thing the finished branch was meant to replace. Track branch age and flag
+      any that have been green and unmerged past a threshold.
+
+  - id: no-steering-layer
+    severity: medium
+    detail: >-
+      An estate that only executes will exhaust its queue and then drift, doing
+      progressively less valuable work while still reporting success. Execution
+      needs a periodic planning pass that re-aims it, and a channel for the
+      operator's feedback to reach that pass.

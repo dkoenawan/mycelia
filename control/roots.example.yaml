@@ -1,0 +1,16 @@
+# roots.example.yaml — template for control/roots.local.yaml.
+#
+# Copy to roots.local.yaml and fill in real paths. That file is gitignored;
+# this one is committed so the required shape is documented.
+
+home: /path/to/home
+repos: /path/to/repos
+logs: /path/to/logs
+
+# Repo aliases map the names used in estate.yaml to real directories.
+# A bare name resolves under `repos`; an absolute path is used as-is.
+aliases:
+  portfolio: my-portfolio-repo
+  side-business: /absolute/path/to/other/repo
+  ledger-app: my-ledger-repo
+  dev-kit: my-dev-kit-repo
