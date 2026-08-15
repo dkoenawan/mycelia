@@ -34,12 +34,13 @@ FEEDBACK.md
 logs/
 *.log
 
-# Obsidian per-machine UI state. app.json IS committed so the vault config
-# is reproducible for anyone who clones this.
-.obsidian/workspace.json
-.obsidian/workspace-mobile.json
-.obsidian/cache
-.obsidian/graph.json
+# Obsidian per-machine UI state. app.json IS committed so the vault config is
+# reproducible for anyone who clones this. Excluding everything else by default
+# (rather than naming known-noisy files) means a new Obsidian version or plugin
+# that adds another per-machine state file is caught automatically instead of
+# showing up as untracked noise until someone notices and adds it here (#5).
+.obsidian/*
+!.obsidian/app.json
 
 # Extracted archives
 handoff/extracted/
