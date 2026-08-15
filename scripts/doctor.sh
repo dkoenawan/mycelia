@@ -90,7 +90,14 @@ elif [[ "$LOCAL_VERSION" == "$EXAMPLE_VERSION" ]]; then
   pass "estate.local.yaml version ($LOCAL_VERSION) matches current framework version"
 else
   fail "estate.local.yaml version ($LOCAL_VERSION) is behind framework version ($EXAMPLE_VERSION)"
-  note "See control/UPGRADE-${EXAMPLE_VERSION}.md for what changed, if present."
+  UPGRADE_DOC="$MYCELIA_CONTROL/UPGRADE-${EXAMPLE_VERSION}.md"
+  if [[ -f "$UPGRADE_DOC" ]]; then
+    note "See control/UPGRADE-${EXAMPLE_VERSION}.md for what changed and how to update your local files."
+  else
+    note "control/UPGRADE-${EXAMPLE_VERSION}.md does not exist yet — this is a framework defect, not"
+    note "something you can fix locally. Report it, or diff control/estate.example.yaml against your"
+    note "estate.local.yaml by hand in the meantime."
+  fi
 fi
 
 # --- 4. roots.local.yaml aliases resolve to real directories --------------
@@ -149,6 +156,26 @@ PYEOF
   fi
 else
   note "skipped commits:false check — needs python3+PyYAML (optional, not a hard dependency)"
+fi
+
+# --- 8. framework self-check: every version bump shipped its UPGRADE doc -
+# ADR-0002 commits to "any schema-breaking change bumps version: and ships
+# control/UPGRADE-<N>.md in the same change." This is currently enforced only
+# by that sentence of prose. Catch the gap mechanically: every version from 2
+# up to the framework's current version must have a matching upgrade doc.
+
+if [[ "$EXAMPLE_VERSION" =~ ^[0-9]+$ ]] && [[ "$EXAMPLE_VERSION" -gt 1 ]]; then
+  MISSING_UPGRADE_DOCS=""
+  for ((v = 2; v <= EXAMPLE_VERSION; v++)); do
+    [[ -f "$MYCELIA_CONTROL/UPGRADE-${v}.md" ]] || MISSING_UPGRADE_DOCS+="${MISSING_UPGRADE_DOCS:+,}$v"
+  done
+  if [[ -z "$MISSING_UPGRADE_DOCS" ]]; then
+    pass "every schema version bump (2..$EXAMPLE_VERSION) has a matching control/UPGRADE-N.md"
+  else
+    fail "schema version(s) missing control/UPGRADE-N.md: $MISSING_UPGRADE_DOCS (ADR-0002 violation)"
+  fi
+else
+  pass "framework still at version 1 — no UPGRADE docs required yet"
 fi
 
 echo ""
