@@ -1,0 +1,26 @@
+# Taskfile.yml — cross-platform entrypoints for mycelia. See ADR-0001
+# (docs/adr/0001-install-and-update-tooling.md) for why Taskfile over plain bash:
+# cross-OS compatibility was the deciding driver. Install go-task first:
+# https://taskfile.dev/installation/
+#
+# The tasks below are thin wrappers around scripts/*.sh — Taskfile solves
+# invocation portability, not shell-command portability, so the actual logic
+# stays in bash, sourced from scripts/lib/common.sh like every other runner.
+
+version: "3"
+
+tasks:
+  install:
+    desc: Seed control/*.local.yaml from the example templates (idempotent, never overwrites).
+    cmds:
+      - bash scripts/install.sh
+
+  doctor:
+    desc: Verify this install is healthy — config present, parses, paths resolve, dependencies found.
+    cmds:
+      - bash scripts/doctor.sh
+
+  default:
+    desc: Show available tasks.
+    cmds:
+      - task --list
