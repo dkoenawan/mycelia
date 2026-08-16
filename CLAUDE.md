@@ -139,3 +139,27 @@ preferences — each is derived from a failure mode that recurs in unattended ag
   back in the loop, which is the thing mycelia exists to prevent.
 - When a decision genuinely is theirs, write it to `00-inbox/` as a note with a clear ask,
   rather than blocking on it.
+
+## Two checkouts, two roles — do not conflate them
+
+There is one framework repo (`github.com/<owner>/mycelia`), but the operator runs two
+independent local clones of it with different jobs:
+
+- **Framework-development checkout** — where framework changes happen: feature branches,
+  ADRs, script changes, PRs back to the repo. Ordinary git-development hygiene applies here.
+- **Second-brain checkout** — the operator's daily-use instance: stays on `main`, pulls
+  framework updates, accumulates real vault notes and real `.obsidian/` state from actual
+  Obsidian use. It is not expected to branch, and its Obsidian churn is normal, not a signal
+  of anything wrong.
+
+**In the framework-development checkout:** a local branch sitting behind an already-merged
+`origin/main` (no local `main` yet, or local `main` stale) is routine, expected git state —
+not evidence of repo confusion or something to investigate and narrate. Resolve it plainly:
+fast-forward or create local `main` from `origin/main`, then move on. Do not treat "which
+checkout/role am I in" as something to re-derive and explain each session — check `git
+remote -v` and the branch name if genuinely unsure, decide once, and act.
+
+**In the second-brain checkout:** `.obsidian/*` files being modified or untracked (besides
+the committed `app.json`) is expected from normal use, not a git anomaly requiring
+explanation. If `.gitignore` isn't catching a new one, that's a framework-level `.gitignore`
+gap to fix (see the `.obsidian/` block above) — not something to narrate per session.
