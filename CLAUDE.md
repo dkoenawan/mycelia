@@ -42,6 +42,22 @@ rule gets misapplied later.
 | `40-archive/` | Finished or dormant. Move, don't delete — history is the point. |
 | `daily/` | `YYYY-MM-DD.md`, one per day, agent-written. |
 
+## Writing back after doing work (ADR-0003)
+
+When work happens in a `10-projects/` or `20-areas/` note, write the progress back into
+that note as part of the work, not as a remembered afterthought — bump `updated:` and
+record what happened, including decisions deferred, not just decisions taken.
+
+Separately: if what you learned would help in a *different* project or area — a reusable
+pattern, a gotcha, a corrected assumption — write or update a `30-resources/` note and
+link it from the project/area note with `[[wikilink]]`. If it only describes what happened
+in this one project, it stays local to that note; don't mirror it into `30-resources/`.
+Corrections from the operator (`type: feedback`) always clear this bar.
+
+This is a write-back rule, not a daily-logging requirement — `daily/` is unaffected and
+stays optional per session. See `docs/adr/0003-session-writeback-protocol.md` for the full
+reasoning.
+
 ## The estate registry
 
 `control/estate.local.yaml` is the single source of truth for every automated job. **A job
