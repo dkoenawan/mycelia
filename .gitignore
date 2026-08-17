@@ -34,6 +34,9 @@ FEEDBACK.md
 logs/
 *.log
 
+# graphify skill output — generated locally, not framework or vault content.
+graphify-out/
+
 # Obsidian per-machine UI state. app.json IS committed so the vault config is
 # reproducible for anyone who clones this. Excluding everything else by default
 # (rather than naming known-noisy files) means a new Obsidian version or plugin
