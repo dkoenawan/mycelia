@@ -20,6 +20,11 @@ tasks:
     cmds:
       - bash scripts/doctor.sh
 
+  doctor:ci:
+    desc: Like doctor, but skips checks that only make sense on the operator's real machine (used by release CI).
+    cmds:
+      - bash scripts/doctor.sh --ci
+
   default:
     desc: Show available tasks.
     cmds:

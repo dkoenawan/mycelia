@@ -7,10 +7,19 @@
 # fresh clone counts as installed once this exits 0, not once someone believes the
 # README was followed correctly.
 #
-# Usage: ./scripts/doctor.sh
+# Usage: ./scripts/doctor.sh [--ci]
 # Also invoked as `task doctor` — see Taskfile.yml.
+#
+# --ci skips checks that only make sense on the operator's real machine (roots
+# resolving to real directories, the claude binary being on PATH) and are expected
+# to fail on a bare CI runner seeded only from the example templates. Used by
+# .github/workflows/release.yml as the release smoke test — see
+# docs/adr/0004-release-versioning-policy.md.
 
 set -uo pipefail  # deliberately not -e: doctor must keep checking after a failure
+
+CI_MODE=0
+[[ "${1:-}" == "--ci" ]] && CI_MODE=1
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/lib/common.sh"
@@ -102,7 +111,9 @@ fi
 
 # --- 4. roots.local.yaml aliases resolve to real directories --------------
 
-if [[ -f "$ROOTS" ]]; then
+if [[ "$CI_MODE" -eq 1 ]]; then
+  note "skipped roots.local.yaml resolution check (--ci: example templates are placeholders)"
+elif [[ -f "$ROOTS" ]]; then
   HOME_ROOT="$(grep -m1 -E '^home:' "$ROOTS" | sed -E 's/^home:[[:space:]]*//')"
   REPOS_ROOT="$(grep -m1 -E '^repos:' "$ROOTS" | sed -E 's/^repos:[[:space:]]*//')"
   LOGS_ROOT="$(grep -m1 -E '^logs:' "$ROOTS" | sed -E 's/^logs:[[:space:]]*//')"
@@ -121,7 +132,9 @@ fi
 
 # --- 5. claude binary resolves (needed by any job that invokes it) -------
 
-if resolve_claude &>/dev/null; then
+if [[ "$CI_MODE" -eq 1 ]]; then
+  note "skipped claude binary check (--ci: no agent runtime on a bare CI runner)"
+elif resolve_claude &>/dev/null; then
   pass "claude binary resolves ($(resolve_claude))"
 else
   fail "claude binary not found on PATH, \$CLAUDE_BIN, ~/.local/bin, or /usr/local/bin"

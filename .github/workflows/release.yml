@@ -1,0 +1,44 @@
+# Release gate — triggers on tag push, validates the tag is well-formed SemVer,
+# then runs the same smoke test a fresh install would (`task install && task doctor`)
+# against a bare checkout. This is Channel 1 from the release-versioning-policy
+# research: the human decides the bump by choosing which tag to push; this workflow
+# never infers major/minor/patch — it only validates shape and runs the existing
+# ADR-0002 gate (doctor.sh check #8: every schema version bump has a matching
+# control/UPGRADE-N.md). See docs/research/release-versioning-policy.md and
+# docs/adr/0004-release-versioning-policy.md.
+
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  validate-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check tag matches vMAJOR.MINOR.PATCH
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Tag '$tag' is not valid SemVer (expected vMAJOR.MINOR.PATCH)"
+            exit 1
+          fi
+          echo "Tag '$tag' is valid SemVer."
+
+  smoke-test:
+    needs: validate-tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install go-task
+        run: |
+          sh -c "$(curl -fsSL https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+
+      - name: task install
+        run: task install
+
+      - name: task doctor:ci
+        run: task doctor:ci
