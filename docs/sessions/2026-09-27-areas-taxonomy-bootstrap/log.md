@@ -2,7 +2,7 @@
 session: 2026-09-27-areas-taxonomy-bootstrap
 type: feature
 issue: 9
-phase: implement
+phase: test
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: design
+milestone: implement
 active_agent: main
-next_step: "Implement milestone gate: operator approves T1–T7 + T9; T8 (ADR-0005 accepted + D14 bullet) runs as the final merge-bound commit after Test"
+next_step: "Test: write verification.md with a passing VER-* for every REQ-001–027"
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -27,6 +27,7 @@ next_step: "Implement milestone gate: operator approves T1–T7 + T9; T8 (ADR-00
 
 ## Key decisions
 
+- **2026-09-27**: ✅ Implement complete — operator approved T1–T7 + T9; T8 deferred to Deploy.
 - **2026-09-27**: T8 (the merge-bound ADR-0005 commit) also adds a Decision Outcome bullet for the stale-defaults guard (D14), and runs in Deploy since tasks.md freezes at the Implement milestone.
 - **2026-09-27**: Scope amended — REQ-027/DES-014/D14: bootstrap refuses to run on unedited defaults when `20-areas/` already holds notes the manifest doesn't list.
 - **2026-09-27**: ✅ Design complete — operator approved design.md (DES-001–013, D1–D13, landing order T1–T8).
@@ -147,3 +148,13 @@ next_step: "Implement milestone gate: operator approves T1–T7 + T9; T8 (ADR-00
 ### 2026-09-27 — main — decision: ADR-0005 records D14 in the T8 commit; T8 runs in Deploy
 - ADR-0005 (committed in T1) needs a Decision Outcome bullet for the stale-defaults guard. It goes into T8, the merge-bound commit that also flips the ADR to `accepted`, so the ADR changes once.
 - `tasks.md` freezes at the Implement milestone, so T8 is executed and logged during Deploy rather than ticked in `tasks.md`.
+
+### 2026-09-27 — main — milestone: ✅ Implement complete
+- Operator approved T1–T7 and T9 (cbf4399, 3795ded, 63599f6, 38f0918, 10396a8, 5bd190a, 5bcba4f, 612f7d5). T8 (ADR-0005 → accepted + D14 bullet) intentionally open; runs in Deploy. Moving to Test.
+
+---
+
+## Phase: Test
+
+### 2026-09-27 — main — handoff: orchestrator → compass-labs:test (VER for REQ-001–027)
+- **Input:** Verify every REQ-001–027 in a temp clone and record VER-* rows in verification.md. ADR-0005 is expected to be `proposed` at this point (REQ-024).
