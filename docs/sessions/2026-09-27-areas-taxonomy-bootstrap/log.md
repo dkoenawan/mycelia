@@ -13,7 +13,7 @@ status: active
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: implement
 active_agent: main
-next_step: "Test: re-verify REQ-022 after redaction; operator to decide on rewriting pushed branch history"
+next_step: "Test milestone gate: operator approves verification.md (all REQs pass; VER-025 pending T8)"
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -27,6 +27,7 @@ next_step: "Test: re-verify REQ-022 after redaction; operator to decide on rewri
 
 ## Key decisions
 
+- **2026-09-27**: Pushed branch history left as is; merge to main by squash-merge only (operator's choice — accepts that the PR head ref keeps the earlier commits).
 - **2026-09-27**: REQ-022 failure fixed in the working tree — redacted quoted draft text (operator pronouns, personal area names, local note name) from design.md and log.md.
 - **2026-09-27**: ✅ Implement complete — operator approved T1–T7 + T9; T8 deferred to Deploy.
 - **2026-09-27**: T8 (the merge-bound ADR-0005 commit) also adds a Decision Outcome bullet for the stale-defaults guard (D14), and runs in Deploy since tasks.md freezes at the Implement milestone.
@@ -175,3 +176,17 @@ next_step: "Test: re-verify REQ-022 after redaction; operator to decide on rewri
 - design.md §DES-011/§DES-012 described the ADR cleanup by quoting the text being removed, which re-committed the operator's pronouns, personal area names and a local note name. Rewritten to describe each edit without quoting it; log.md's two mentions redacted likewise. REQ-022's own example list in `requirements.md` and a grep pattern in design.md named the areas too; both rewritten generically.
 - Amending frozen `design.md` (and append-only `log.md`) is justified by REQ-022; the edit changes wording only, not the design.
 - Pushed branch history (from 7b59741 / 1ef5079) still contains the text; whether to rewrite it is the operator's call.
+
+### 2026-09-27 — main — decision: Squash-merge only; no history rewrite
+- Operator chose not to rewrite the pushed branch history containing the since-redacted text. Merge to `main` must be a squash-merge so `main` never carries it. Accepted consequence: the PR's head ref keeps the earlier commits on GitHub.
+- Deploy must use squash-merge (not merge commit or rebase).
+
+- (REQ-022 re-verification relayed to the same compass-labs:test agent via SendMessage.) **Output:** done; verification.md
+
+### 2026-09-27 — compass-labs:test — attempt: REQ-022 re-verified after redaction (1254250) — passes
+- VER-022 (fail against 258e421) is kept as history and now describes the findings generically, without the leaked text.
+- New VER-032 (pass): pronoun, personal-area-term (terms file outside the repo), PARA-note-filename and path/username/email greps over the 14 files changed vs origin/main plus verification.md found only rule text, generic words, a Python argument, the third-party example and fixture names.
+- check-traceability.sh: exit 0, all REQ-001–027 have a passing VER. VER-025 (the REQ-024 flip to accepted) stays pending until Deploy T8.
+
+### 2026-09-27 — main — note: Orchestrator spot-check of Test
+- Re-ran check-traceability.sh: exit 0. Terms-file grep over verification.md: 0 hits; remaining pronoun hits are the grep patterns themselves.
