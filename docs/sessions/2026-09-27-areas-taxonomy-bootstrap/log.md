@@ -2,7 +2,7 @@
 session: 2026-09-27-areas-taxonomy-bootstrap
 type: feature
 issue: 9
-phase: test
+phase: deploy
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: implement
+milestone: test
 active_agent: main
-next_step: "Test milestone gate: operator approves verification.md (all REQs pass; VER-025 pending T8)"
+next_step: "Deploy: T8 (ADR-0005 accepted + D14 bullet), open PR, squash-merge, write release.md"
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -27,6 +27,7 @@ next_step: "Test milestone gate: operator approves verification.md (all REQs pas
 
 ## Key decisions
 
+- **2026-09-27**: ✅ Test complete — all REQ-001–027 have a passing VER (traceability exit 0); VER-025 pending T8.
 - **2026-09-27**: Pushed branch history left as is; merge to main by squash-merge only (operator's choice — accepts that the PR head ref keeps the earlier commits).
 - **2026-09-27**: REQ-022 failure fixed in the working tree — redacted quoted draft text (operator pronouns, personal area names, local note name) from design.md and log.md.
 - **2026-09-27**: ✅ Implement complete — operator approved T1–T7 + T9; T8 deferred to Deploy.
@@ -190,3 +191,10 @@ next_step: "Test milestone gate: operator approves verification.md (all REQs pas
 
 ### 2026-09-27 — main — note: Orchestrator spot-check of Test
 - Re-ran check-traceability.sh: exit 0. Terms-file grep over verification.md: 0 hits; remaining pronoun hits are the grep patterns themselves.
+
+### 2026-09-27 — main — milestone: ✅ Test complete
+- Operator approved `verification.md`. check-traceability.sh exit 0. Moving to Deploy.
+
+---
+
+## Phase: Deploy
