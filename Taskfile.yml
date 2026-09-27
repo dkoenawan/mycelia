@@ -15,6 +15,11 @@ tasks:
     cmds:
       - bash scripts/install.sh
 
+  bootstrap-areas:
+    desc: Create one 20-areas/ note per entry in control/areas.local.yaml (seeds it from the example if absent; never edits existing notes; needs python3+PyYAML).
+    cmds:
+      - bash scripts/bootstrap-areas.sh
+
   doctor:
     desc: Verify this install is healthy — config present, parses, paths resolve, dependencies found.
     cmds:
