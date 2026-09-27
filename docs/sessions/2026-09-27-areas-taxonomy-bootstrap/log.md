@@ -13,7 +13,7 @@ status: active
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: implement
 active_agent: main
-next_step: "Test: write verification.md with a passing VER-* for every REQ-001–027"
+next_step: "Test: re-verify REQ-022 after redaction; operator to decide on rewriting pushed branch history"
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -27,6 +27,7 @@ next_step: "Test: write verification.md with a passing VER-* for every REQ-001�
 
 ## Key decisions
 
+- **2026-09-27**: REQ-022 failure fixed in the working tree — redacted quoted draft text (operator pronouns, personal area names, local note name) from design.md and log.md.
 - **2026-09-27**: ✅ Implement complete — operator approved T1–T7 + T9; T8 deferred to Deploy.
 - **2026-09-27**: T8 (the merge-bound ADR-0005 commit) also adds a Decision Outcome bullet for the stale-defaults guard (D14), and runs in Deploy since tasks.md freezes at the Implement milestone.
 - **2026-09-27**: Scope amended — REQ-027/DES-014/D14: bootstrap refuses to run on unedited defaults when `20-areas/` already holds notes the manifest doesn't list.
@@ -52,13 +53,13 @@ next_step: "Test: write verification.md with a passing VER-* for every REQ-001�
 ### 2026-09-27 — compass-labs:define — attempt: First draft of requirements (REQ-001–025)
 - Drafted 25 EARS requirements from draft ADR-0005 and the research note. They cover the default manifest, local manifest seeding by `install.sh`, the bootstrap script (create-only, re-runnable, checks input before writing, never touches git-tracked files), the `task bootstrap-areas` entry, README linking conventions and slug list, public-repo cleanup of the ADR and research note, and keeping the release test passing.
 - Non-goals: the operator's own areas (manual local step), enforcing links, updating existing notes, per-area templates.
-- Found beyond the stated cleanup: the draft ADR names a local vault note (`10-projects/mycelia-as-foundation.md`), and the research note lists the personal areas twice (lines 15–17 and 75–84). REQ-022 covers both.
+- Found beyond the stated cleanup: the draft ADR names a local vault note [redacted — REQ-022], and the research note lists the personal areas twice (lines 15–17 and 75–84). REQ-022 covers both.
 - Returned 6 questions for the operator: doctor checks, whether install creates notes, the README slug list, the YAML dependency, ADR status, Community as an 8th area.
 
 ### 2026-09-27 — compass-labs:define — note: Defaults picked without asking
 - `task bootstrap-areas` is in scope (ADR-0001 wraps every script in a `task` entry).
 - An invalid or duplicate slug fails the whole run before any note is written, and the error names the bad entry.
-- The operator's own 9 areas are not committed work; they go in by hand after merge.
+- The operator's own areas are not committed work; they go in by hand after merge.
 - ADR-0005 should say `proposed`, not `accepted`, until the work lands.
 
 ### 2026-09-27 — main — note: Operator answered Define questions
@@ -158,3 +159,19 @@ next_step: "Test: write verification.md with a passing VER-* for every REQ-001�
 
 ### 2026-09-27 — main — handoff: orchestrator → compass-labs:test (VER for REQ-001–027)
 - **Input:** Verify every REQ-001–027 in a temp clone and record VER-* rows in verification.md. ADR-0005 is expected to be `proposed` at this point (REQ-024).
+- **Output:** done; verification.md (REQ-022 failing; check-traceability exit 1)
+
+### 2026-09-27 — compass-labs:test — attempt: Verification run against 258e421 — REQ-022 fails
+- Every check ran in its own fresh clone of the branch in the scratchpad; 35 harness checks, all passed. VER-001–031 recorded in verification.md.
+- 26 of 27 REQs have a passing VER. REQ-022 fails: design.md DES-011/DES-012 quote the removed draft text (operator pronouns and personal area names), and design.md and log.md name a local vault note. Already pushed.
+- REQ-024: ADR-0005 is `proposed` at every commit touching it (only cbf4399); the flip to `accepted` is pending in Deploy T8 (VER-025 pending).
+- REQ-025: the smoke test passes with and without PyYAML.
+- check-traceability.sh: exit 1, missing REQ-022.
+
+### 2026-09-27 — compass-labs:test — note: REQ-022 remediation needs an orchestrator decision
+- design.md is frozen, so the redaction of design.md and log.md is the orchestrator's to log and apply. The pushed history also still holds the text, so decide on squash-merge vs rewrite. After that, re-run VER-022's grep and add a new passing VER row.
+
+### 2026-09-27 — main — decision: Redact quoted draft text from session artifacts (REQ-022)
+- design.md §DES-011/§DES-012 described the ADR cleanup by quoting the text being removed, which re-committed the operator's pronouns, personal area names and a local note name. Rewritten to describe each edit without quoting it; log.md's two mentions redacted likewise. REQ-022's own example list in `requirements.md` and a grep pattern in design.md named the areas too; both rewritten generically.
+- Amending frozen `design.md` (and append-only `log.md`) is justified by REQ-022; the edit changes wording only, not the design.
+- Pushed branch history (from 7b59741 / 1ef5079) still contains the text; whether to rewrite it is the operator's call.

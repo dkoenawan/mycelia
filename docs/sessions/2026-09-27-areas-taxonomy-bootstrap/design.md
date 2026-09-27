@@ -267,19 +267,19 @@ Edits to `docs/adr/0005-default-areas-taxonomy-and-bootstrap.md`, applied before
   - `status: proposed`.
   - `date:` becomes the date of the landing commit (the decision date), set in the same commit that flips the status.
 - **Context ¶1**
-  - Replace "an actual working set of 9 areas (style, … finance) and wants two things at once: his own instance populated, and … tied to his 9 names" with wording that names no areas: "a working set of their own areas and wants two things at once: their own instance populated, and the mechanism that does it reusable by any installer for their own taxonomy — not a one-off script tied to one person's list."
+  - Replace the sentence that lists the operator's own areas and uses gendered pronouns with wording that names no areas and uses they/them: "a working set of their own areas and wants two things at once: their own instance populated, and the mechanism that does it reusable by any installer for their own taxonomy — not a one-off script tied to one person's list."
   - Add "Tracked in [issue #9](https://github.com/dkoenawan/mycelia/issues/9)." This follows the issue-link precedent in ADR-0002 and ADR-0004.
-- **Context, second precedent bullet.** Drop the `10-projects/mycelia-as-foundation.md` sentence. Replace it with "no PARA directory has ever committed a note as an exception to its gitignore rule."
+- **Context, second precedent bullet.** Drop the sentence naming a local vault note. Replace it with "no PARA directory has ever committed a note as an exception to its gitignore rule."
 - **Decision Drivers, third bullet.** Rewrite in they/them without the count: "The operator needs their own areas populated in their real vault; the framework needs a generic, install-anywhere default that isn't one person's list in disguise."
 - **Considered Options, row 4.**
   - Title: "Commit the operator's own areas as the framework default."
-  - Cons: drop "his personal taxonomy (style, golf, travel)" and use "one person's taxonomy".
+  - Cons: replace the gendered phrase that lists personal area names with "one person's taxonomy".
 - **Decision Outcome, lead paragraph.** Change "via the existing `seed_local()` pattern in `install.sh`" to "via `seed_local()`, moved from `install.sh` into `scripts/lib/common.sh` so both runners share one seeding path".
 - **"Generic framework default" bullet.** Change "the convergent 6-8 category set … and Community as an optional 8th" to: seven active entries (Health, Finances, Career/Work, Relationships, Personal Growth, Home/Environment, Recreation), with Community shipped commented out as the worked example of adding an area.
 - **"Operator's real instance" bullet.** Rewrite to name no areas and use they/them:
   - The operator's own areas go into their gitignored `control/areas.local.yaml`, by editing the seeded copy and running `task bootstrap-areas`.
   - Areas outside the convergent set are valid precisely because Areas are personal.
-  - Delete the Style/Travel sentence.
+  - Delete the sentence naming the operator's two non-convergent areas.
 - **"Downstream" bullet.** Change "generic 6-8 default" to "seven-area default". Replace "edit `areas.local.yaml`, rerun" with "edit `areas.local.yaml`, run `task bootstrap-areas` again — it creates missing notes and never edits existing ones".
 - **"Note format" bullet**
   - Drop the stray word "yearly".
@@ -290,13 +290,13 @@ Edits to `docs/adr/0005-default-areas-taxonomy-and-bootstrap.md`, applied before
   - **Create-only.** Notes are created, never updated. Renames, description edits, and deletions are manual.
   - **Unversioned manifest.** There is no `doctor.sh` areas check, and the areas manifest has no `version:`. This reconciles with ADR-0002, whose version/UPGRADE rule is written for `control/*.example.yaml` in general. The areas manifest is read only by an on-demand, create-only generator that fails loudly and names the entry on any shape it doesn't expect. So the silent-drift risk the version gate exists to catch doesn't arise. The first schema-breaking change to the areas manifest adds `version:` and an UPGRADE doc under ADR-0002.
 - **Consequences**
-  - Change "his real 9 areas without hand authoring 9 frontmatter blocks" to "their own areas without hand-authoring each frontmatter block".
+  - Change the gendered phrase with the area count to "their own areas without hand-authoring each frontmatter block".
   - Rewrite the last constraint in present tense: `install.sh` seeds the areas manifest alongside roots and estate.
 - **Revisit Conditions.** Keep both. Add: "If `areas.local.yaml` needs a breaking schema change, add `version:` per ADR-0002."
 
 After editing, both files must pass a final check before they are committed:
 - `grep -nEi '\b(he|his|him)\b'` finds nothing about the operator.
-- `grep -nEi 'golf|style|travel|mycelia-as-foundation|9 areas'` finds nothing that refers to the operator.
+- A grep for each of the operator's own area names (taken from their local `areas.local.yaml`, never written into a committed file), local vault note names, and the area count finds nothing that refers to the operator.
 
 **Status lifecycle (REQ-024).** Every commit that touches ADR-0005 shows `proposed`, except the final merge-bound commit. That commit flips it to `accepted` and sets `date:`, and it happens only after Test has passed. It is the last task (T8 below), and nothing touches ADR-0005 after it.
 
@@ -310,7 +310,7 @@ Edits to `docs/research/areas-of-life-taxonomy.md`:
   - An individual's list typically maps onto the convergent set plus a few narrower facets that no source converges on.
   - That isn't a taxonomy error, since Forte and GTD both expect Areas to be personal.
   - It is why the framework default stays at the convergent core.
-- **"Mechanism precedent" bullet 2.** Replace the `mycelia-as-foundation.md` clause with "every file under the PARA directories other than `README.md` is untracked".
+- **"Mechanism precedent" bullet 2.** Replace the clause naming a local vault note with "every file under the PARA directories other than `README.md` is untracked".
 - **"Implication" paragraph.** Change "turns either the generic default or an operator-edited local manifest into…" to "turns the local manifest (seeded from the generic default) into…". This matches REQ-015.
 - **Leave alone.** Forte's own example "(home, travel)" at line 33 is a third-party example, not the operator's area list. Test should read the REQ-022 grep hit there as expected.
 
