@@ -46,7 +46,7 @@ mycelia/
 ├── 30-resources/   # PARA: reference, standards, captured corrections
 ├── 40-archive/     # PARA: done or dormant
 ├── daily/          # agent-written daily notes
-├── control/        # the estate registry and its schema
+├── control/        # the estate registry, the areas manifest, and their schemas
 ├── scripts/        # runners, and the shared library they build on
 └── handoff/        # TUI design specification
 ```
@@ -72,7 +72,7 @@ This repository holds **fundamentals only**. Your estate never enters it:
 | Committed — the framework | Local — your configuration |
 |---|---|
 | Vault structure and conventions | Every note you write |
-| `control/*.example.yaml` (schema, documented) | `control/*.local.yaml` (your jobs and real paths) |
+| `control/*.example.yaml` (schema, documented) | `control/*.local.yaml` (your jobs, real paths, and areas) |
 | `scripts/lib/common.sh` | `FEEDBACK.md`, logs, Obsidian workspace state |
 
 Anything matching `*.local.*` is gitignored, as is all vault content — the PARA directories

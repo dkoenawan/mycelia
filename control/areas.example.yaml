@@ -1,0 +1,48 @@
+# areas.example.yaml — the default areas of life, and the manifest schema, by example.
+#
+# An Area is an ongoing responsibility with no finish line (PARA). Each entry
+# below becomes one note under 20-areas/. See ADR-0005 for why this default set.
+#
+# WORKFLOW
+#
+# - scripts/install.sh copies this file to control/areas.local.yaml, and so does
+#   `task bootstrap-areas` if that file is missing. The local copy is gitignored:
+#   your areas are configuration, not part of the framework.
+# - Edit control/areas.local.yaml, never this file.
+# - Run `task bootstrap-areas` (or ./scripts/bootstrap-areas.sh) to create one
+#   note per entry. The bootstrap needs python3 with PyYAML.
+#
+# FIELDS
+#
+# - slug         Becomes the filename 20-areas/<slug>.md and the [[<slug>]] link
+#                target. Kebab-case (lowercase letters, digits, single hyphens)
+#                and unique within the file.
+# - description  Becomes the note's frontmatter `description`. One line.
+#
+# No other keys are accepted, at the top level or per entry.
+#
+# RE-RUNNING
+#
+# - The bootstrap only creates notes that don't exist yet. It never edits one.
+# - Renaming or removing an entry doesn't rename or delete its note. Do that by hand.
+# - A bad entry stops the run before any note is written.
+
+areas:
+  - slug: health
+    description: Physical and mental health — sleep, fitness, nutrition, medical care.
+  - slug: finances
+    description: Money in and out — budgeting, saving, investing, taxes, insurance.
+  - slug: career
+    description: Work and professional development — current role, skills, next moves.
+  - slug: relationships
+    description: Partner, family, and friends — the people you keep up with deliberately.
+  - slug: personal-growth
+    description: Learning and self-development — reading, courses, habits, reflection.
+  - slug: home-environment
+    description: Where you live and what you own — upkeep, household admin, moves.
+  - slug: recreation
+    description: Fun and rest — hobbies, play, time off.
+  # Community ships commented out. To add it, or any area of your own, delete
+  # the "# " after the indent on both lines below, then re-run the bootstrap.
+  # - slug: community
+  #   description: Contribution beyond your own circle — volunteering, local groups, open source.
