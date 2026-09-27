@@ -2,7 +2,7 @@
 session: 2026-09-27-areas-taxonomy-bootstrap
 type: feature
 issue: 9
-phase: define
+phase: design
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: none
+milestone: define
 active_agent: main
-next_step: "Define milestone gate: operator approves requirements.md"
+next_step: "Design: turn REQ-001–026 into DES-* components and decisions"
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -26,6 +26,7 @@ next_step: "Define milestone gate: operator approves requirements.md"
 
 ## Key decisions
 
+- **2026-09-27**: ✅ Define complete — operator approved REQ-001–026.
 - **2026-09-27**: Requirements agreed — REQ-001–026; all six Define defaults confirmed (no doctor check, install seeds manifest only, PyYAML required, 7 active areas + Community commented, README lists defaults, ADR-0005 `proposed` until landing).
 - **2026-09-27**: Session opened on branch `feature/issue-9-areas-bootstrap`. Existing draft ADR-0005 and its research note are inputs to Define, not settled output.
 
@@ -68,3 +69,10 @@ next_step: "Define milestone gate: operator approves requirements.md"
   5. ADR-0005 stays `proposed` until the commit that lands the work, then becomes `accepted` (REQ-024).
   6. Seven active default areas, with Community commented out (REQ-001 tightened from "6–8").
 - Not in this work: the operator's own areas (a manual local step after merge), enforcing links, updating existing notes, per-area templates, frontmatter format changes.
+
+### 2026-09-27 — main — milestone: ✅ Define complete
+- Operator approved `requirements.md` (REQ-001–026) at the Define gate. Moving to Design.
+
+---
+
+## Phase: Design
