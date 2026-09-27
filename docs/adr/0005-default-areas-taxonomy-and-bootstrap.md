@@ -1,8 +1,8 @@
 ---
 id: "005"
 title: Default areas-of-life taxonomy, shipped as an example manifest and a bootstrap script
-date: 2026-08-22
-status: proposed
+date: 2026-09-27
+status: accepted
 deciders: [operator]
 ---
 
@@ -108,6 +108,14 @@ exists, so re-running after edits is always safe.**
   the ADR-0004 release smoke test is unaffected.
 - **Create-only:** notes are created, never updated. Renames, description edits, and
   deletions are manual.
+- **Stale-defaults guard:** the bootstrap refuses to run when the local manifest's
+  entries are still identical to the shipped defaults and `20-areas/` already holds
+  notes the manifest doesn't list. It exits non-zero before writing anything, names
+  those notes, and tells the operator to edit `control/areas.local.yaml` first. This
+  stops an existing vault getting generic default notes created alongside the
+  operator's hand-written ones. There is no override flag: editing the manifest to
+  list their own areas (including the notes they already have) is both the fix and
+  the override.
 - **Unversioned manifest:** there is no `doctor.sh` areas check, and the areas
   manifest has no `version:`. This reconciles with ADR-0002, whose version/UPGRADE
   rule is written for `control/*.example.yaml` in general: the areas manifest is read
