@@ -13,7 +13,7 @@ status: active
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: design
 active_agent: main
-next_step: "Implement: add T9 (stale-defaults guard, REQ-027/DES-014) to tasks.md and implement it"
+next_step: "Implement milestone gate: operator approves T1–T7 + T9; T8 (ADR-0005 accepted + D14 bullet) runs as the final merge-bound commit after Test"
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -27,6 +27,7 @@ next_step: "Implement: add T9 (stale-defaults guard, REQ-027/DES-014) to tasks.m
 
 ## Key decisions
 
+- **2026-09-27**: T8 (the merge-bound ADR-0005 commit) also adds a Decision Outcome bullet for the stale-defaults guard (D14), and runs in Deploy since tasks.md freezes at the Implement milestone.
 - **2026-09-27**: Scope amended — REQ-027/DES-014/D14: bootstrap refuses to run on unedited defaults when `20-areas/` already holds notes the manifest doesn't list.
 - **2026-09-27**: ✅ Design complete — operator approved design.md (DES-001–013, D1–D13, landing order T1–T8).
 - **2026-09-27**: Root README Install section deferred to follow-up #10 (design D13).
@@ -129,3 +130,20 @@ next_step: "Implement: add T9 (stale-defaults guard, REQ-027/DES-014) to tasks.m
 - Operator chose option 1: a guard in the bootstrap. If the local manifest's entries are identical to the example's (unedited defaults) and `20-areas/` already contains at least one note (other than `README.md`) whose stem is not a manifest slug, the bootstrap exits 1 before writing anything, names those notes, and tells the operator to edit `control/areas.local.yaml` first.
 - No override flag: listing the existing notes' slugs in the manifest (or any edit to the entries) clears the guard.
 - Frozen artifacts amended by the orchestrator in this same commit: `requirements.md` (REQ-027) and `design.md` (DES-014, D14, landing-order T9). Implement is reopened to add and execute T9.
+- (T9 relayed to the same compass-labs:implement agent via SendMessage.) **Output:** done; scripts/bootstrap-areas.sh, tasks.md (612f7d5)
+
+### 2026-09-27 — compass-labs:implement — attempt: T9 stale-defaults guard implemented (612f7d5)
+- bootstrap-areas.sh refuses when the manifest entries equal the example's and 20-areas/ has notes no slug matches; it lists them and asks for control/areas.local.yaml to be edited first. It runs before seeding, so a refused run leaves no local manifest behind.
+- Verified in a temp clone: unedited+hand note → exit 1, nothing created; no local manifest → exit 1, none seeded; entry edit → proceeds; comment-only edit → still refuses; empty 20-areas → 7 created; re-run → 7 skipped. task install && task doctor:ci pass.
+
+### 2026-09-27 — compass-labs:implement — note: T9 deviations (recorded in tasks.md)
+- The guard runs in the pre-seed --check pass against the would-be source (REQ-027 "before creating any file").
+- The step-6 error message is now neutral ("stopped before writing anything"), because it now covers both validation failures and guard refusals.
+- ADR-0005 doesn't yet mention the guard (D14); flagged for the orchestrator.
+
+### 2026-09-27 — main — note: Orchestrator spot-check of T9
+- Fresh temp clone: hand-written `health-and-fitness.md` with no local manifest → exit 1, message names the note and `control/areas.local.yaml`, no manifest seeded. Empty `20-areas/` → 7 created; re-run → 0 created, 7 skipped; `git status` clean.
+
+### 2026-09-27 — main — decision: ADR-0005 records D14 in the T8 commit; T8 runs in Deploy
+- ADR-0005 (committed in T1) needs a Decision Outcome bullet for the stale-defaults guard. It goes into T8, the merge-bound commit that also flips the ADR to `accepted`, so the ADR changes once.
+- `tasks.md` freezes at the Implement milestone, so T8 is executed and logged during Deploy rather than ticked in `tasks.md`.
