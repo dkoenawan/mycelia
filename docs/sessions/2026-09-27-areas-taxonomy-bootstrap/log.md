@@ -13,7 +13,7 @@ status: active
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: define
 active_agent: main
-next_step: "Design: turn REQ-001–026 into DES-* components and decisions"
+next_step: "Design milestone gate: operator approves design.md"
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -22,10 +22,12 @@ next_step: "Design: turn REQ-001–026 into DES-* components and decisions"
 
 ## Open items
 
+- Follow-up #10: root README Install section should use `task install` / `task bootstrap-areas`.
 - Draft `docs/adr/0005-default-areas-taxonomy-and-bootstrap.md` and `docs/research/areas-of-life-taxonomy.md` are untracked inputs. They must not be committed until they use "the operator"/they and no longer list the operator's personal areas. The research note's "Tracked in issue (…)" should point at #9.
 
 ## Key decisions
 
+- **2026-09-27**: Root README Install section deferred to follow-up #10 (design D13).
 - **2026-09-27**: ✅ Define complete — operator approved REQ-001–026.
 - **2026-09-27**: Requirements agreed — REQ-001–026; all six Define defaults confirmed (no doctor check, install seeds manifest only, PyYAML required, 7 active areas + Community commented, README lists defaults, ADR-0005 `proposed` until landing).
 - **2026-09-27**: Session opened on branch `feature/issue-9-areas-bootstrap`. Existing draft ADR-0005 and its research note are inputs to Define, not settled output.
@@ -76,3 +78,23 @@ next_step: "Design: turn REQ-001–026 into DES-* components and decisions"
 ---
 
 ## Phase: Design
+
+### 2026-09-27 — main — handoff: orchestrator → compass-labs:design (DES for REQ-001–026)
+- **Input:** Turn the agreed REQ-001–026 into DES-* components and decisions: manifest schema, bootstrap-areas.sh structure, install.sh seeding, Taskfile entry, README text, ADR/research cleanup.
+- **Output:** done; design.md
+
+### 2026-09-27 — compass-labs:design — attempt: Design drafted (DES-001–013, D1–D13)
+- `design.md` maps REQ-001–026 to 13 components: the default manifest, `seed_local` moved into `common.sh`, the `install.sh` changes, the bootstrap script and its embedded python generator, the note template, the Taskfile entry, `.gitignore` (unchanged), both READMEs, the ADR-0005 and research cleanup, and release-CI compatibility.
+- The landing order is set as T1–T8, with the ADR-0005 status flip last and merge-bound.
+
+### 2026-09-27 — compass-labs:design — note: Decided without asking
+- `seed_local` moves into `scripts/lib/common.sh` and gains a check for a missing example file. The bootstrap doesn't call or source `install.sh`.
+- The bootstrap is a bash script around one embedded python/PyYAML block. It validates the manifest before seeding, writes notes only if they don't already exist, and exits 1 on any failure. It runs a `git check-ignore` guard and runs no git commands that change anything.
+- Unknown manifest keys are rejected (stricter than REQ-016).
+- Slugs are `health`, `finances`, `career`, `relationships`, `personal-growth`, `home-environment`, `recreation`, with `community` commented out. `home` is avoided because of the Obsidian `Home.md` collision. The operator can adjust these at the gate.
+- Example wikilinks are written as code spans, to avoid dangling graph nodes.
+- ADR-0005 records the unversioned areas manifest as an explicit exception to ADR-0002's version rule.
+- `release.yml`, `doctor.sh` and `.gitignore` are unchanged. The root README Install section is out of scope.
+
+### 2026-09-27 — main — decision: Root README Install section deferred to #10
+- Design D13 left the root `README.md` Install section (manual `cp` commands) out of scope; no REQ covers it. Follow-up issue #10 created.
