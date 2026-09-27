@@ -92,7 +92,8 @@ Mycelia is a **framework other people install**. The operator's estate is a *con
 of it. These never mix.
 
 **Committed (the framework):** vault structure, conventions, `scripts/lib/`, and
-`control/*.example.yaml` — schema and documentation, using fictional jobs.
+`control/*.example.yaml` — schema and documentation, using fictional jobs and
+generic default areas.
 
 **Local (the configuration):** `control/*.local.yaml`, `FEEDBACK.md`, logs, and **all vault
 content**. The PARA directories ship with only a README; everything written into them stays

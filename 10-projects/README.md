@@ -17,5 +17,6 @@ never delete. If it has no finish line, it is an Area, not a Project.
 
 Link the area(s) the project serves as `[[area-slug]]` — e.g. `[[home-environment]]` for a
 renovation project. When the project yields a reusable pattern, write it to a
-`30-resources/` note and link it from the project; areas link to the same resources. The
-area slugs are listed in `20-areas/README.md`.
+`30-resources/` note and link it from the project; areas link to the same resources.
+Check `control/areas.local.yaml` for the vault's area slugs; `20-areas/README.md` lists
+the shipped defaults.

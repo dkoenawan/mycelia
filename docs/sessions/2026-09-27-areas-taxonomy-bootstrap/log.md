@@ -3,7 +3,7 @@ session: 2026-09-27-areas-taxonomy-bootstrap
 type: feature
 issue: 9
 phase: close
-status: active
+status: archived
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
 # implement | test | deploy | close. "none" until the first milestone
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: deploy
+milestone: close
 active_agent: main
-next_step: "Close: fold session into as-built docs, archive session folder, push; operator squash-merges PR #11 and tags v0.3.0"
+next_step: "None — session archived. Operator squash-merges PR #11 (closes #9) and pushes v0.3.0."
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -23,10 +23,12 @@ next_step: "Close: fold session into as-built docs, archive session folder, push
 ## Open items
 
 - Follow-up #10: root README Install section should use `task install` / `task bootstrap-areas`.
+- Operator to squash-merge PR #11 (closes #9) and push the `v0.3.0` tag on the squash commit.
 - Draft `docs/adr/0005-default-areas-taxonomy-and-bootstrap.md` and `docs/research/areas-of-life-taxonomy.md` are untracked inputs. They must not be committed until they use "the operator"/they and no longer list the operator's personal areas. The research note's "Tracked in issue (…)" should point at #9.
 
 ## Key decisions
 
+- **2026-09-27**: ✅ Session closed — fold-back is accuracy fixes only (CLAUDE.md, README.md, 10-projects/README.md); PR #11 left for the operator to squash-merge.
 - **2026-09-27**: ✅ Deploy complete — PR #11 open (squash-merge only), release check passes, target v0.3.0. Operator will merge the PR and push the tag.
 - **2026-09-27**: ✅ Test complete — all REQ-001–027 have a passing VER (traceability exit 0); VER-025 pending T8.
 - **2026-09-27**: Pushed branch history left as is; merge to main by squash-merge only (operator's choice — accepts that the PR head ref keeps the earlier commits).
@@ -225,3 +227,15 @@ next_step: "Close: fold session into as-built docs, archive session folder, push
 
 ### 2026-09-27 — main — handoff: orchestrator → compass-labs:close (fold back into as-built docs)
 - **Input:** Fold the session into the repo's as-built docs (no session narrative, one Origin line per doc). Operator merges PR #11 after Close; do not merge.
+- **Output:** done; CLAUDE.md, README.md, 10-projects/README.md
+
+### 2026-09-27 — compass-labs:close — note: Fold-back ready — accuracy fixes to CLAUDE.md, README.md, 10-projects/README.md
+- ADR-0005 checked against the as-built bootstrap and the tasks.md deviations (live self-link, repo-relative YAML errors, guard before seeding, no override flag): already accurate, not edited, still `accepted`.
+- CLAUDE.md Committed list: `control/*.example.yaml` now says "fictional jobs and generic default areas".
+- README.md Layout and Framework-vs-configuration table now mention the areas manifest and local areas. Install section untouched (follow-up #10).
+- 10-projects/README.md Linking: points to `control/areas.local.yaml` as the vault's slug list and to `20-areas/README.md` for the shipped defaults.
+- No new docs tree and no Origin lines in these multi-issue framework docs; ADR-0005 carries the #9 link.
+- Flagged, not edited: `scripts/bootstrap-areas.sh` guard docstring cites REQ-027/DES-014; left as released.
+
+### 2026-09-27 — main — milestone: ✅ Session closed
+- Operator approved Close. Fold-back reviewed by the orchestrator (diff is wording-only). Issue #9 closes when the operator squash-merges PR #11; `gh issue close` intentionally not run. Draft-input open item resolved: ADR-0005 and the research note were committed clean in cbf4399 and accepted in c94bdcb.
