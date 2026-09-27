@@ -70,6 +70,7 @@ EARS syntax. Each requirement has one acceptance criterion in Given/When/Then fo
 | REQ-024 | The committed ADR-0005 shall carry status `proposed` while this session is open, and shall be changed to `accepted` only in the commit that lands the session's implementation for merge. | Given the feature branch's history, when ADR-0005's `status:` is inspected at each commit that touches it, then every commit before the final merge-bound one shows `proposed` and the merge-bound one shows `accepted`. |
 | REQ-025 | While the areas manifest files exist, the release smoke test (`task install && task doctor:ci` on a fresh clone) shall continue to pass. | Given a fresh clone on a runner with no local config, when `task install && task doctor:ci` runs, then it exits 0. |
 | REQ-026 | If python3 or PyYAML is unavailable, then the areas bootstrap shall exit non-zero before creating any file, with an error naming the missing dependency. | Given an environment where `python3 -c "import yaml"` fails, when the bootstrap runs, then it exits non-zero, no `control/areas.local.yaml` or `20-areas/*.md` is created, and the error output names python3/PyYAML. |
+| REQ-027 | If the local areas manifest's entries are identical to the default manifest's entries, and `20-areas/` already contains a note other than `README.md` whose name matches no manifest slug, then the areas bootstrap shall exit non-zero before creating any file, name those notes, and tell the operator to edit `control/areas.local.yaml` first. | Given an unedited `control/areas.local.yaml` and a hand-written `20-areas/health-and-fitness.md`, when the bootstrap runs, then it exits non-zero, no `20-areas/*.md` is created, and the output names `health-and-fitness.md` and `control/areas.local.yaml`. |
 
 ## Open questions
 
@@ -81,3 +82,4 @@ All questions resolved. On 2026-09-27 the operator confirmed each proposed defau
 4. **YAML parsing:** the bootstrap requires python3+PyYAML and fails clearly without it (REQ-026, Constraints).
 5. **ADR-0005 status:** `proposed` until the commit that lands the work, then `accepted` (REQ-024).
 6. **Default areas:** seven active, with Community commented out (REQ-001).
+7. **Existing installs with hand-written area notes** (added 2026-09-27, after Design): the bootstrap refuses to add the generic defaults next to notes the manifest doesn't list, until the operator edits the manifest (REQ-027).

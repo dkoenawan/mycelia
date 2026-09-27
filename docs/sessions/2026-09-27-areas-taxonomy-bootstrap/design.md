@@ -31,6 +31,7 @@ Alternatives considered:
 | DES-011 | ADR-0005 public-repo cleanup and status lifecycle | REQ-022, REQ-024 | Concrete edits in §DES-011. |
 | DES-012 | Research note cleanup | REQ-022, REQ-023 | Concrete edits in §DES-012. |
 | DES-013 | Release-CI compatibility (no change to `release.yml` / `doctor.sh`) | REQ-025 | See §DES-013. |
+| DES-014 | Stale-defaults guard in the embedded validator (added after Design, see log) | REQ-027 | Runs after validation, before any write. See §DES-014. |
 
 ### DES-001: `control/areas.example.yaml`
 
@@ -322,6 +323,19 @@ Edits to `docs/research/areas-of-life-taxonomy.md`:
 
 Test should verify REQ-025 in a fresh clone with PyYAML made unavailable, for example with a `PATH` stub `python3` that fails `import yaml`, so that nothing implicitly depends on it.
 
+### DES-014: Stale-defaults guard (REQ-027)
+
+Added 2026-09-27 after the Design milestone, by logged decision.
+
+Runs inside the DES-005 generator, after the manifest validates and before any note is written (in both `--check` and `--write` modes):
+
+1. Parse the local manifest and the example. The manifest is **unedited** when their `areas` entry lists are equal after parsing (same slugs and descriptions, same order). Comments and whitespace don't count, so a cosmetic edit doesn't clear the guard, but any change to the entries does.
+2. List `20-areas/*.md`, excluding `README.md`. A note is **unmatched** when its filename stem is not a manifest slug.
+3. If the manifest is unedited **and** there is at least one unmatched note, fail: exit 1, write nothing, and print on stderr the unmatched note names (repo-relative) and the fix: edit `control/areas.local.yaml` to list your own areas, including the slugs of the notes you already have, then re-run.
+4. Otherwise continue as before.
+
+This also covers the case where the bootstrap seeded `areas.local.yaml` itself in this run (REQ-014): a freshly seeded manifest is unedited by definition. There is no override flag, because DES-004 rejects every argument; listing the existing notes' slugs clears the guard, which is also the fix.
+
 ## Decisions
 
 | # | Decision | Notes |
@@ -339,6 +353,7 @@ Test should verify REQ-025 in a fresh clone with PyYAML made unavailable, for ex
 | D11 | The areas manifest is unversioned, and ADR-0005 records the reconciliation with ADR-0002. | The operator declined `version:`. ADR-0002's wording covers all `control/*.example.yaml`, so the exception is written down, not left implicit. |
 | D12 | ADR-0005 flips to `accepted`, and its `date:` is set, only in the final merge-bound commit after Test passes. | REQ-024. |
 | D13 | The root `README.md` Install section, which still shows manual `cp`, is left as is. | No REQ covers it. It is recorded as a possible follow-up issue, not scope creep. |
+| D14 | The bootstrap refuses to run on unedited default entries when `20-areas/` has notes the manifest doesn't list. No override flag. | REQ-027. Stops existing installs getting generic default notes next to hand-written ones. Editing the manifest is both the fix and the override. |
 
 ## Risks
 
@@ -363,6 +378,7 @@ Each task below is one commit.
 5. **T5 — `scripts/bootstrap-areas.sh`** (DES-004, DES-005, DES-006). Depends on T2 and T3.
 6. **T6 — Taskfile `bootstrap-areas`** (DES-007). Depends on T5.
 7. **T7 — `20-areas/README.md` and `10-projects/README.md`** (DES-009, DES-010). Depends on T3 for the slugs.
+9. **T9 — Stale-defaults guard** (DES-014, added after Design). Depends on T5. Lands before T8.
 8. **T8 — Accept ADR-0005** (DES-011 status flip and `date:`). This is the merge-bound commit, done only after Test passes.
 
 ## Open questions

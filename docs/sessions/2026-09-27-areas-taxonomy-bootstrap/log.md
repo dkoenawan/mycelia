@@ -13,7 +13,7 @@ status: active
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: design
 active_agent: main
-next_step: "Implement: decompose design into tasks.md (T1–T8) and execute"
+next_step: "Implement: add T9 (stale-defaults guard, REQ-027/DES-014) to tasks.md and implement it"
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -27,6 +27,7 @@ next_step: "Implement: decompose design into tasks.md (T1–T8) and execute"
 
 ## Key decisions
 
+- **2026-09-27**: Scope amended — REQ-027/DES-014/D14: bootstrap refuses to run on unedited defaults when `20-areas/` already holds notes the manifest doesn't list.
 - **2026-09-27**: ✅ Design complete — operator approved design.md (DES-001–013, D1–D13, landing order T1–T8).
 - **2026-09-27**: Root README Install section deferred to follow-up #10 (design D13).
 - **2026-09-27**: ✅ Define complete — operator approved REQ-001–026.
@@ -106,3 +107,25 @@ next_step: "Implement: decompose design into tasks.md (T1–T8) and execute"
 ---
 
 ## Phase: Implement
+
+### 2026-09-27 — main — handoff: orchestrator → compass-labs:implement (tasks T1–T8)
+- **Input:** Decompose design.md into tasks.md (T1–T8 landing order) and execute; one atomic commit per ticked task. T8 (ADR-0005 → accepted) is held until Test passes.
+- **Output:** done; tasks.md, ADR-0005, research note, common.sh, install.sh, bootstrap-areas.sh (new), areas.example.yaml (new), Taskfile.yml, 20-areas/README.md, 10-projects/README.md
+
+### 2026-09-27 — compass-labs:implement — attempt: T1–T7 implemented and committed
+- tasks.md created from the design landing order; T1–T7 ticked, one commit each: cbf4399, 3795ded, 63599f6, 38f0918, 10396a8, 5bd190a, 5bcba4f.
+- Verified in temp clones: task install (run twice) + task doctor:ci pass; bootstrap first run creates 7 notes, re-run skips all 7, invalid/missing-example/no-PyYAML cases exit 1 and write nothing; smoke test passes with PyYAML stubbed out; git status stays clean.
+- T8 (ADR-0005 → accepted, date:) left unchecked on purpose — per D12 it lands only after Test passes.
+
+### 2026-09-27 — compass-labs:implement — note: Deviations from design (recorded in tasks.md)
+- DES-006: the note's self-link `[[<slug>]]` is a real link, not wrapped in backticks. The template block and its bullet disagreed; the bullet and ADR-0005 say it is the one live link.
+- DES-005: the manifest is parsed from a string so YAML errors show `control/<file>` plus line and column, not PyYAML's absolute path. The missing-example message drops the absolute-path suffix too.
+
+### 2026-09-27 — main — note: Orchestrator spot-check
+- Confirmed 7 task commits on branch, `bash -n` clean on all scripts, ADR-0005 `status: proposed`, 7 active slugs + commented `community`. Privacy grep over changed files: only hits are the `github.com/dkoenawan/mycelia/issues/9` links (same pattern as ADR-0002/0004, flagged in design risks).
+
+### 2026-09-27 — main — decision: Amend requirements and design — stale-defaults guard (REQ-027, DES-014, D14)
+- Operator asked what happens when `install.sh` runs on an existing install. Finding: install is safe (copy-if-absent), but an existing install gets `areas.local.yaml` seeded with the generic defaults; running `task bootstrap-areas` without editing it adds 7 default notes alongside hand-written ones (e.g. `health.md` next to `health-and-fitness.md`).
+- Operator chose option 1: a guard in the bootstrap. If the local manifest's entries are identical to the example's (unedited defaults) and `20-areas/` already contains at least one note (other than `README.md`) whose stem is not a manifest slug, the bootstrap exits 1 before writing anything, names those notes, and tells the operator to edit `control/areas.local.yaml` first.
+- No override flag: listing the existing notes' slugs in the manifest (or any edit to the entries) clears the guard.
+- Frozen artifacts amended by the orchestrator in this same commit: `requirements.md` (REQ-027) and `design.md` (DES-014, D14, landing-order T9). Implement is reopened to add and execute T9.
