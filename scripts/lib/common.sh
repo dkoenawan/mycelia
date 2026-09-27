@@ -49,6 +49,23 @@ require_cmd() {
   command -v "$1" &>/dev/null || die "'$1' not found on PATH."
 }
 
+# --- Config seeding ------------------------------------------------------
+
+# Copy a control/*.example.yaml to its *.local.yaml only if the local file is
+# absent. Never overwrites: the local copy is the operator's configuration, and
+# re-running an installer after editing it must always be safe. Shared by
+# install.sh and bootstrap-areas.sh so there is exactly one seeding path.
+seed_local() {
+  local example="$1" local_file="$2"
+  [[ -f "$example" ]] || die "$(basename "$example") not found under control/ — is this a complete mycelia checkout?"
+  if [[ -f "$local_file" ]]; then
+    log "Already present, left untouched: ${local_file#$MYCELIA_ROOT/}"
+  else
+    cp "$example" "$local_file"
+    log "Created ${local_file#$MYCELIA_ROOT/} from $(basename "$example")."
+  fi
+}
+
 # --- Git safety ----------------------------------------------------------
 # These encode the most costly failure in unattended agent work: an agent that edits
 # files and exits without committing. Its work is destroyed by the next branch

@@ -16,16 +16,6 @@ source "$SCRIPT_DIR/lib/common.sh"
 [[ -f "$MYCELIA_CONTROL/estate.example.yaml" ]] \
   || die "control/estate.example.yaml not found — is this a mycelia checkout? (looked under $MYCELIA_ROOT)"
 
-seed_local() {
-  local example="$1" local_file="$2"
-  if [[ -f "$local_file" ]]; then
-    log "Already present, left untouched: ${local_file#$MYCELIA_ROOT/}"
-  else
-    cp "$example" "$local_file"
-    log "Created ${local_file#$MYCELIA_ROOT/} from $(basename "$example") — edit it before running 'task doctor'."
-  fi
-}
-
 seed_local "$MYCELIA_CONTROL/roots.example.yaml"  "$MYCELIA_CONTROL/roots.local.yaml"
 seed_local "$MYCELIA_CONTROL/estate.example.yaml" "$MYCELIA_CONTROL/estate.local.yaml"
 
