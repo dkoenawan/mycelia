@@ -2,7 +2,7 @@
 session: 2026-09-27-areas-taxonomy-bootstrap
 type: feature
 issue: 9
-phase: design
+phase: implement
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: define
+milestone: design
 active_agent: main
-next_step: "Design milestone gate: operator approves design.md"
+next_step: "Implement: decompose design into tasks.md (T1–T8) and execute"
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -27,6 +27,7 @@ next_step: "Design milestone gate: operator approves design.md"
 
 ## Key decisions
 
+- **2026-09-27**: ✅ Design complete — operator approved design.md (DES-001–013, D1–D13, landing order T1–T8).
 - **2026-09-27**: Root README Install section deferred to follow-up #10 (design D13).
 - **2026-09-27**: ✅ Define complete — operator approved REQ-001–026.
 - **2026-09-27**: Requirements agreed — REQ-001–026; all six Define defaults confirmed (no doctor check, install seeds manifest only, PyYAML required, 7 active areas + Community commented, README lists defaults, ADR-0005 `proposed` until landing).
@@ -98,3 +99,10 @@ next_step: "Design milestone gate: operator approves design.md"
 
 ### 2026-09-27 — main — decision: Root README Install section deferred to #10
 - Design D13 left the root `README.md` Install section (manual `cp` commands) out of scope; no REQ covers it. Follow-up issue #10 created.
+
+### 2026-09-27 — main — milestone: ✅ Design complete
+- Operator approved `design.md` at the Design gate ("atomic commit please"). Slugs accepted as designed. Moving to Implement.
+
+---
+
+## Phase: Implement
