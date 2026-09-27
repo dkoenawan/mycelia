@@ -2,7 +2,7 @@
 session: 2026-09-27-areas-taxonomy-bootstrap
 type: feature
 issue: 9
-phase: deploy
+phase: close
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: test
+milestone: deploy
 active_agent: main
-next_step: "Deploy: T8 (ADR-0005 accepted + D14 bullet), open PR, squash-merge, write release.md"
+next_step: "Close: fold session into as-built docs, archive session folder, push; operator squash-merges PR #11 and tags v0.3.0"
 ---
 # Session Log: Default areas taxonomy + bootstrap (#9)
 
@@ -27,6 +27,7 @@ next_step: "Deploy: T8 (ADR-0005 accepted + D14 bullet), open PR, squash-merge, 
 
 ## Key decisions
 
+- **2026-09-27**: ✅ Deploy complete — PR #11 open (squash-merge only), release check passes, target v0.3.0. Operator will merge the PR and push the tag.
 - **2026-09-27**: ✅ Test complete — all REQ-001–027 have a passing VER (traceability exit 0); VER-025 pending T8.
 - **2026-09-27**: Pushed branch history left as is; merge to main by squash-merge only (operator's choice — accepts that the PR head ref keeps the earlier commits).
 - **2026-09-27**: REQ-022 failure fixed in the working tree — redacted quoted draft text (operator pronouns, personal area names, local note name) from design.md and log.md.
@@ -198,3 +199,29 @@ next_step: "Deploy: T8 (ADR-0005 accepted + D14 bullet), open PR, squash-merge, 
 ---
 
 ## Phase: Deploy
+
+### 2026-09-27 — main — handoff: orchestrator → compass-labs:deploy (T8 + PR + release.md)
+- **Input:** Run T8 (ADR-0005 → accepted, date:, D14 guard bullet) as its own commit; re-check VER-025; run the release smoke test on branch HEAD; open a PR to main (squash-merge only, not merged yet — merge happens at Close per D5); write release.md with target version v0.3.0 (tag pushed by the operator after merge, per ADR-0004).
+- **Output:** done; ADR-0005 (c94bdcb), release.md; PR #11
+
+### 2026-09-27 — compass-labs:deploy — attempt: T8 — ADR-0005 accepted
+- Committed `c94bdcb` (`docs(adr): accept ADR-0005 — #9`): `status: accepted`, `date: 2026-09-27`, and a Decision Outcome bullet for the stale-defaults guard (D14/REQ-027). VER-025 passes: `c94bdcb` is the last commit touching the ADR and the only one that says `accepted`. Evidence is in release.md.
+
+### 2026-09-27 — compass-labs:deploy — attempt: Release smoke test + completeness passed; PR #11 opened
+- `task install && task doctor:ci` on a fresh clone of `c94bdcb` exited 0 (8/8 checks, no UPGRADE doc needed). Completeness check against the branch diff found no gaps or stubs. Opened https://github.com/dkoenawan/mycelia/pull/11 (squash-merge only, Closes #9, follow-up #10). Not merged.
+
+### 2026-09-27 — compass-labs:deploy — note: release.md ready for the Deploy gate
+- Target v0.3.0 (minor). After the squash-merge at Close, the operator pushes the `v0.3.0` tag on the squash commit to trigger release.yml, per ADR-0004.
+
+### 2026-09-27 — main — note: Orchestrator spot-check of Deploy
+- release.md Completeness section lists every shipped component as complete with evidence, none left out. ADR-0005 at HEAD: accepted, no pronoun/personal-area hits. PR #11: OPEN, MERGEABLE, base main.
+
+### 2026-09-27 — main — milestone: ✅ Deploy complete
+- Operator approved `release.md`. Completeness checked: all shipped components complete, none left out. The operator will squash-merge PR #11 themselves after Close, then push `v0.3.0`.
+
+---
+
+## Phase: Close
+
+### 2026-09-27 — main — handoff: orchestrator → compass-labs:close (fold back into as-built docs)
+- **Input:** Fold the session into the repo's as-built docs (no session narrative, one Origin line per doc). Operator merges PR #11 after Close; do not merge.
