@@ -11,6 +11,10 @@
 # only ever generated from the local manifest. The whole manifest is validated
 # before anything is written; a bad entry stops the run with no file created.
 #
+# Stale-defaults guard: if the manifest still lists exactly the shipped defaults
+# while 20-areas/ already has notes it doesn't list (an existing vault), the run
+# refuses and asks for control/areas.local.yaml to be edited first.
+#
 # Requires python3 with PyYAML. Never stages, commits, or checks out anything.
 #
 # Usage: ./scripts/bootstrap-areas.sh   (takes no arguments)
@@ -27,10 +31,12 @@ AREAS_DIR="$MYCELIA_ROOT/20-areas"
 
 # Validator + note generator. One embedded block so the note template lives in
 # exactly one place (ADR-0005 "New constraints").
-#   python3 - --check <manifest>
-#   python3 - --write <manifest> <YYYY-MM-DD> <areas-dir>
-# Exit 0 on success, 1 on any validation or write error (nothing written on a
-# validation error). Per-slug report on stdout; errors and warnings on stderr.
+#   python3 - --check <manifest> <example> <areas-dir>
+#   python3 - --write <manifest> <example> <areas-dir> <YYYY-MM-DD>
+# Both modes validate the manifest and run the stale-defaults guard; only --write
+# creates notes. Exit 0 on success, 1 on any validation, guard, or write error
+# (nothing written on a validation or guard error). Per-slug report on stdout;
+# errors and warnings on stderr.
 run_generator() {
   python3 - "$@" <<'PYEOF'
 import datetime
@@ -156,24 +162,75 @@ def render(slug, description, day):
     )
 
 
+def example_entries(path):
+    """The example's parsed `areas` list, or None if it can't be read as one."""
+    try:
+        with open(path, encoding="utf-8") as fh:
+            data = yaml.safe_load(fh.read())
+    except (OSError, yaml.YAMLError):
+        return None
+    return data.get("areas") if isinstance(data, dict) else None
+
+
+def stale_defaults(manifest, areas, example, areas_dir, shown_dir):
+    """Stale-defaults guard (REQ-027, DES-014).
+
+    Refuse when the manifest's entries are exactly the shipped defaults while
+    20-areas/ already holds notes the manifest doesn't list: that is an existing
+    vault whose operator hasn't told the manifest about their own areas yet, and
+    generating the generic set beside their notes would only add clutter.
+    Compared after parsing, so a comment- or whitespace-only edit doesn't count;
+    any change to the entries does. Returns True (after printing) if refused.
+    """
+    if areas != example_entries(example):
+        return False
+    slugs = {entry["slug"] for entry in areas}
+    try:
+        names = sorted(os.listdir(areas_dir))
+    except FileNotFoundError:
+        return False
+    unmatched = [
+        name for name in names
+        if name.endswith(".md") and name != "README.md"
+        and os.path.isfile(os.path.join(areas_dir, name))
+        and name[:-3] not in slugs
+    ]
+    if not unmatched:
+        return False
+    err(f"control/areas.local.yaml still lists only the shipped default areas, but "
+        f"{shown_dir}/ already has notes it doesn't list:")
+    for name in unmatched:
+        print(f"  {shown_dir}/{name}", file=sys.stderr)
+    fix = ""
+    if os.path.abspath(manifest) == os.path.abspath(example):
+        fix = ("control/areas.local.yaml doesn't exist yet — create it first with "
+               "'task install' (or cp control/areas.example.yaml control/areas.local.yaml). ")
+    stems = ", ".join(name[:-3] for name in unmatched)
+    print(f"{fix}Edit control/areas.local.yaml to list your own areas, including the "
+          f"slugs of the notes you already have ({stems}), then re-run. "
+          f"Nothing was written.", file=sys.stderr)
+    return True
+
+
 def main(argv):
-    if len(argv) < 2 or argv[0] not in ("--check", "--write"):
-        err("generator usage: --check <manifest> | --write <manifest> <date> <areas-dir>")
+    usage = ("generator usage: --check <manifest> <example> <areas-dir> | "
+             "--write <manifest> <example> <areas-dir> <date>")
+    if not ((len(argv) == 4 and argv[0] == "--check")
+            or (len(argv) == 5 and argv[0] == "--write")):
+        err(usage)
         return 1
-    mode, manifest = argv[0], argv[1]
+    mode, manifest, example, areas_dir = argv[:4]
     shown = "control/" + os.path.basename(manifest)
+    shown_dir = os.path.basename(os.path.normpath(areas_dir))
     areas = validate(manifest, shown)
     if areas is None:
+        return 1
+    if stale_defaults(manifest, areas, example, areas_dir, shown_dir):
         return 1
     if mode == "--check":
         return 0
 
-    if len(argv) != 4:
-        err("generator usage: --write <manifest> <date> <areas-dir>")
-        return 1
-    day = datetime.date.fromisoformat(argv[2])
-    areas_dir = argv[3]
-    shown_dir = os.path.basename(os.path.normpath(areas_dir))
+    day = datetime.date.fromisoformat(argv[4])
     if not areas:
         print(f"WARN: {shown} lists no areas — nothing to create.", file=sys.stderr)
 
@@ -232,18 +289,19 @@ if git -C "$MYCELIA_ROOT" rev-parse --is-inside-work-tree &>/dev/null; then
   done
 fi
 
-# 5. Validate whatever the notes will come from before writing anything, so a bad
-#    example can't leave a seeded local file behind.
+# 5. Validate whatever the notes will come from, and run the stale-defaults guard
+#    against it, before writing anything — so neither a bad example nor a refused
+#    run can leave a seeded local file behind.
 if [[ -f "$AREAS_LOCAL" ]]; then SOURCE="$AREAS_LOCAL"; else SOURCE="$AREAS_EXAMPLE"; fi
-if ! run_generator --check "$SOURCE"; then
-  die "control/$(basename "$SOURCE") is invalid — no notes written."
+if ! run_generator --check "$SOURCE" "$AREAS_EXAMPLE" "$AREAS_DIR"; then
+  die "areas bootstrap stopped before writing anything — see errors above."
 fi
 
 # 6. Seed the local manifest if absent (no-op with a "left untouched" message otherwise).
 seed_local "$AREAS_EXAMPLE" "$AREAS_LOCAL"
 
-# 7. Generate, always from the local manifest. Re-validates, which covers the file
-#    changing since step 5.
-if ! run_generator --write "$AREAS_LOCAL" "$(date -u '+%Y-%m-%d')" "$AREAS_DIR"; then
+# 7. Generate, always from the local manifest. Re-validates and re-runs the guard,
+#    which covers the file changing since step 5.
+if ! run_generator --write "$AREAS_LOCAL" "$AREAS_EXAMPLE" "$AREAS_DIR" "$(date -u '+%Y-%m-%d')"; then
   die "areas bootstrap failed — see errors above."
 fi
