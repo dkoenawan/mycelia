@@ -27,6 +27,7 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 
 ## Key decisions
 
+- **2026-09-28**: Design questions settled: Obsidian's new-note folder → `00-inbox/capture`; CLAUDE.md gets pointers to ADR-0006; state lives in `.state/ingest-inbox/`; an empty target catalogue refuses to start.
 - **2026-09-28**: ✅ Define complete — operator approved REQ-001–042 with default thresholds (cap 10, thin <50 words, 3-strike ask).
 - **2026-09-28**: Requirements drafted for the gate: REQ-001–042 live (32 Must, 8 Should, 2 Could); REQ-043 → #17, REQ-044 → #16. Default thresholds: cap 10, thin <50 words, 3-strike ask.
 - **2026-09-28**: Held captures stay in `00-inbox/capture/`, with a separate ask note in `00-inbox/`. They're skipped while the ask is open and the content is unchanged.
@@ -99,3 +100,16 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 
 ### 2026-09-28 — main — handoff: orchestrator → compass-labs:design (DES-* for ingestion MVP)
 - **Input:** Turn define/requirements.md (REQ-001–042) into design.md: DES-* components, D-* decisions, landing order. Open item from Define: how Obsidian's default new-note folder points at `00-inbox/capture/` (committed `.obsidian/app.json`).
+- **Output:** needs_input (4 questions); design.md
+
+### 2026-09-28 — compass-labs:design — attempt: Design draft for ingestion MVP (DES-001 to DES-022)
+- design.md drafted. A bash runner calls a Python module. The model gets one call per item with no tools and returns JSON that is checked before any write. Plain code handles selection, holds, fetching, locking, the per-item check, the rollback journal, archiving, the ledger and the daily note.
+- Decisions D1 to D17 record the options considered, including ADR-0006 for the two agreed departures from CLAUDE.md, and a crash-recovery rule that undoes the interrupted item. Every REQ from 001 to 042 is traced to a DES item. The landing order is T1 to T14.
+- It found two committed READMEs this session will edit that fail REQ-040. DES-017 fixes both.
+
+### 2026-09-28 — compass-labs:design — note: Four design questions raised for the operator
+- Q1: Obsidian's new-note folder (recommend `00-inbox/capture` in the committed `app.json`). Q2: add two pointers to ADR-0006 in CLAUDE.md (recommend yes). Q3: where the state lives (recommend `.state/ingest-inbox/`). Q4: an empty catalogue refuses to start rather than raising an ask per item (recommend refuse). The draft already follows every recommended default.
+
+### 2026-09-28 — main — decision: Operator answers to Design questions
+- Q1: the committed `.obsidian/app.json` new-note folder becomes `00-inbox/capture`. Q2: CLAUDE.md gets two one-line pointers to ADR-0006 (`commits: false` exception, capped-batch exception). Q3: ledger and journal live in `.state/ingest-inbox/` (gitignored). Q4: with no area or project notes, the runner refuses to start (exit 2) and points to `task bootstrap-areas`.
+- All four match the recommended defaults already in the draft design.md.
