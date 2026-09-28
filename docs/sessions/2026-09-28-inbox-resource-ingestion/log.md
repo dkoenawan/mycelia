@@ -2,7 +2,7 @@
 session: 2026-09-28-inbox-resource-ingestion
 type: feature
 issue: 12
-phase: define
+phase: design
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: none
+milestone: define
 active_agent: main
-next_step: "Hand off to compass-labs:define to frame the ingestion MVP and draft REQ-*."
+next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* components and decisions."
 ---
 # Session Log: Resource lifecycle MVP — inbox → resources ingestion (#12)
 
@@ -27,6 +27,7 @@ next_step: "Hand off to compass-labs:define to frame the ingestion MVP and draft
 
 ## Key decisions
 
+- **2026-09-28**: ✅ Define complete — operator approved REQ-001–042 with default thresholds (cap 10, thin <50 words, 3-strike ask).
 - **2026-09-28**: Requirements drafted for the gate: REQ-001–042 live (32 Must, 8 Should, 2 Could); REQ-043 → #17, REQ-044 → #16. Default thresholds: cap 10, thin <50 words, 3-strike ask.
 - **2026-09-28**: Held captures stay in `00-inbox/capture/`, with a separate ask note in `00-inbox/`. They're skipped while the ask is open and the content is unchanged.
 - **2026-09-28**: Ingestion MVP behaviour agreed: capture folder only; text + URL with read-only fetch; oldest first, cap 10; one resource per item; original moved to archive; two-way links; no fit → ask; local uncommitted output.
@@ -88,3 +89,10 @@ next_step: "Hand off to compass-labs:define to frame the ingestion MVP and draft
 ### 2026-09-28 — compass-labs:define — decision: Requirements set REQ-001 to REQ-042 drafted for the Define gate
 - Full-tier define/ is complete: framing, problem (NEED-01 to NEED-06, OUT-01 to OUT-07), 42 live requirements (32 Must, 8 Should, 2 Could), REQ-043 deferred to #17 and REQ-044 to #16, quality coverage, NFR measures, assumptions and dependencies, and diagrams (impact map, context, traceability per outcome, as-is/to-be).
 - Thresholds set by Define and awaiting confirmation at the gate: cap 10, thin under 50 words, 3-strike ask.
+
+### 2026-09-28 — main — milestone: ✅ Define complete
+- The operator approved define/ (full tier) with REQ-001–042 and the default thresholds: at most 10 items per run, thin means under 50 words, and an ask after 3 failed checks in a row. The project anchor is in README.md and matches the agreed text.
+
+---
+
+## Phase: Design

@@ -1,7 +1,7 @@
 <!-- tier: full. The main doc (D12). Summarise and link; never restate a sub-doc's content. -->
 # Define: Resource lifecycle MVP — inbox → resources ingestion
 
-> Phase: Define | Started: 2026-09-28 | Status: Draft, ready for the Define gate
+> Phase: Define | Started: 2026-09-28 | Status: Approved, ready for the Define gate
 > Relates to: Issue #12 · Session history: [`log.md`](../log.md)
 
 ## Contents
