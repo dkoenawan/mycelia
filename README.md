@@ -128,3 +128,29 @@ monitoring.
 ## License
 
 MIT
+
+<!-- compass:anchor -->
+## Project anchor
+
+### Vision
+
+A second brain that the operator's agents feed, instead of one the operator feeds: the operator reads and steers, and stops being the message bus between their own systems.
+
+### Mission
+
+Mycelia is an installable framework (vault conventions, an estate registry and runner tooling) that lets scheduled agents write, file and connect an operator's knowledge in plain Markdown, and keeps their automated estate visible and healthy, with autonomy licensed by machine-checkable gates.
+
+### Scope
+
+- Vault structure and conventions: PARA directories, note format and linking, as plain Markdown in git, readable without mycelia.
+- The estate registry and health checks for scheduled jobs, with failures pushed to the operator rather than logged.
+- Runner tooling (the shared library, install and bootstrap scripts) for scheduled agents that land their own work behind gates.
+- Agent workflows that capture, file, connect and summarise vault content.
+- Framework only: generic defaults and schemas; every operator's notes and estate stay local configuration.
+
+### Non-goals
+
+- Committing an operator's notes, estate or paths to the framework repository, or requiring an instance to be its own repo or fork.
+- A database or proprietary store; the vault stays plain Markdown in git.
+- Depending on Obsidian plugins.
+<!-- /compass:anchor -->

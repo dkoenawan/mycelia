@@ -27,6 +27,7 @@ next_step: "Hand off to compass-labs:define to frame the ingestion MVP and draft
 
 ## Key decisions
 
+- **2026-09-28**: Framing tier is full; the project anchor is created in README.md (vision, mission, scope, non-goals) as approved. Verdict: aligns.
 - **2026-09-28**: Define answers agreed: capture subfolder; local uncommitted output; oldest-first batch (configurable later, #16); unmatched items → inbox ask; originals → 40-archive; text + URL with fetch (files deferred, #17); two-way links; rest of Define defaults accepted.
 - **2026-09-28**: MVP is scoped to daily inbox → resource ingestion with area/project linking. Routing at scale (#13), project lifecycle (#14) and resource lifecycle (#15) are deferred.
 
@@ -61,3 +62,8 @@ next_step: "Hand off to compass-labs:define to frame the ingestion MVP and draft
 - Q9: one resource per item. Q10: links go both ways (append to the area or project note's resources section only).
 - Q11: output stays local and uncommitted. The ledger is local and gitignored, and the registry entry records `commits: false` with an explanation.
 - Q12 gate and Q13 outcomes/appetite: accepted as proposed.
+- **Output:** done; define/index.md, framing.md, problem.md, requirements.md, quality.md, diagrams.md
+
+### 2026-09-28 — compass-labs:define — decision: Framing tier and project anchor
+- Tier: full, confirmed by the operator. It adds a scheduled capability across the inbox, resources, areas, projects, archive, the runner library and the estate registry, and changes how the inbox is used.
+- Anchor was missing (no markers in README.md). The operator approved the drafted vision, mission, scope and non-goals as written. The action is `create`, and the orchestrator wrote the agreed text into README.md between `<!-- compass:anchor -->` markers. Verdict: aligns.
