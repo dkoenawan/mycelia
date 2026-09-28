@@ -96,3 +96,6 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 ---
 
 ## Phase: Design
+
+### 2026-09-28 — main — handoff: orchestrator → compass-labs:design (DES-* for ingestion MVP)
+- **Input:** Turn define/requirements.md (REQ-001–042) into design.md: DES-* components, D-* decisions, landing order. Open item from Define: how Obsidian's default new-note folder points at `00-inbox/capture/` (committed `.obsidian/app.json`).
