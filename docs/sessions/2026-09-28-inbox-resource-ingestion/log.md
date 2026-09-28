@@ -28,6 +28,7 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 
 ## Key decisions
 
+- **2026-09-28**: Design Revision 3 answers: the agent may read the whole vault (except control/, .state/ and hidden folders), overriding the least-privilege default. REQ-011 and REQ-032 amended. The language decision gets ADR-0007 plus a CLAUDE.md pointer.
 - **2026-09-28**: The ingester's language is now Node (TypeScript) instead of Python: transactional and workflow code and future API endpoints go in Node, and Python is kept for data analysis. #18 is retitled to match.
 - **2026-09-28**: Design sent back for rework at the gate. The ingester is Python-only. The agent step gets read-only vault tools and fetched content that's been cleaned. Before each run, claude must be present and logged in, behind a provider interface. Follow-ups: #18 (port the bash scripts), #19 (choose the agent provider at install).
 - **2026-09-28**: Design questions settled: Obsidian's new-note folder → `00-inbox/capture`; CLAUDE.md gets pointers to ADR-0006; state lives in `.state/ingest-inbox/`; an empty target catalogue refuses to start.
@@ -135,3 +136,22 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 - The operator reversed the Python choice. Transactional and workflow code, and any future API endpoint, belong in Node; Python is reserved for data-analysis tasks.
 - Design uses TypeScript on Node LTS with the Claude Agent SDK for TypeScript, strict tsc, eslint and a test runner, with pinned dependencies. The rest of the rethink decision stands.
 - #18 is retitled "Port framework scripts from bash to Node (TypeScript)". Relayed to the running Design agent (same invocation, no new handoff).
+- **Output (rework):** needs_input (Q5–Q7); design.md (Revision 3)
+
+### 2026-09-28 — compass-labs:design — attempt: Design revised to TypeScript on Node with a tool-using agent (Revision 3)
+- design.md was rewritten per the operator's rethink and the later Node decision. It is self-contained, and every kept mechanism is written out again.
+- Toolchain: TypeScript on Node 22.18 or later, run directly through Node's type stripping (no build). npm with exact pins, a committed lockfile, and install scripts refused. Three runtime dependencies: `@anthropic-ai/claude-agent-sdk`, `yaml` and `parse5`. Gates: `tsc` strict, ESLint with typescript-eslint, and `node:test`, run by `task check:node` and a new `ci.yml`. `task install` and `release.yml` are unchanged; two new `doctor.sh` checks are the only bash changes.
+- The agent step goes through an `AgentProvider` interface. The only provider is Claude Code via the Agent SDK; its preflight checks the CLI is present and logged in on every run, before any write.
+- The agent has read-only Read, Glob and Grep tools, confined to `20-areas/` and `10-projects/` by a hook in the ingester's code. URLs are fetched by deterministic code, which refuses private addresses as it connects.
+- Six injection layers, with a worst-case table. Kept unchanged: holds via asks, the journal and rollback, crash recovery, the ledger, the outage rule and the vault index. Decisions D1–D18, landing order T1–T16.
+
+### 2026-09-28 — compass-labs:design — note: Three Revision 3 questions raised for the operator
+- Q5: the agent's read scope (recommend `20-areas/` and `10-projects/` only).
+- Q6: two flagged requirement changes (recommend approving): REQ-032 widened to cover a provider that isn't logged in, and REQ-011 clarified to cover vault files only.
+- Q7: a separate ADR-0007 for the runner language and the provider seam, plus a third CLAUDE.md pointer (recommend yes).
+- The Q1–Q4 answers still apply, and the draft follows every recommended default.
+
+### 2026-09-28 — main — decision: Operator answers Q5–Q7; REQ-011 and REQ-032 amended after the Define milestone
+- Q5 (the operator overrode the recommended default): the agent's read-only tools may read the **whole vault**, excluding `control/`, `.state/` and hidden folders, not just areas and projects. URL fetching stays in deterministic code, so the agent still has no network egress.
+- Q6: both requirement amendments approved and applied by the orchestrator to `define/requirements.md`. REQ-032 now covers a provider that can't be resolved or isn't authenticated, with a logged-out example. REQ-011 is scoped to files within the vault and the repository; the provider's own session files outside the repository aren't vault output.
+- Q7: ADR-0007 records TypeScript on Node for workflow runners, Python for data analysis, and the agent-provider seam. CLAUDE.md "Writing runners" gets a third one-line pointer.
