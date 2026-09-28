@@ -27,6 +27,9 @@ next_step: "Hand off to compass-labs:define to frame the ingestion MVP and draft
 
 ## Key decisions
 
+- **2026-09-28**: Requirements drafted for the gate: REQ-001–042 live (32 Must, 8 Should, 2 Could); REQ-043 → #17, REQ-044 → #16. Default thresholds: cap 10, thin <50 words, 3-strike ask.
+- **2026-09-28**: Held captures stay in `00-inbox/capture/`, with a separate ask note in `00-inbox/`. They're skipped while the ask is open and the content is unchanged.
+- **2026-09-28**: Ingestion MVP behaviour agreed: capture folder only; text + URL with read-only fetch; oldest first, cap 10; one resource per item; original moved to archive; two-way links; no fit → ask; local uncommitted output.
 - **2026-09-28**: Framing tier is full; the project anchor is created in README.md (vision, mission, scope, non-goals) as approved. Verdict: aligns.
 - **2026-09-28**: Define answers agreed: capture subfolder; local uncommitted output; oldest-first batch (configurable later, #16); unmatched items → inbox ask; originals → 40-archive; text + URL with fetch (files deferred, #17); two-way links; rest of Define defaults accepted.
 - **2026-09-28**: MVP is scoped to daily inbox → resource ingestion with area/project linking. Routing at scale (#13), project lifecycle (#14) and resource lifecycle (#15) are deferred.
@@ -67,3 +70,21 @@ next_step: "Hand off to compass-labs:define to frame the ingestion MVP and draft
 ### 2026-09-28 — compass-labs:define — decision: Framing tier and project anchor
 - Tier: full, confirmed by the operator. It adds a scheduled capability across the inbox, resources, areas, projects, archive, the runner library and the estate registry, and changes how the inbox is used.
 - Anchor was missing (no markers in README.md). The operator approved the drafted vision, mission, scope and non-goals as written. The action is `create`, and the orchestrator wrote the agreed text into README.md between `<!-- compass:anchor -->` markers. Verdict: aligns.
+
+### 2026-09-28 — compass-labs:define — decision: Ingestion MVP behaviour agreed with the operator
+- Only `00-inbox/capture/` is ingested; decision items are never touched.
+- Inputs are text/Markdown and URL-only notes; URLs are fetched read-only when the text is thin. A failed fetch leaves the item in place with an inbox ask. File captures are deferred to #17.
+- One daily run processes items oldest first, up to a fixed cap of 10. A configurable policy is deferred to #16.
+- Each item gets exactly one resource note; the original moves to `40-archive/` and is linked as the resource's source. Links go both ways, appended only to the target's resources section.
+- When no area or project fits, no resource is created; the item is held with one inbox ask (override of Define's default).
+- Output and ledger stay local and uncommitted; the registry entry records `commits: false` with an explanatory note.
+- A per-item gate runs as proposed. The outcomes and appetite are accepted, with OUT-02 adjusted for the no-fit behaviour.
+
+### 2026-09-28 — compass-labs:define — decision: Held captures stay in place with a separate ask note
+- The operator left this choice to Define. A capture with no fitting area or project (or a failed fetch, an unsupported type, or 3 consecutive gate failures) stays in `00-inbox/capture/`. The ask is a separate note in `00-inbox/`, outside the capture folder.
+- The item is skipped while its ask is open and its content is unchanged. Editing the item or deleting the ask makes it eligible again (REQ-005, REQ-006).
+- This avoids daily re-asks, and OUT-03 holds by construction.
+
+### 2026-09-28 — compass-labs:define — decision: Requirements set REQ-001 to REQ-042 drafted for the Define gate
+- Full-tier define/ is complete: framing, problem (NEED-01 to NEED-06, OUT-01 to OUT-07), 42 live requirements (32 Must, 8 Should, 2 Could), REQ-043 deferred to #17 and REQ-044 to #16, quality coverage, NFR measures, assumptions and dependencies, and diagrams (impact map, context, traceability per outcome, as-is/to-be).
+- Thresholds set by Define and awaiting confirmation at the gate: cap 10, thin under 50 words, 3-strike ask.
