@@ -24,9 +24,11 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 
 - Deferred sub-issues, out of MVP scope: #13 (scalable routing/taxonomy), #14 (project lifecycle), #15 (resource lifecycle).
 - Enhancements deferred during Define: #16 (configurable batch policy), #17 (file captures: PDF, images).
+- Deferred during Design: #18 (port framework scripts from bash to Python), #19 (choose the agent provider and auth mode at install).
 
 ## Key decisions
 
+- **2026-09-28**: Design sent back for rework at the gate. The ingester is Python-only. The agent step gets read-only vault tools and fetched content that's been cleaned. Before each run, claude must be present and logged in, behind a provider interface. Follow-ups: #18 (port the bash scripts), #19 (choose the agent provider at install).
 - **2026-09-28**: Design questions settled: Obsidian's new-note folder → `00-inbox/capture`; CLAUDE.md gets pointers to ADR-0006; state lives in `.state/ingest-inbox/`; an empty target catalogue refuses to start.
 - **2026-09-28**: ✅ Define complete — operator approved REQ-001–042 with default thresholds (cap 10, thin <50 words, 3-strike ask).
 - **2026-09-28**: Requirements drafted for the gate: REQ-001–042 live (32 Must, 8 Should, 2 Could); REQ-043 → #17, REQ-044 → #16. Default thresholds: cap 10, thin <50 words, 3-strike ask.
@@ -113,3 +115,17 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 ### 2026-09-28 — main — decision: Operator answers to Design questions
 - Q1: the committed `.obsidian/app.json` new-note folder becomes `00-inbox/capture`. Q2: CLAUDE.md gets two one-line pointers to ADR-0006 (`commits: false` exception, capped-batch exception). Q3: ledger and journal live in `.state/ingest-inbox/` (gitignored). Q4: with no area or project notes, the runner refuses to start (exit 2) and points to `task bootstrap-areas`.
 - All four match the recommended defaults already in the draft design.md.
+
+### 2026-09-28 — compass-labs:design — note: Design questions Q1–Q4 resolved; design.md ready for the gate
+- The operator accepted all four recommended defaults. Q1: the new-note folder in the committed `.obsidian/app.json` becomes `00-inbox/capture`. Q2: CLAUDE.md gets two one-line pointers to ADR-0006. Q3: ingester state lives in `.state/ingest-inbox/`. Q4: an empty placement-target catalogue refuses to start (exit 2).
+- In design.md, only the Open questions section and the status line changed, to mark Q1–Q4 resolved. DES-001–022, D1–D17 and the landing order T1–T14 are unchanged.
+
+### 2026-09-28 — main — decision: Design rethink requested by the operator at the gate
+- **One language.** The ingester is written entirely in Python: no bash runner wrapping a Python engine. The Claude Agent SDK for Python is the likely vehicle. Quality is enforced through Python tooling. Porting the existing bash scripts is deferred to #18.
+- **The agent gets tools.** The agent step runs with read-only tools scoped to the vault, so it can find placement targets by reading the vault itself instead of relying only on a pre-built catalogue. The operator must never have to paste whole articles in: URL content is still fetched.
+- **Prompt injection.** It's handled in layers, not by removing every tool. Fetched HTML is converted to plain text and wrapped as untrusted data. The agent has no write tools and no shell. Its output is validated before deterministic code writes anything.
+- **Kept as is.** The workflow stays deterministic around the agent step. Idempotency, the journal and rollback, and the vault index are kept; the operator explicitly liked them.
+- **Agent check.** Before each run, check that claude is installed and authenticated, through a small agent-provider interface. Choosing a provider and auth mode at install (subscription, API key or local) is deferred to #19.
+
+### 2026-09-28 — main — handoff: orchestrator → compass-labs:design (rework design per operator rethink)
+- **Input:** Revise design.md per the rethink decision above. Python-only ingester, agent with read-only vault tools, cleaned fetch, provider interface with an auth preflight. Keep idempotency, journal and rollback. Out of scope: #18, #19.
