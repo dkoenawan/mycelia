@@ -38,3 +38,6 @@ next_step: "Hand off to compass-labs:define to frame the ingestion MVP and draft
 
 ### 2026-09-28 — main — decision: MVP scope and deferred sub-issues
 - The operator asked to build the whole user story as an MVP and to split the scale-dependent concerns into separate issues: #13 (route into a nested taxonomy without re-reading every resource), #14 (project archival and outcome record), #15 (evolving resources, archive-with-reason). All three are children of #12.
+
+### 2026-09-28 — main — handoff: orchestrator → compass-labs:define (frame MVP, draft REQs)
+- **Input:** Frame the inbox → resources ingestion MVP for issue #12 and draft REQ-* requirements. Out of scope: #13, #14, #15.
