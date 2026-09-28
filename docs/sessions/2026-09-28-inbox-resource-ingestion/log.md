@@ -24,10 +24,11 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 
 - Deferred sub-issues, out of MVP scope: #13 (scalable routing/taxonomy), #14 (project lifecycle), #15 (resource lifecycle).
 - Enhancements deferred during Define: #16 (configurable batch policy), #17 (file captures: PDF, images).
-- Deferred during Design: #18 (port framework scripts from bash to Python), #19 (choose the agent provider and auth mode at install).
+- Deferred during Design: #18 (port framework scripts from bash to Node/TypeScript), #19 (choose the agent provider and auth mode at install).
 
 ## Key decisions
 
+- **2026-09-28**: The ingester's language is now Node (TypeScript) instead of Python: transactional and workflow code and future API endpoints go in Node, and Python is kept for data analysis. #18 is retitled to match.
 - **2026-09-28**: Design sent back for rework at the gate. The ingester is Python-only. The agent step gets read-only vault tools and fetched content that's been cleaned. Before each run, claude must be present and logged in, behind a provider interface. Follow-ups: #18 (port the bash scripts), #19 (choose the agent provider at install).
 - **2026-09-28**: Design questions settled: Obsidian's new-note folder → `00-inbox/capture`; CLAUDE.md gets pointers to ADR-0006; state lives in `.state/ingest-inbox/`; an empty target catalogue refuses to start.
 - **2026-09-28**: ✅ Define complete — operator approved REQ-001–042 with default thresholds (cap 10, thin <50 words, 3-strike ask).
@@ -129,3 +130,8 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 
 ### 2026-09-28 — main — handoff: orchestrator → compass-labs:design (rework design per operator rethink)
 - **Input:** Revise design.md per the rethink decision above. Python-only ingester, agent with read-only vault tools, cleaned fetch, provider interface with an auth preflight. Keep idempotency, journal and rollback. Out of scope: #18, #19.
+
+### 2026-09-28 — main — decision: Ingester language is Node (TypeScript), superseding Python
+- The operator reversed the Python choice. Transactional and workflow code, and any future API endpoint, belong in Node; Python is reserved for data-analysis tasks.
+- Design uses TypeScript on Node LTS with the Claude Agent SDK for TypeScript, strict tsc, eslint and a test runner, with pinned dependencies. The rest of the rethink decision stands.
+- #18 is retitled "Port framework scripts from bash to Node (TypeScript)". Relayed to the running Design agent (same invocation, no new handoff).
