@@ -2,7 +2,7 @@
 session: 2026-09-28-inbox-resource-ingestion
 type: feature
 issue: 12
-phase: design
+phase: implement
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: define
+milestone: design
 active_agent: main
-next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* components and decisions."
+next_step: "Hand off to compass-labs:implement to decompose landing order T1–T16 into tasks.md and execute it."
 ---
 # Session Log: Resource lifecycle MVP — inbox → resources ingestion (#12)
 
@@ -28,6 +28,7 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 
 ## Key decisions
 
+- **2026-10-04**: ✅ Design complete — operator approved design.md Revision 3 (DES-001–027, D1–D18, landing order T1–T16) with the recommended defaults for D2, D4, D10, D11, D12, D14, D16 and D17.
 - **2026-09-28**: Design Revision 3 answers: the agent may read the whole vault (except control/, .state/ and hidden folders), overriding the least-privilege default. REQ-011 and REQ-032 amended. The language decision gets ADR-0007 plus a CLAUDE.md pointer.
 - **2026-09-28**: The ingester's language is now Node (TypeScript) instead of Python: transactional and workflow code and future API endpoints go in Node, and Python is kept for data analysis. #18 is retitled to match.
 - **2026-09-28**: Design sent back for rework at the gate. The ingester is Python-only. The agent step gets read-only vault tools and fetched content that's been cleaned. Before each run, claude must be present and logged in, behind a provider interface. Follow-ups: #18 (port the bash scripts), #19 (choose the agent provider at install).
@@ -155,3 +156,17 @@ next_step: "Hand off to compass-labs:design to turn REQ-001–042 into DES-* com
 - Q5 (the operator overrode the recommended default): the agent's read-only tools may read the **whole vault**, excluding `control/`, `.state/` and hidden folders, not just areas and projects. URL fetching stays in deterministic code, so the agent still has no network egress.
 - Q6: both requirement amendments approved and applied by the orchestrator to `define/requirements.md`. REQ-032 now covers a provider that can't be resolved or isn't authenticated, with a logged-out example. REQ-011 is scoped to files within the vault and the repository; the provider's own session files outside the repository aren't vault output.
 - Q7: ADR-0007 records TypeScript on Node for workflow runners, Python for data analysis, and the agent-provider seam. CLAUDE.md "Writing runners" gets a third one-line pointer.
+- **Output:** done; design.md (Revision 3, Q1–Q7 resolved)
+
+### 2026-09-28 — compass-labs:design — note: Q5–Q7 applied; design.md ready for the Design gate
+- Q5, which overrode the recommended default: the agent's read-only tools cover the whole vault except `control/`, `.state/`, hidden folders and `node_modules/`. D8, DES-007 (`readScope()`), DES-010 (the hook's rules; Grep and Glob can't search from the repository root) and T6 are updated. DES-011 now says that no network egress from the agent is the main containment; its worst-case table adds copying from any in-scope note and stored injection. Risks adds the wider read exposure, stored injection, and secrets in ordinary notes.
+- Q6: DES-009 and Risks cite the amended REQ-032 and REQ-011. The REQ→DES mapping is unchanged.
+- Q7: ADR-0007 is separate, and CLAUDE.md gets a third pointer. Both are in T1.
+
+### 2026-10-04 — main — milestone: ✅ Design complete
+- The operator approved design.md Revision 3 at the gate after reviewing a decision-by-decision summary with BPMN workflow diagrams. Approved: TypeScript on Node with no build step, read-only agent tools over the whole vault minus `control/`, `.state/`, hidden folders and `node_modules/`, deterministic URL fetching (no agent egress), the per-item journal and rollback, and the landing order T1–T16.
+- The adjustable decisions (D2, D4, D10, D11, D12, D14, D16, D17) are accepted as recommended. Nothing was deferred at the gate.
+
+---
+
+## Phase: Implement
