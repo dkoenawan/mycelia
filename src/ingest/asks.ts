@@ -70,6 +70,8 @@ export interface AskDetails {
   detail?: string;
   /** check-failed: the last failure reason. */
   lastFailure?: string;
+  /** check-failed: raised by recovery, because an interrupted run couldn't be undone safely. */
+  interrupted?: boolean;
 }
 
 const RESOLVE_PLACE = [
@@ -84,7 +86,8 @@ export function askDescription(name: string, d: AskDetails): string {
     case "empty": return `Capture ${name} is empty: nothing to ingest`;
     case "fetch-failed": return `Capture ${name} couldn't be ingested: a link in it couldn't be fetched`;
     case "unsupported": return `Capture ${name} wasn't ingested: ${d.detail ?? "unsupported file type"}`;
-    case "check-failed": return `Capture ${name} failed its check on 3 consecutive runs`;
+    case "check-failed":
+      return d.interrupted ? `Capture ${name} was interrupted mid-run and couldn't be undone safely` : `Capture ${name} failed its check on 3 consecutive runs`;
   }
 }
 
@@ -109,6 +112,13 @@ export function askBody(name: string, d: AskDetails): string {
         "- Convert it to a `.md` or `.txt` file in the capture folder (file captures are planned, #17).", "- Or delete it.");
       break;
     case "check-failed":
+      if (d.interrupted) {
+        lines.push(`Capture ${link} was interrupted mid-run, and the ingester couldn't undo it safely because files it had written were edited afterwards. Nothing was overwritten, and the ingester stops until this is resolved.`, "",
+          `Details: ${codeSpan(d.lastFailure ?? "unknown")}`, "", "To resolve it:", "",
+          "- Check the files named above, and keep or delete the half-written changes yourself.",
+          "- Then delete `.state/ingest-inbox/journal.json` and this ask.");
+        break;
+      }
       lines.push(`Capture ${link} failed its check on 3 consecutive runs, so it's held until you act.`, "",
         `Last failure: ${codeSpan(d.lastFailure ?? "unknown")}`, "", "To resolve it:", "", "- Edit the capture.", "- Or delete this ask to retry it as it is.");
       break;

@@ -32,6 +32,18 @@ tasks:
     cmds:
       - npm ci
 
+  ingest-inbox:
+    desc: Turn items in 00-inbox/capture/ into linked 30-resources/ notes (oldest first, up to 10; needs Node and a logged-in Claude Code; never commits).
+    deps: [deps:node]
+    cmds:
+      - node src/ingest/cli.ts
+
+  ingest-inbox:preflight:
+    desc: Check the ingester can run (folders, targets, Claude Code installed and logged in) without changing anything.
+    deps: [deps:node]
+    cmds:
+      - node src/ingest/cli.ts --preflight
+
   check:node:
     desc: Quality gates for the TypeScript code (tsc strict, eslint, node:test).
     deps: [deps:node]
