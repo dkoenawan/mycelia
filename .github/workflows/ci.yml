@@ -1,0 +1,27 @@
+# CI — runs the TypeScript quality gates (tsc strict, eslint, node:test) on every
+# push and pull request (DES-022, D16). The release smoke test in release.yml is
+# deliberately separate and unchanged, so a bare runner without Node still passes
+# `task install && task doctor:ci`.
+
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check-node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Install go-task
+        run: |
+          sh -c "$(curl -fsSL https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+
+      - name: task check:node
+        run: task check:node

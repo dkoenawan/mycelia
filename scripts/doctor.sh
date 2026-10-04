@@ -148,6 +148,29 @@ else
   fail "task (go-task) not found on PATH — required per ADR-0001"
 fi
 
+# --- 6a. node resolves and is new enough (ADR-0007) ---------------------
+# Needed by TypeScript runners such as `task ingest-inbox`. Skipped under --ci,
+# like the claude check: the release smoke test runs on a bare runner.
+
+NODE_VERSION_CHECK="const [a,b]=process.versions.node.split('.').map(Number);process.exit(a>22||(a===22&&b>=18)?0:1)"
+if [[ "$CI_MODE" -eq 1 ]]; then
+  note "skipped node check (--ci: TypeScript gates run in ci.yml, not the release smoke test)"
+elif command -v node &>/dev/null && node -e "$NODE_VERSION_CHECK" &>/dev/null; then
+  pass "node resolves and is >= 22.18 ($(node --version), needed by task ingest-inbox)"
+else
+  fail "node missing or older than 22.18 (needed by task ingest-inbox) — install Node LTS"
+fi
+
+# --- 6b. Node dependencies installed and matching package-lock.json -------
+
+if [[ "$CI_MODE" -eq 1 ]]; then
+  note "skipped node dependency check (--ci)"
+elif command -v npm &>/dev/null && (cd "$MYCELIA_ROOT" && npm ls --omit=dev --depth=0 --silent) &>/dev/null; then
+  pass "Node dependencies installed and matching package-lock.json"
+else
+  fail "Node dependencies missing or out of date — run 'task deps:node'"
+fi
+
 # --- 7. estate.local.yaml jobs: commits:false without a note is a defect -
 
 if [[ -f "$ESTATE" ]] && command -v python3 &>/dev/null && python3 -c "import yaml" &>/dev/null; then

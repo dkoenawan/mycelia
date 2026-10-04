@@ -33,6 +33,10 @@ FEEDBACK.md
 # --- Runtime noise ---------------------------------------------------------
 logs/
 *.log
+# Node dependencies (installed by `task deps:node`) and go-task's fingerprint
+# directory.
+node_modules/
+.task/
 
 # graphify skill output — generated locally, not framework or vault content.
 graphify-out/

@@ -6,6 +6,8 @@
 # The tasks below are thin wrappers around scripts/*.sh — Taskfile solves
 # invocation portability, not shell-command portability, so the actual logic
 # stays in bash, sourced from scripts/lib/common.sh like every other runner.
+# TypeScript runners under src/ (ADR-0007) are wrapped the same way, behind
+# deps:node, which installs the pinned dependencies on first use.
 
 version: "3"
 
@@ -19,6 +21,22 @@ tasks:
     desc: Create one 20-areas/ note per entry in control/areas.local.yaml (seeds it from the example if absent; never edits existing notes; needs python3+PyYAML).
     cmds:
       - bash scripts/bootstrap-areas.sh
+
+  deps:node:
+    desc: Install the pinned Node dependencies (npm ci) when package.json or package-lock.json changes.
+    preconditions:
+      - sh: node -e "const [a,b]=process.versions.node.split('.').map(Number);process.exit(a>22||(a===22&&b>=18)?0:1)"
+        msg: "Node.js 22.18 or later is required (the ingester runs TypeScript directly). Install Node LTS, e.g. from nodejs.org or with your version manager."
+    sources: [package.json, package-lock.json]
+    generates: [node_modules/.package-lock.json]
+    cmds:
+      - npm ci
+
+  check:node:
+    desc: Quality gates for the TypeScript code (tsc strict, eslint, node:test).
+    deps: [deps:node]
+    cmds:
+      - npm run check
 
   doctor:
     desc: Verify this install is healthy — config present, parses, paths resolve, dependencies found.

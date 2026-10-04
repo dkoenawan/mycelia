@@ -55,6 +55,15 @@ lockfile, and gated by `tsc` strict, ESLint with `typescript-eslint` and `node:t
   `.npmrc` with `engine-strict`, `save-exact` and `ignore-scripts`. Runtime
   dependencies are kept to what the runner can't reasonably do with built-ins; HTTP,
   DNS checks, hashing, locking and tests use Node's own modules.
+- **Pinned versions (at adoption).** Runtime: `@anthropic-ai/claude-agent-sdk`,
+  `yaml` and `parse5`, plus the SDK's three declared peer dependencies (`zod`,
+  `@anthropic-ai/sdk`, `@modelcontextprotocol/sdk`). They aren't marked optional, so
+  npm would install them anyway; pinning them in `package.json` makes the choice
+  explicit and reviewable. Dev: `typescript` is held at the newest release inside
+  `typescript-eslint`'s supported range (6.0.x, not 7.x), and `@types/node` tracks the
+  minimum supported Node major (22), so the type check rejects APIs that minimum
+  lacks. No package in the tree has an install script, so `ignore-scripts` costs
+  nothing; the SDK's bundled CLI ships as platform-specific optional packages.
 - **Gates.** `task check:node` runs `npm run check` (typecheck, lint, test). A separate
   `ci.yml` runs it on push and pull request; the release smoke test is unchanged.
 - **Runner rules.** The CLAUDE.md "Writing runners" rules apply unchanged to
