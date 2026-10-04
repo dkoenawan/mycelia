@@ -53,6 +53,7 @@ import { promisify } from "node:util";
 import { query } from "@anthropic-ai/claude-agent-sdk";
 import type { CanUseTool, HookCallback, Options, SDKMessage, SDKResultMessage } from "@anthropic-ai/claude-agent-sdk";
 import { resolveClaude } from "../../lib/claude-bin.ts";
+import { decide } from "./policy.ts";
 import {
   AgentItemError,
   ProviderNotReady,
@@ -108,9 +109,6 @@ export function classifyFault(code: string | undefined, text: string): Fault | n
   return null;
 }
 
-/** Default decider until the read policy is wired in: deny every tool. Fail closed. */
-export const denyAll: ToolDecider = (_tool, input) => ({ allowed: false, path: describePath(input), reason: "no policy" });
-
 function describePath(input: unknown): string {
   if (input && typeof input === "object") {
     const o = input as Record<string, unknown>;
@@ -146,7 +144,7 @@ export class ClaudeCodeProvider implements AgentProvider {
   private readonly onToolCall: (call: ToolCall) => void;
 
   constructor(opts: ClaudeCodeProviderOptions = {}) {
-    this.decider = opts.decider ?? denyAll;
+    this.decider = opts.decider ?? decide;
     this.env = opts.env ?? process.env;
     this.onToolCall = opts.onToolCall ?? (() => undefined);
   }

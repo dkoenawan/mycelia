@@ -115,6 +115,9 @@ documented, so no fallback was needed:
   validating it, so API-key and third-party auth fall back to a minimal no-tool query
   (D10's fallback). An invalid key surfaces as `authentication_failed` retries, which
   the provider stops at the first one.
+- **Search tools and gitignored notes.** Glob lists gitignored files, but Grep respects
+  `.gitignore`, so it skips vault notes (all gitignored) and finds only committed
+  files. Agents that need to find notes use Glob and Read.
 - **Residual.** If a subscription login has expired in a way `auth status` still
   reports as logged in, preflight can't tell without a model call. The first agent
   step then fails as `ProviderUnavailable` (exit 4, no strike), so the run stops
