@@ -170,3 +170,6 @@ next_step: "Hand off to compass-labs:implement to decompose landing order T1–T
 ---
 
 ## Phase: Implement
+
+### 2026-10-04 — main — handoff: orchestrator → compass-labs:implement (T1–T16 for ingestion MVP)
+- **Input:** Turn design.md's landing order T1–T16 into a task-executor-format tasks.md, then execute it: one commit per task (code and tick together), with `task check:node` in every gate from T2 on. T16 (accepting ADR-0006 and ADR-0007) waits until Test passes. Out of scope: #13, #16–#19.
