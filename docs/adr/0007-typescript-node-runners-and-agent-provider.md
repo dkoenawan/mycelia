@@ -86,7 +86,39 @@ Recorded by the Implement phase's T5 spike against the pinned SDK and the instal
 CLI. See the header comment of `src/ingest/agent/claude-code.ts` for the per-option
 detail.
 
-_Pending T5._
+Verified on 2026-10-04 against `@anthropic-ai/claude-agent-sdk` 0.3.289 and Claude Code
+CLI 2.1.289 (native binary). Every option the design relies on exists and behaves as
+documented, so no fallback was needed:
+
+- **`pathToClaudeCodeExecutable`** works with the installed native CLI, so runs use the
+  operator's own CLI version and login. The SDK's bundled CLI (the documented
+  fallback) isn't used.
+- **Tool restriction.** `tools: ["Read", "Glob", "Grep"]` offers exactly those three,
+  plus `StructuredOutput` when an output schema is set. Sub-agent, skill, shell, write
+  and web tools aren't offered even though the CLI still discovers skills and agents.
+  `disallowedTools` is passed as a second layer, and the provider aborts the call if
+  the session ever offers a tool or MCP server outside the set.
+- **Structured output** (`outputFormat: json_schema`) works, implemented by the CLI as
+  a `StructuredOutput` tool call. That call goes through the PreToolUse hook like any
+  other, costs one turn, and is let through by the provider without consulting the
+  read policy.
+- **The PreToolUse hook** sees every tool call before permission checks, and a `deny`
+  blocks it; denials are also listed in the result. **`canUseTool`** is consulted
+  only for calls that would prompt. In-scope read-only calls don't prompt, so the
+  hook is the enforcing check and `canUseTool` backs it for anything else.
+- **Isolation.** `settingSources: []` loads no settings or CLAUDE.md; `mcpServers: {}`
+  with `strictMcpConfig` gives no MCP servers; `persistSession: false` writes no
+  transcript.
+- **Authentication check.** `claude auth status --json` reports `loggedIn` and
+  `authMethod` without a model call. That is the whole check for a Claude
+  subscription login. It reports any `ANTHROPIC_API_KEY` as logged in without
+  validating it, so API-key and third-party auth fall back to a minimal no-tool query
+  (D10's fallback). An invalid key surfaces as `authentication_failed` retries, which
+  the provider stops at the first one.
+- **Residual.** If a subscription login has expired in a way `auth status` still
+  reports as logged in, preflight can't tell without a model call. The first agent
+  step then fails as `ProviderUnavailable` (exit 4, no strike), so the run stops
+  without raising asks, but a run with nothing eligible won't notice that day.
 
 ## Consequences
 
