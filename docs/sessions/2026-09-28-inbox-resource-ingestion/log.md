@@ -2,7 +2,7 @@
 session: 2026-09-28-inbox-resource-ingestion
 type: feature
 issue: 12
-phase: implement
+phase: test
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: design
+milestone: implement
 active_agent: main
-next_step: "Hand off to compass-labs:implement to decompose landing order T1–T16 into tasks.md and execute it."
+next_step: "Hand off to compass-labs:test to verify REQ-001–042 into verification.md (VER-*), including the live gates."
 ---
 # Session Log: Resource lifecycle MVP — inbox → resources ingestion (#12)
 
@@ -28,6 +28,7 @@ next_step: "Hand off to compass-labs:implement to decompose landing order T1–T
 
 ## Key decisions
 
+- **2026-10-04**: ✅ Implement complete — operator approved T1–T15 (97 tests passing, live gates passed); T16 (accept ADR-0006/0007) held for Test.
 - **2026-10-04**: ✅ Design complete — operator approved design.md Revision 3 (DES-001–027, D1–D18, landing order T1–T16) with the recommended defaults for D2, D4, D10, D11, D12, D14, D16 and D17.
 - **2026-09-28**: Design Revision 3 answers: the agent may read the whole vault (except control/, .state/ and hidden folders), overriding the least-privilege default. REQ-011 and REQ-032 amended. The language decision gets ADR-0007 plus a CLAUDE.md pointer.
 - **2026-09-28**: The ingester's language is now Node (TypeScript) instead of Python: transactional and workflow code and future API endpoints go in Node, and Python is kept for data analysis. #18 is retitled to match.
@@ -173,3 +174,41 @@ next_step: "Hand off to compass-labs:implement to decompose landing order T1–T
 
 ### 2026-10-04 — main — handoff: orchestrator → compass-labs:implement (T1–T16 for ingestion MVP)
 - **Input:** Turn design.md's landing order T1–T16 into a task-executor-format tasks.md, then execute it: one commit per task (code and tick together), with `task check:node` in every gate from T2 on. T16 (accepting ADR-0006 and ADR-0007) waits until Test passes. Out of scope: #13, #16–#19.
+- **Output:** done; tasks.md (T1–T15 ticked, T16 held for Test)
+
+### 2026-10-04 — compass-labs:implement — attempt: Implement T1–T15 complete; T16 held for Test
+- tasks.md splits the landing order into 16 tasks, one per T-step, each naming its DES and its gate. T1–T15 are ticked, one commit each, all pushed (427a57e … 51efa39). T16 (accepting ADR-0006 and ADR-0007) stays unticked until Test passes.
+- Final gates on a fresh clone: `task install && task doctor:ci` passes 8/8, and `task check:node` passes 97 tests (tsc strict, eslint strictTypeChecked, node:test). The REQ-040 greps over the session diff are clean.
+- Each deviation is recorded under "Deviations from design" in tasks.md, with its task and the DES or D it departs from.
+
+### 2026-10-04 — compass-labs:implement — note: T5 SDK spike: every option the design relies on exists; documented fallback used for API-key auth
+- Checked against `@anthropic-ai/claude-agent-sdk` 0.3.289 and Claude Code CLI 2.1.289 (native binary).
+- Work as designed: `pathToClaudeCodeExecutable`, `tools: [Read, Glob, Grep]`, PreToolUse denial, `settingSources: []`, `mcpServers: {}` with `strictMcpConfig`, `persistSession: false`, and `outputFormat: json_schema`.
+- Structured output arrives as a `StructuredOutput` tool call that passes through the hook, so the hook lets that one tool through. `canUseTool` only runs for calls that would prompt, so the hook is what enforces the read policy.
+- `claude auth status --json` checks a subscription login without a model call. It reports any API key as logged in, so API-key and third-party logins fall back to a minimal no-tool query (D10). An invalid key fails fast on the first `authentication_failed`.
+- Residual risk: an expired subscription login that `auth status` still reports as logged in is only caught at the first agent step (exit 4, no strike). On a day with nothing eligible, it goes unnoticed. Recorded in ADR-0007.
+
+### 2026-10-04 — compass-labs:implement — note: Live gates passed for T5, T6 and T14 (outside CI)
+- **T5:** preflight passes when logged in and fails with the login message under an empty HOME. One real no-tool call returned structured output.
+- **T6:** a real call asking to read `control/estate.local.yaml` and `.git/config` was denied for both, and an in-scope Read was allowed. Claude Code's Grep respects `.gitignore` and so skips vault notes; the system prompt steers the agent to Glob and Read.
+- **T14:** a real run on a scratch vault ingested a text capture under the matching area, held a link-only capture with one fetch-failed ask, wrote the daily summary, exited 0 and left git clean. A second run changed nothing.
+- These gates run with `npm run test:live`, not `task check:node`, because CI has no Claude login.
+
+### 2026-10-04 — compass-labs:implement — note: Notable deviations recorded in tasks.md
+- **T2:** the SDK's peer dependencies (`zod`, `@anthropic-ai/sdk`, `@modelcontextprotocol/sdk`) are pinned exactly, and TypeScript is held at 6.0.3 for typescript-eslint. `node_modules/` is about 569 MB, mostly the SDK's unused optional platform binaries.
+- **T6:** a folder is searchable only if nothing beneath it is a symlink. Glob and Grep paths must be absolute directories.
+- **T8 and T14:** recovery treats a transaction as committed if the ledger has any record for its run, item and hash. On a rollback conflict the journal is kept, the run exits 4, and one "interrupted" check-failed ask is raised.
+- **T10:** a host is refused if any address it resolves to is private. NAT64 and 6to4 are blocked, and URLs with embedded credentials aren't fetched.
+- **T11:** when the capture names its own targets (REQ-019), the agent's decision must be `place`.
+- **T12:** markdown images become their alt text, and archive names replace characters that would break a wikilink.
+
+### 2026-10-04 — main — milestone: ✅ Implement complete
+- The operator approved T1–T15 at the gate: 15 commits (427a57e … 51efa39), `task check:node` passing 97/97, and the live T5, T6 and T14 gates passed. T16 (accepting ADR-0006 and ADR-0007) is held until Test passes.
+- Accepted as reported: the expired-subscription-login residual (ADR-0007), `node_modules/` at about 569 MB in the vault root, the agent using Glob and Read rather than Grep, and the deviations recorded in tasks.md.
+
+---
+
+## Phase: Test
+
+### 2026-10-04 — main — handoff: orchestrator → compass-labs:test (verify REQ-001–042)
+- **Input:** Write verification.md with VER-* rows verifying every REQ-001–042 against the implemented branch, using check-traceability.sh's column order. Run `task check:node` and the live gates (`npm run test:live`), plus the acceptance criteria that need a real or scratch vault. Pay specific attention to the expired-login residual and Grep's gitignore behaviour.
