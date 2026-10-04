@@ -24,6 +24,11 @@ export default tseslint.config(
     },
   },
   {
+    // Tests narrow with assert.* and then read the narrowed value defensively.
+    files: ["test/**/*.ts"],
+    rules: { "@typescript-eslint/no-unnecessary-condition": "off" },
+  },
+  {
     files: ["**/*.js"],
     ...tseslint.configs.disableTypeChecked,
   },
