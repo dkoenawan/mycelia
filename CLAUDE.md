@@ -6,7 +6,7 @@ This repository is both a **vault** (Obsidian-compatible Markdown) and a **contr
 ## The one rule
 
 Mycelia exists to **reduce the operator's workload**. Every change should move information toward
-them without requiring him to come looking. If a change adds something for them to maintain,
+them without requiring them to come looking. If a change adds something for them to maintain,
 it is probably wrong.
 
 ## Note format
@@ -79,7 +79,7 @@ Schema, one entry per job:
 | `schedule` | Cron expression, matching the live crontab exactly. |
 | `ledger` | Repo-relative committed file holding progress state, or `null`. |
 | `gate` | Command that must pass before work may land, or `null` if none exists. |
-| `commits` | Whether the job commits its own work. **`false` is a defect**, not a configuration — it means the job's output is lost on the next branch switch. |
+| `commits` | Whether the job commits its own work. **`false` is a defect**, not a configuration — it means the job's output is lost on the next branch switch. Exception: a job whose every output is gitignored vault content or local state may declare `false` with a `note` saying so (ADR-0006). |
 | `branch` | Branch it commits to. A dedicated branch is safer than `main`. |
 | `log` | Path to its log file, same placeholder rules. |
 | `tier` | `cheap` \| `standard` \| `deep`. Declared now, unused until the routing layer exists. |
@@ -126,6 +126,10 @@ name whatever they choose; this rule governs the committed framework — README,
 
 ## Writing runners
 
+New workflow runners are TypeScript on Node (`src/`, gated by `task check:node`) and follow
+the same rules below; Bash runners remain until #18; Python is reserved for data-analysis
+tasks. See ADR-0007.
+
 Scripts in `scripts/` source `lib/common.sh`. The patterns below are not stylistic
 preferences — each is derived from a failure mode that recurs in unattended agent work.
 
@@ -134,6 +138,8 @@ preferences — each is derived from a failure mode that recurs in unattended ag
 - Resolve `claude` explicitly; cron does not source a shell profile.
 - **One** unit of work per run, chosen by a *deterministic* rule ("the first unchecked item"),
   never "decide what is most valuable". Undirected agents drift.
+  Exception: a capped batch in a deterministic order, where each item has its own gate,
+  rollback and ledger record, counts as one unit per item (ADR-0006).
 - Keep state in a **committed ledger** so a missed day costs nothing.
 - Run a **gate** before landing anything. The gate is what licenses autonomy.
 - On failure: revert the work, record the failure in the ledger, commit *the ledger only*, stop.
