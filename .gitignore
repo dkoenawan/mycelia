@@ -21,6 +21,13 @@ control/roots.local.yaml
 40-archive/*
 daily/*
 !00-inbox/README.md
+# The capture folder ships with only its README (ADR-0006). 00-inbox/* excludes
+# the directory itself, and git can't re-include a file under an excluded
+# directory, so: re-include the directory, exclude its contents, re-include
+# the README.
+!00-inbox/capture/
+00-inbox/capture/*
+!00-inbox/capture/README.md
 !10-projects/README.md
 !20-areas/README.md
 !30-resources/README.md
@@ -37,6 +44,8 @@ logs/
 # directory.
 node_modules/
 .task/
+# Local runner state, e.g. the ingester's ledger and journal (ADR-0006).
+.state/
 
 # graphify skill output — generated locally, not framework or vault content.
 graphify-out/
