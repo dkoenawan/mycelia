@@ -84,6 +84,30 @@ jobs:
       never collides with whatever you have checked out. This is the pattern to
       copy for any job that runs against a repo you also work in yourself.
 
+  # A job whose every output is gitignored vault content or local state. Here
+  # commits: false is deliberate, and the note says why (ADR-0006); without a
+  # note it would be the defect shown in the next example.
+  - id: inbox-ingest
+    description: Daily ingestion of 00-inbox/capture/ into linked 30-resources/ notes.
+    repo: ${repos}/my-vault
+    script: "task -d ${repos}/my-vault ingest-inbox"
+    schedule: "0 6 * * *"
+    ledger: .state/ingest-inbox/ledger.jsonl
+    gate: "built-in per-item check; task ingest-inbox:preflight checks readiness"
+    commits: false
+    branch: null
+    log: ${logs}/ingest-inbox.log
+    tier: standard
+    max_silence_hours: 30
+    status: healthy
+    note: >-
+      commits: false is deliberate here, not the lost-work defect. Every file this
+      job writes (resource notes, archived captures, asks, the daily note and its
+      ledger) is gitignored vault content or local state, and a branch checkout
+      never touches ignored files. Each item is checked before it is kept and
+      undone if the check fails. The scheduler's PATH must include task and node.
+      See ADR-0006.
+
   # A deliberately broken example, kept because the failure it shows is the most
   # common one in practice.
   - id: example-broken-job
