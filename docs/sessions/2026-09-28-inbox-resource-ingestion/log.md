@@ -3,7 +3,7 @@ session: 2026-09-28-inbox-resource-ingestion
 type: feature
 issue: 12
 phase: close
-status: active
+status: archived
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
 # implement | test | deploy | close. "none" until the first milestone
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: deploy
+milestone: close
 active_agent: main
-next_step: "Hand off to compass-labs:close to fold back into as-built docs; then archive, squash-merge PR #20, tag v0.4.0, close #12."
+next_step: "None — session closed. PR #20 squash-merged and v0.4.0 tagged after archive."
 ---
 # Session Log: Resource lifecycle MVP — inbox → resources ingestion (#12)
 
@@ -28,6 +28,7 @@ next_step: "Hand off to compass-labs:close to fold back into as-built docs; then
 
 ## Key decisions
 
+- **2026-10-10**: ✅ Session closed — fold-back into README.md, ADR-0006 and ADR-0007; PR #20 squash-merged and v0.4.0 tagged at the operator's request.
 - **2026-10-10**: ✅ Deploy complete — release.md approved: v0.4.0, schema unchanged, all components complete; PR #20 open for squash-merge at Close.
 - **2026-10-10**: ✅ Test complete — 44 VER rows, traceability passes (41 pass, REQ-032 partial); operator approved and asked to ship.
 - **2026-10-10**: Operator accepted the REQ-032 expired-login gap (VER-033) as a known residual, recorded in ADR-0007. The Test findings (rate-limit stop not noted in the daily note, go-task exit 201, the `-2` resource suffix) ship as known issues.
@@ -284,4 +285,14 @@ next_step: "Hand off to compass-labs:close to fold back into as-built docs; then
 
 ### 2026-10-10 — main — handoff: orchestrator → compass-labs:close (fold back into as-built docs)
 - **Input:** Fold the session into the repo's as-built docs (no session narrative, one Origin line per doc). Don't merge; the orchestrator squash-merges PR #20 after Close at the operator's request.
+- **Output:** done; README.md, docs/adr/0006-inbox-capture-ingestion.md, docs/adr/0007-typescript-node-runners-and-agent-provider.md
+
+### 2026-10-10 — compass-labs:close — note: Fold-back ready — README.md, ADR-0006, ADR-0007
+- `README.md` gets an "Inbox ingestion" section (what it needs, `task ingest-inbox` / `ingest-inbox:preflight`, scheduling, never commits, exit codes 0–4, known issues including the accepted expired-login/rate-limit residual and go-task's 201). It also gets `src/`/`test/` in Layout, Node items in the framework-vs-configuration table, a TypeScript-runner pointer and a Roadmap row.
+- ADR-0006 and ADR-0007: the session-folder path and session-only decision/question/task references are removed, and each gets one `Origin: #12` line. The decisions are unchanged.
+- Checked and already accurate: `CLAUDE.md`, `00-inbox/README.md`, `00-inbox/capture/README.md`, `30-resources/README.md`, `control/estate.example.yaml`. There's no `docs/explanation`, `docs/reference` or registry tree in this repo, so nothing there to fold.
+- Small gap left as is: CLAUDE.md's `ledger` row says "committed file", while the `inbox-ingest` example uses a gitignored ledger; the example's own `note` explains why.
+
+### 2026-10-10 — main — milestone: ✅ Session closed
+- Fold-back committed with this entry. After archiving, the orchestrator squash-merges PR #20, tags `v0.4.0` on the squash commit (runs release.yml) and closes #12, as the operator asked.
 

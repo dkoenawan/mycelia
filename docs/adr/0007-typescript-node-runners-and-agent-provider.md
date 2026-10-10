@@ -39,7 +39,7 @@ existing bash scripts is #18. Choosing an agent provider and auth mode at instal
 | TypeScript compiled by `tsc` into a gitignored `dist/` | Any TypeScript feature | A build artifact that can drift from source | Kept as the fallback (below) |
 | TypeScript through a loader (`tsx`) | Any TypeScript feature, no `dist/` | An extra dependency for no gain over type stripping | Unneeded |
 | Python with the Python Agent SDK | Good tooling | Superseded by the operator's language decision | Operator's decision |
-| Bash runner around a second language | Matches existing scripts | Two languages per runner; transactional logic in bash | Rejected at the Design gate |
+| Bash runner around a second language | Matches existing scripts | Two languages per runner; transactional logic in bash | Fails the one-language driver |
 
 ## Decision Outcome
 
@@ -80,11 +80,10 @@ lockfile, and gated by `tsc` strict, ESLint with `typescript-eslint` and `node:t
   `ANTHROPIC_API_KEY`. #19 adds configuration and providers behind this interface.
 - **Bash scripts stay** until #18.
 
-### SDK findings (T5)
+### SDK findings
 
-Recorded by the Implement phase's T5 spike against the pinned SDK and the installed
-CLI. See the header comment of `src/ingest/agent/claude-code.ts` for the per-option
-detail.
+Recorded by a spike against the pinned SDK and the installed CLI. See the header
+comment of `src/ingest/agent/claude-code.ts` for the per-option detail.
 
 Verified on 2026-10-04 against `@anthropic-ai/claude-agent-sdk` 0.3.289 and Claude Code
 CLI 2.1.289 (native binary). Every option the design relies on exists and behaves as
@@ -112,9 +111,9 @@ documented, so no fallback was needed:
 - **Authentication check.** `claude auth status --json` reports `loggedIn` and
   `authMethod` without a model call. That is the whole check for a Claude
   subscription login. It reports any `ANTHROPIC_API_KEY` as logged in without
-  validating it, so API-key and third-party auth fall back to a minimal no-tool query
-  (D10's fallback). An invalid key surfaces as `authentication_failed` retries, which
-  the provider stops at the first one.
+  validating it, so API-key and third-party auth fall back to a minimal no-tool query.
+  An invalid key surfaces as `authentication_failed` retries, which the provider stops
+  at the first one.
 - **Search tools and gitignored notes.** Glob lists gitignored files, but Grep respects
   `.gitignore`, so it skips vault notes (all gitignored) and finds only committed
   files. Agents that need to find notes use Glob and Read.
@@ -125,7 +124,7 @@ documented, so no fallback was needed:
   plus the ask and daily note for any item held before the first agent call. The CLI
   clears the expired tokens, so the next run fails preflight with the login message.
   A rate limit gets past preflight the same way. A run with nothing eligible won't
-  notice either that day. Accepted at the Test gate as a known residual.
+  notice either that day. Accepted as a known residual; see the README's known issues.
 
 ## Consequences
 
@@ -145,3 +144,5 @@ documented, so no fallback was needed:
   emitting to a gitignored `dist/`, built by `deps:node`.
 - Node's minimum version blocks an installer's platform.
 - #19 needs more than a provider class (for example per-provider tool semantics).
+
+Origin: #12

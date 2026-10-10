@@ -47,7 +47,9 @@ mycelia/
 ├── 40-archive/     # PARA: done or dormant
 ├── daily/          # agent-written daily notes
 ├── control/        # the estate registry, the areas manifest, and their schemas
-├── scripts/        # runners, and the shared library they build on
+├── scripts/        # bash runners, and the shared library they build on
+├── src/            # TypeScript runners (the inbox ingester) and their shared library
+├── test/           # tests for src/, run by `task check:node`
 └── handoff/        # TUI design specification
 ```
 
@@ -73,7 +75,8 @@ This repository holds **fundamentals only**. Your estate never enters it:
 |---|---|
 | Vault structure and conventions | Every note you write |
 | `control/*.example.yaml` (schema, documented) | `control/*.local.yaml` (your jobs, real paths, and areas) |
-| `scripts/lib/common.sh` | `FEEDBACK.md`, logs, Obsidian workspace state |
+| `scripts/lib/common.sh`, `src/` | `FEEDBACK.md`, logs, Obsidian workspace state |
+| `package.json` and its lockfile | `node_modules/`, runner state in `.state/` |
 
 Anything matching `*.local.*` is gitignored, as is all vault content — the PARA directories
 ship with only a README explaining what belongs inside them.
@@ -81,6 +84,57 @@ ship with only a README explaining what belongs inside them.
 Keep that boundary if you fork this. It is what lets you pull framework updates without
 merge conflicts against your own notes, and what keeps paths, client names, and personal
 material out of a public repository.
+
+## Inbox ingestion
+
+Drop pasted text, a note, or a bare link into `00-inbox/capture/` (Obsidian's new-note
+folder). The ingester turns each item into a `30-resources/` note with a summary and key
+takeaways, links it from the areas and projects it serves, and moves the original to
+`40-archive/capture/`. Anything it can't place stays where it is, and it raises one ask in
+`00-inbox/`. The rest of `00-inbox/` is never ingested. See
+[`00-inbox/capture/README.md`](00-inbox/capture/README.md) and
+[ADR-0006](docs/adr/0006-inbox-capture-ingestion.md).
+
+**Needs:** go-task, Node.js 22.18 or later, Claude Code installed and logged in (or
+`ANTHROPIC_API_KEY` set), and at least one note in `20-areas/` or `10-projects/`
+(`task bootstrap-areas` creates the defaults). Linux and macOS; on Windows, use WSL.
+
+```bash
+task ingest-inbox:preflight   # check readiness; changes nothing
+task ingest-inbox             # one run: oldest first, up to 10 items
+```
+
+Schedule it daily like the `inbox-ingest` example in `control/estate.example.yaml`, with
+`task` and `node` on the scheduler's PATH. The first run installs the pinned Node
+dependencies (`task deps:node`). The ingester never commits. Everything it writes is
+gitignored vault content or local state, and its ledger is
+`.state/ingest-inbox/ledger.jsonl`. Each run appends a summary block to the day's note in
+`daily/`.
+
+Exit codes from `node src/ingest/cli.ts`:
+
+| Code | Meaning |
+|---|---|
+| 0 | Done, or nothing to do. |
+| 1 | At least one item failed its check and was rolled back. The other items were processed. |
+| 2 | Can't start, and nothing was changed: the capture folder is missing, an output path isn't gitignored, there are no areas or projects, or Claude Code is missing or logged out. |
+| 3 | Another run is in progress. Nothing was changed. |
+| 4 | The run stopped early: the agent provider failed mid-run (for example auth or a rate limit), the network was down, or an interrupted earlier run couldn't be rolled back cleanly. No strike is recorded, and the remaining items stay eligible. |
+
+Known issues:
+
+- `task ingest-inbox` reports go-task's exit status 201 for any failure, not the codes
+  above. Run `node src/ingest/cli.ts` directly to see the ingester's own code.
+- An expired Claude subscription login that `claude auth status` still reports as logged
+  in gets past preflight. The run then stops with exit 4, without saying how to log in,
+  after it may have written the ledger and, for items held before the first agent call,
+  an ask and the daily note. The next run fails preflight with the login message. A rate
+  limit gets past preflight the same way. See ADR-0007.
+- When a run stops early (exit 4), the daily note doesn't say so.
+- A resource note often gets a `-2` suffix, because the archived original already has the
+  item's name.
+
+Origin: #12
 
 ## Writing a runner
 
@@ -99,6 +153,10 @@ from observed failures, not preference:
   collides with what you have checked out.
 - **Never swallow errors to keep cron quiet.** A log file nobody reads is not monitoring.
 
+New workflow runners are TypeScript on Node under `src/`, gated by `task check:node`, and
+follow the same rules; `src/lib/` mirrors the `common.sh` helpers they need
+([ADR-0007](docs/adr/0007-typescript-node-runners-and-agent-provider.md)).
+
 Full detail in [`CLAUDE.md`](CLAUDE.md), which doubles as the instruction file agents read
 when working in the vault.
 
@@ -111,6 +169,7 @@ when working in the vault.
 | 2 — Routing | Dispatch jobs to model tiers so routine work uses cheaper models | ○ |
 | 3 — Circulation | Daily digest; a mobile surface for reading and capture | ○ |
 | 4 — Growth | Weekly planner that re-aims the estate; feedback channel that steers it | ○ |
+| — Inbox ingestion | Turn captures into linked resource notes, daily | ✅ |
 | — TUI | Terminal workspace: tasks, journal, threads, live telemetry | ○ spec in `handoff/` |
 
 ## Design commitments

@@ -13,8 +13,7 @@ was doing two jobs: holding decisions and asks that agents raise for the operato
 holding raw material the operator drops in to read later (pasted text, a bare link).
 Raw material piled up and was never turned into reusable `30-resources/` notes linked
 from the areas and projects they serve, so the queue the operator is meant to keep
-short kept growing. Tracked in issue #12; the full requirement set and design are in
-`docs/sessions/2026-09-28-inbox-resource-ingestion/`.
+short kept growing. Tracked in issue #12.
 
 Three constraints make the decision non-obvious:
 
@@ -46,7 +45,7 @@ Three constraints make the decision non-obvious:
 | A new top-level capture folder | Fully separate from the inbox | A second place the operator has to look; breaks "the inbox is where things arrive" | More surface for the operator |
 | **A tool-using agent with read-only tools, confined by a hook in the ingester (chosen)** | Can read target bodies and nearby notes to decide placement; enforcement is code the ingester owns and tests | Wider read exposure to an injected agent | — chosen |
 | A tool-less model given a catalogue | Smallest exposure | Can't read a target's body; placement is guessed from descriptions | Placement quality |
-| An agent with WebFetch | Simplest fetching | Private-note reads, outbound requests and untrusted input in one agent form an exfiltration channel | Rejected (D6) |
+| An agent with WebFetch | Simplest fetching | Private-note reads, outbound requests and untrusted input in one agent form an exfiltration channel | Exfiltration risk |
 | **A capped batch, up to 10 items per run (chosen)** | A daily run keeps up with a normal day's captures | Departs from "one unit of work per run" | — chosen, with per-item gates |
 | One item per run | Matches the runner rule literally | A day's captures take a week to clear | Doesn't keep the queue short |
 | **`commits: false`, outputs gitignored (chosen)** | Vault content stays local (ADR-0002) | Departs from "`commits: false` is a defect" | — chosen, with a required `note` |
@@ -62,7 +61,7 @@ tools.
   and dot-files. Everything else under `00-inbox/` is read only for ask frontmatter, and
   only asks the ingester itself created (and recorded in its ledger) are ever modified
   or moved.
-- **Read scope (operator's choice, Q5).** The agent may read the whole vault with Read,
+- **Read scope (the operator's choice).** The agent may read the whole vault with Read,
   Glob and Grep, except `control/`, `.state/`, every hidden folder at any depth and
   `node_modules/`. A PreToolUse hook in the ingester's own code enforces this, backed by
   a `canUseTool` callback; settings files aren't loaded. Reads are limited to `.md` and
@@ -99,8 +98,8 @@ tools.
   gitignored. Holds are visible in the ask notes' own frontmatter, so a lost ledger
   can't cause a repeat ask.
 - **Obsidian.** The committed `.obsidian/app.json` sets the new-note folder to
-  `00-inbox/capture` (Q1) and ignores `node_modules/` in Obsidian's views.
-- **Platforms.** Linux and macOS. Windows is untested in the MVP; use WSL (D17).
+  `00-inbox/capture` and ignores `node_modules/` in Obsidian's views.
+- **Platforms.** Linux and macOS. Windows is untested; use WSL.
 - **Proxies.** The fetcher ignores environment proxies; supporting `HTTPS_PROXY` is a
   follow-up.
 
@@ -126,3 +125,5 @@ tools.
 - A stored injection observed in practice (instructions planted in an earlier capture
   or archived original): narrow `readScope()` to exclude `00-inbox/capture/` and
   `40-archive/capture/`.
+
+Origin: #12
