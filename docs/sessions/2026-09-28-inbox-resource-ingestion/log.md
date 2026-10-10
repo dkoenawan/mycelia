@@ -2,7 +2,7 @@
 session: 2026-09-28-inbox-resource-ingestion
 type: feature
 issue: 12
-phase: test
+phase: deploy
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: implement
+milestone: test
 active_agent: main
-next_step: "Hand off to compass-labs:test to verify REQ-001–042 into verification.md (VER-*), including the live gates."
+next_step: "Run T16 (accept ADR-0006 and ADR-0007), then hand off to compass-labs:deploy: tag the release, open the PR and merge."
 ---
 # Session Log: Resource lifecycle MVP — inbox → resources ingestion (#12)
 
@@ -28,6 +28,8 @@ next_step: "Hand off to compass-labs:test to verify REQ-001–042 into verificat
 
 ## Key decisions
 
+- **2026-10-10**: ✅ Test complete — 44 VER rows, traceability passes (41 pass, REQ-032 partial); operator approved and asked to ship.
+- **2026-10-10**: Operator accepted the REQ-032 expired-login gap (VER-033) as a known residual, recorded in ADR-0007. The Test findings (rate-limit stop not noted in the daily note, go-task exit 201, the `-2` resource suffix) ship as known issues.
 - **2026-10-04**: ✅ Implement complete — operator approved T1–T15 (97 tests passing, live gates passed); T16 (accept ADR-0006/0007) held for Test.
 - **2026-10-04**: ✅ Design complete — operator approved design.md Revision 3 (DES-001–027, D1–D18, landing order T1–T16) with the recommended defaults for D2, D4, D10, D11, D12, D14, D16 and D17.
 - **2026-09-28**: Design Revision 3 answers: the agent may read the whole vault (except control/, .state/ and hidden folders), overriding the least-privilege default. REQ-011 and REQ-032 amended. The language decision gets ADR-0007 plus a CLAUDE.md pointer.
@@ -212,3 +214,41 @@ next_step: "Hand off to compass-labs:test to verify REQ-001–042 into verificat
 
 ### 2026-10-04 — main — handoff: orchestrator → compass-labs:test (verify REQ-001–042)
 - **Input:** Write verification.md with VER-* rows verifying every REQ-001–042 against the implemented branch, using check-traceability.sh's column order. Run `task check:node` and the live gates (`npm run test:live`), plus the acceptance criteria that need a real or scratch vault. Pay specific attention to the expired-login residual and Grep's gitignore behaviour.
+- **Output (after a usage-limit interruption and resume):** done; verification.md (44 VER rows; 41 pass, REQ-032 partial)
+
+### 2026-10-04 — compass-labs:test — attempt: Verification run against 5170998 (REQ-001–042)
+- `task check:node` passed 97/97 and `npm run test:live` passed 4/4. On a fresh clone, `task install && task doctor:ci` exited 0, and REQ-035's two git commands gave the expected results.
+- Real CLI runs on scratch vaults, using the real Claude agent wherever an item reached the agent step, covered:
+  - ingest, and holds for no-fit, fetch 404 and unsupported files;
+  - ordering and the 10-item cap, hold and re-eligibility, and the concurrent-run lock;
+  - recorded fetches (GET only, no credentials) and the injection capture;
+  - back-link exact diffs, the ask archived on resolve, and git left clean throughout.
+- REQ-041: 10 items of up to 2,000 words against 50 targets were all ingested in 143 s (the Goal is 15 min).
+- verification.md has 44 VER rows, and check-traceability.sh passes: 41 REQs pass, REQ-032 is partial, none fail.
+
+### 2026-10-04 — compass-labs:test — note: REQ-032 only partly met (expired subscription login)
+- REQ-032's acceptance criteria pass as written: with the capture folder missing, logged out, or no CLI found, the run exits 2 and changes nothing.
+- With an expired subscription login, `claude auth status` still reports logged in, so preflight passes.
+  - The first real run then exits 4 with "auth: authentication_failed" and no login instructions.
+  - Before stopping, it has written the ledger, plus the ask and daily note for any held items processed ahead of the first agent call.
+  - The CLI then clears the tokens, so the next run exits 2 with the login message.
+- VER-033 records this failing case for the operator to decide on at the gate.
+
+### 2026-10-04 — compass-labs:test — note: Findings from Test (no code changed)
+- Rate limits get past preflight the same way. The run stops with exit 4, but the daily note doesn't say it stopped early.
+- `task ingest-inbox` reports go-task's exit status 201 instead of the ingester's own code (1–4), because it runs without `--exit-code`.
+- Confirmed: Claude Code's Grep returns nothing for gitignored notes, while Glob and Read see them. Placement doesn't rely on Grep.
+- Resource names often get a `-2` suffix, because the archived original claims the item's stem first. This is correct REQ-022 behaviour, but it's cosmetically awkward.
+
+### 2026-10-10 — main — decision: REQ-032 expired-login gap accepted as a known residual
+- The operator accepted VER-033 as is: an expired subscription login gets past preflight, and the run exits 4 without a login hint after writing the ledger (and possibly an ask and the daily note). The next run exits 2 with the proper message.
+- ADR-0007 already records the residual; T16 adds the missing login hint and the writes before the stop to it.
+- The other Test findings ship as known issues: a rate-limit stop isn't noted in the daily note, `task ingest-inbox` reports go-task's 201, and resource names often get a `-2` suffix.
+
+### 2026-10-10 — main — milestone: ✅ Test complete
+- `check-traceability.sh` passes: every REQ-001–042 has a passing VER-* (41 pass, REQ-032 partial, none fail).
+- The operator approved the gate and asked to close off: commit, tag the release, open the PR and merge.
+
+---
+
+## Phase: Deploy
