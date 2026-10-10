@@ -1,8 +1,8 @@
 ---
 id: "007"
 title: TypeScript on Node for workflow runners, and an agent-provider seam
-date: 2026-10-04
-status: proposed
+date: 2026-10-10
+status: accepted
 deciders: [operator]
 ---
 
@@ -120,8 +120,12 @@ documented, so no fallback was needed:
   files. Agents that need to find notes use Glob and Read.
 - **Residual.** If a subscription login has expired in a way `auth status` still
   reports as logged in, preflight can't tell without a model call. The first agent
-  step then fails as `ProviderUnavailable` (exit 4, no strike), so the run stops
-  without raising asks, but a run with nothing eligible won't notice that day.
+  step then fails as `ProviderUnavailable` (exit 4, no strike) and the run stops.
+  The error doesn't say how to log in, and by then the run has written the ledger,
+  plus the ask and daily note for any item held before the first agent call. The CLI
+  clears the expired tokens, so the next run fails preflight with the login message.
+  A rate limit gets past preflight the same way. A run with nothing eligible won't
+  notice either that day. Accepted at the Test gate as a known residual.
 
 ## Consequences
 

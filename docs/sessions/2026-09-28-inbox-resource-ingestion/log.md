@@ -252,3 +252,8 @@ next_step: "Run T16 (accept ADR-0006 and ADR-0007), then hand off to compass-lab
 ---
 
 ## Phase: Deploy
+
+### 2026-10-10 — main — note: T16 done — ADR-0006 and ADR-0007 accepted
+- Both ADRs are now `status: accepted`, dated 2026-10-10. ADR-0007's Residual bullet now covers the missing login hint, the writes made before the stop, and rate limits.
+- T16 ticked in tasks.md.
+

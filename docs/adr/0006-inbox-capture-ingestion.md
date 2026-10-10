@@ -1,8 +1,8 @@
 ---
 id: "006"
 title: Inbox capture ingestion — a capture subfolder, a confined read-only agent, and a capped batch
-date: 2026-10-04
-status: proposed
+date: 2026-10-10
+status: accepted
 deciders: [operator]
 ---
 

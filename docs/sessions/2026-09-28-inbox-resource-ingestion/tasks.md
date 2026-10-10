@@ -33,7 +33,7 @@ One commit per ticked task, containing that task's changes and its tick. From T2
 - [x] T13 — Per-item pipeline and check, failure handling and strikes (DES-016; DES-002 phase 5) (depends on: 8, 9, 10, 11, 12). Gate: per-item tests for ingest, hold, check failure with rollback, `changed-during-run`, third-strike ask; `task check:node`.
 - [x] T14 — Run loop, CLI, daily note, `ingest-inbox` and `ingest-inbox:preflight` tasks (DES-001, DES-002, DES-018, DES-021) (depends on: 13, 6). Gate: end-to-end run on a temp vault with `FakeProvider`; `task --list`; one real run on a scratch vault; `task check:node`.
 - [x] T15 — Example registry entry `inbox-ingest` (DES-024) (depends on: 14). Gate: the YAML parses; `task doctor` passes on a copy seeded from it; `task check:node`.
-- [ ] T16 — Accept ADR-0006 and ADR-0007 (`status: accepted`, `date:` set to landing date) (D15). Held: runs only after Test passes; not executed by Implement. (depends on: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
+- [x] T16 — Accept ADR-0006 and ADR-0007 (`status: accepted`, `date:` set to landing date) (D15). Held: runs only after Test passes; not executed by Implement. (depends on: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15)
 
 ## Deviations from design
 
