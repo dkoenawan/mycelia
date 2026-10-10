@@ -2,7 +2,7 @@
 session: 2026-10-10-notion-inbox-capture
 type: feature
 issue: 21
-phase: define
+phase: design
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: none
+milestone: define
 active_agent: main
-next_step: "Define gate: operator approves / adjusts / rethinks define/"
+next_step: "Hand off to compass-labs:design"
 ---
 # Session Log: Notion inbox: capture from phone into the vault inbox (#21)
 
@@ -22,11 +22,11 @@ next_step: "Define gate: operator approves / adjusts / rethinks define/"
 
 ## Open items
 
-- Define gate pending: operator to confirm six Define-taken decisions (define/index.md) and thresholds (10 items/run, 3 failures, ≤5 min pull overhead).
 - Design to confirm Notion API assumptions (DB needs shared parent page; integration keys don't expire) and whether outbound Notion access needs its own ADR.
 
 ## Key decisions
 
+- **2026-10-10**: ✅ Define complete — 44 requirements frozen; anchor aligns, no update.
 - **2026-10-10**: Requirements set agreed — REQ-001…REQ-044 (31 Must, 12 Should, 1 Could), incl. the six Define-taken decisions and thresholds (10 items/run, 3 failures, ≤5 min pull overhead).
 - **2026-10-10**: Scope agreed — Notion database only; pull + ingest in one run via the ADR-0006 ingester; New → Ingested/Failed, rows kept; title/body/URL + optional area/project hint; idempotent setup; configurable schedule; appetite 2–3 impl sessions (hint deferred first).
 - **2026-10-10**: Framing agreed — tier full; phone capture is the need, Notion the chosen source; anchor aligns (no update).
@@ -73,3 +73,11 @@ next_step: "Define gate: operator approves / adjusts / rethinks define/"
 ### 2026-10-10 — main — decision: requirements set agreed
 - Operator approved `define/requirements.md` as the complete requirements set: REQ-001…REQ-044 (31 Must, 12 Should, 1 Could; none deferred).
 - Confirmed with it: the six decisions Define took (`define/index.md` → "Decisions taken in Define") and thresholds of 10 items per run, 3 pull failures, pull overhead ≤5 min for 10 items (target 1 min).
+
+### 2026-10-10 — main — milestone: ✅ Define complete
+- Operator approved `define/` at the gate. Tier full; anchor aligns (action none, so no a3 check needed).
+- Carried into Design: confirm Notion API assumptions (database needs a shared parent page; integration keys don't expire) and decide whether outbound credentialed Notion access needs its own ADR.
+
+---
+
+## Phase: Design
