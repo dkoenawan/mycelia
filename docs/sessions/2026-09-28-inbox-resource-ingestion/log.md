@@ -282,3 +282,6 @@ next_step: "Hand off to compass-labs:close to fold back into as-built docs; then
 
 ## Phase: Close
 
+### 2026-10-10 — main — handoff: orchestrator → compass-labs:close (fold back into as-built docs)
+- **Input:** Fold the session into the repo's as-built docs (no session narrative, one Origin line per doc). Don't merge; the orchestrator squash-merges PR #20 after Close at the operator's request.
+
