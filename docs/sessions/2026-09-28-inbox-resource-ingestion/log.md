@@ -2,7 +2,7 @@
 session: 2026-09-28-inbox-resource-ingestion
 type: feature
 issue: 12
-phase: deploy
+phase: close
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: test
+milestone: deploy
 active_agent: main
-next_step: "Run T16 (accept ADR-0006 and ADR-0007), then hand off to compass-labs:deploy: tag the release, open the PR and merge."
+next_step: "Hand off to compass-labs:close to fold back into as-built docs; then archive, squash-merge PR #20, tag v0.4.0, close #12."
 ---
 # Session Log: Resource lifecycle MVP — inbox → resources ingestion (#12)
 
@@ -28,6 +28,7 @@ next_step: "Run T16 (accept ADR-0006 and ADR-0007), then hand off to compass-lab
 
 ## Key decisions
 
+- **2026-10-10**: ✅ Deploy complete — release.md approved: v0.4.0, schema unchanged, all components complete; PR #20 open for squash-merge at Close.
 - **2026-10-10**: ✅ Test complete — 44 VER rows, traceability passes (41 pass, REQ-032 partial); operator approved and asked to ship.
 - **2026-10-10**: Operator accepted the REQ-032 expired-login gap (VER-033) as a known residual, recorded in ADR-0007. The Test findings (rate-limit stop not noted in the daily note, go-task exit 201, the `-2` resource suffix) ship as known issues.
 - **2026-10-04**: ✅ Implement complete — operator approved T1–T15 (97 tests passing, live gates passed); T16 (accept ADR-0006/0007) held for Test.
@@ -259,4 +260,25 @@ next_step: "Run T16 (accept ADR-0006 and ADR-0007), then hand off to compass-lab
 
 ### 2026-10-10 — main — handoff: orchestrator → compass-labs:deploy (smoke test + PR + release.md, target v0.4.0)
 - **Input:** T16 is already done (`aa1a34e`, ADR-0006/0007 accepted). Run the release smoke test on a fresh clone of branch HEAD; check completeness against `git diff main...HEAD`; open a PR to main (squash-merge, Closes #12, not merged — the merge happens at Close); write release.md with target v0.4.0 (minor, additive). The operator asked to tag, open the PR and merge in this session, so the orchestrator squash-merges and pushes the tag after Close.
+- **Output:** done; release.md; PR #20
+
+### 2026-10-10 — compass-labs:deploy — attempt: Release smoke test and completeness check passed for v0.4.0
+- Fresh clone of 53b5863: `task install && task doctor:ci` passed 8/8 (exit 0); `task deps:node && task check:node` passed (tsc and eslint clean, 97/97 tests).
+- Completeness: all 74 files on the branch diff checked as they ship; no stubs, nothing left out. Hygiene scan of added lines found nothing.
+- Schema stays at version 1 (additive example job only), so no UPGRADE doc. Version v0.4.0 (SemVer minor, ADR-0004).
+- T16 was already done in aa1a34e and is recorded in release.md (tasks.md is frozen).
+
+### 2026-10-10 — compass-labs:deploy — note: PR #20 opened to main; release.md ready for the Deploy gate
+- PR #20 is not merged and must be squash-merged at Close; it has Closes #12, the Test result (VER: 43 pass / 1 fail; REQ: 41 pass, REQ-032 partial), known issues and follow-ups #13–#19.
+- After the merge, push the v0.4.0 tag on the squash commit; that runs release.yml.
+
+### 2026-10-10 — main — note: Orchestrator spot-check of Deploy
+- release.md's Completeness section lists 13 components, all complete, with no gaps or stubs. PR #20: OPEN, MERGEABLE, base main.
+
+### 2026-10-10 — main — milestone: ✅ Deploy complete
+- Approved under the operator's instruction to close off (commit, tag, PR, merge). The orchestrator squash-merges PR #20 after Close, then pushes `v0.4.0` on the squash commit.
+
+---
+
+## Phase: Close
 
