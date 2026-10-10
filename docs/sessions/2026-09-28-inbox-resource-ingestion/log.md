@@ -257,3 +257,6 @@ next_step: "Run T16 (accept ADR-0006 and ADR-0007), then hand off to compass-lab
 - Both ADRs are now `status: accepted`, dated 2026-10-10. ADR-0007's Residual bullet now covers the missing login hint, the writes made before the stop, and rate limits.
 - T16 ticked in tasks.md.
 
+### 2026-10-10 — main — handoff: orchestrator → compass-labs:deploy (smoke test + PR + release.md, target v0.4.0)
+- **Input:** T16 is already done (`aa1a34e`, ADR-0006/0007 accepted). Run the release smoke test on a fresh clone of branch HEAD; check completeness against `git diff main...HEAD`; open a PR to main (squash-merge, Closes #12, not merged — the merge happens at Close); write release.md with target v0.4.0 (minor, additive). The operator asked to tag, open the PR and merge in this session, so the orchestrator squash-merges and pushes the tag after Close.
+
