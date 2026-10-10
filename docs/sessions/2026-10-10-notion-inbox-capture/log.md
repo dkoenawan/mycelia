@@ -27,6 +27,7 @@ next_step: "Define gate: operator approves / adjusts / rethinks define/"
 
 ## Key decisions
 
+- **2026-10-10**: Requirements set agreed — REQ-001…REQ-044 (31 Must, 12 Should, 1 Could), incl. the six Define-taken decisions and thresholds (10 items/run, 3 failures, ≤5 min pull overhead).
 - **2026-10-10**: Scope agreed — Notion database only; pull + ingest in one run via the ADR-0006 ingester; New → Ingested/Failed, rows kept; title/body/URL + optional area/project hint; idempotent setup; configurable schedule; appetite 2–3 impl sessions (hint deferred first).
 - **2026-10-10**: Framing agreed — tier full; phone capture is the need, Notion the chosen source; anchor aligns (no update).
 ---
@@ -68,3 +69,7 @@ next_step: "Define gate: operator approves / adjusts / rethinks define/"
 - Every OUT-nn is served by at least one live requirement. All nine ISO/IEC 25010 quality characteristics are covered, or not applicable with a reason (Safety).
 - Six decisions were taken by Define and are listed in `index.md` for the operator to confirm or adjust at the gate.
 - The decision entry for the complete requirements set waits for the operator's approval at the gate.
+
+### 2026-10-10 — main — decision: requirements set agreed
+- Operator approved `define/requirements.md` as the complete requirements set: REQ-001…REQ-044 (31 Must, 12 Should, 1 Could; none deferred).
+- Confirmed with it: the six decisions Define took (`define/index.md` → "Decisions taken in Define") and thresholds of 10 items per run, 3 pull failures, pull overhead ≤5 min for 10 items (target 1 min).
