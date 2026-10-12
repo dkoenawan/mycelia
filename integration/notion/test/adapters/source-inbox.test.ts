@@ -2,7 +2,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { SourceAuthRejected, SourceNoAccess, SourceUnavailable, StatusFormRejected } from "../../src/application/ports.ts";
-import { NotionInboxBase, NotionProvisioner, parsePageId, type InboxTemplate } from "../../src/adapters/notion/source-inbox.ts";
+import { NotionSourceInbox, NotionProvisioner, parsePageId, type InboxTemplate } from "../../src/adapters/notion/source-inbox.ts";
 import { FakeNotion, unavailable } from "../fakes/fake-notion.ts";
 
 const TEMPLATE: InboxTemplate = {
@@ -19,19 +19,19 @@ test("rowsNotIngested: Ingested rows dropped, oldest first, ties by ID", async (
   api.addRow(ds, { title: "done", status: "Ingested" });
   const b = api.addRow(ds, { title: "b", createdTime: "2026-10-11T08:01:00.000Z", id: "aaaa", status: "" });
   const c = api.addRow(ds, { title: "c", createdTime: "2026-10-11T07:00:00.000Z", status: "Failed" });
-  const rows = await new NotionInboxBase(api, { dataSourceId: ds, form: "select" }).rowsNotIngested();
+  const rows = await new NotionSourceInbox(api, { dataSourceId: ds, form: "select" }).rowsNotIngested();
   assert.deepEqual(rows.map((r) => [r.id, r.title, r.status]), [[c.id, "c", "Failed"], [b.id, "b", ""], [a.id, "a", "New"]]);
 });
 
 test("check and setStatus map Notion errors to port errors", async () => {
   const api = new FakeNotion();
   const ds = api.addInbox("status");
-  const inbox = new NotionInboxBase(api, { dataSourceId: ds, form: "status" });
+  const inbox = new NotionSourceInbox(api, { dataSourceId: ds, form: "status" });
   await inbox.check();
   const row = api.addRow(ds, { title: "x" });
   await inbox.setStatus(row.id, "Failed", "boom");
   assert.deepEqual([row.status, row.reason], ["Failed", "boom"]);
-  await assert.rejects(new NotionInboxBase(api, { dataSourceId: "gone", form: "status" }).check(), SourceNoAccess);
+  await assert.rejects(new NotionSourceInbox(api, { dataSourceId: "gone", form: "status" }).check(), SourceNoAccess);
   api.failOn("queryDataSource", unavailable, { times: 1 });
   await assert.rejects(inbox.rowsNotIngested(), SourceUnavailable);
   api.keyValid = false;

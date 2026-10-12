@@ -1,12 +1,13 @@
 // Source inbox adapter (DES-002, D8): implements the SourceInbox and
 // InboxProvisioner ports on top of NotionApi, mapping Notion rows and errors
 // into domain types so no Notion type crosses into application/.
-import type { SourceRow, Status } from "../../domain/capture.ts";
+import type { Capture, SourceRow, Status } from "../../domain/capture.ts";
 import {
   SourceAuthRejected, SourceItemError, SourceNoAccess, SourceUnavailable, StatusFormRejected,
-  type InboxProvisioner, type StatusForm,
+  type InboxProvisioner, type SourceInbox, type StatusForm,
 } from "../../application/ports.ts";
-import { NotionAuthError, NotionItemError, NotionNoAccess, NotionUnavailable, richText, type Json, type NotionApi, type NotionPage } from "./http-client.ts";
+import { NESTABLE, blocksToMarkdown } from "./blocks.ts";
+import { NotionAuthError, NotionItemError, NotionNoAccess, NotionUnavailable, richText, type Json, type NotionApi, type NotionBlock, type NotionPage } from "./http-client.ts";
 
 export const PROP = { title: "Name", status: "Status", url: "URL", hint: "Area or project", reason: "Reason" } as const;
 
@@ -87,8 +88,10 @@ export interface InboxRef {
   form: StatusForm;
 }
 
-/** The parts of SourceInbox that don't read content; read() arrives with the converter (DES-006). */
-export class NotionInboxBase {
+/** Nested blocks deeper than this are left out, which bounds requests per item. */
+export const MAX_DEPTH = 4;
+
+export class NotionSourceInbox implements SourceInbox {
   protected readonly api: NotionApi;
   protected readonly ref: InboxRef;
 
@@ -109,6 +112,27 @@ export class NotionInboxBase {
 
   setStatus(id: string, status: Status, reason: string): Promise<void> {
     return mapped("setting a row's status", () => this.api.setStatus(id, this.ref.form, status, reason));
+  }
+
+  /** Read and convert one row. A row-level error is a pull failure (SourceItemError); outages stop the run. */
+  async read(row: SourceRow): Promise<Capture> {
+    try {
+      const page = await this.api.getPage(row.id);
+      const { body, omitted } = blocksToMarkdown(await this.tree(row.id, 0));
+      return { title: rowTitle(page) || row.title, body, url: rowUrl(page), hint: rowHint(page), omitted };
+    } catch (e) {
+      if (e instanceof NotionNoAccess || e instanceof NotionItemError) throw new SourceItemError(`couldn't read the row: ${e.message}`);
+      if (e instanceof NotionAuthError || e instanceof NotionUnavailable) throw mapError(e, "reading a row");
+      throw new SourceItemError(`couldn't convert the row: ${e instanceof Error ? e.message : String(e)}`);
+    }
+  }
+
+  private async tree(blockId: string, depth: number): Promise<NotionBlock[]> {
+    const blocks = await this.api.listChildren(blockId);
+    for (const b of blocks) {
+      if (b.has_children && NESTABLE.has(b.type) && depth < MAX_DEPTH) b.children = await this.tree(b.id, depth + 1);
+    }
+    return blocks;
   }
 }
 
