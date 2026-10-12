@@ -30,7 +30,7 @@ budget:
 - [x] DES-006: converter `src/adapters/notion/blocks.ts` and pure `src/domain/capture-item.ts`, reproducing REQ-011/REQ-012 fixtures and the REQ-024 `extractUrls` check (depends on: 9)
 - [x] DES-008: eligibility and selection `src/domain/eligibility.ts` with REQ-010/019/035 tests (depends on: 4, 8)
 - [x] DES-010: stopped-item ask `src/domain/stopped-ask.ts` and `src/adapters/vault/vault-writer.ts` (capture items with `wx`, asks, daily block, hint lookup) with tests (depends on: 4, 11)
-- [ ] DES-013: `scripts/doctor.sh` check 9 (not configured is a note; present must be gitignored, 0600, parse) (depends on: 7)
+- [x] DES-013: `scripts/doctor.sh` check 9 (not configured is a note; present must be gitignored, 0600, parse) (depends on: 7)
 - [ ] DES-016: privacy guard test `test/privacy.test.ts` over the template, `integration/` and the README (depends on: 6)
 - [ ] DES-005: setup use case `src/application/setup-inbox.ts`, `src/adapters/cli/key-prompt.ts`, `src/adapters/notion/template.ts`, tested against fakes (depends on: 6, 7, 9)
 - [ ] DES-009 (part 1): pull and preflight use cases `src/application/pull-inbox.ts` and `src/application/preflight.ts`, tested against in-memory fakes in `test/fakes/` (depends on: 5, 7, 8, 9, 11, 12, 13)
