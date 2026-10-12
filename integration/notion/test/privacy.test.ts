@@ -13,7 +13,7 @@ const ALLOWED = new Set(["secret_TESTKEY0000"]);
 export const PATTERNS: { name: string; re: RegExp }[] = [
   { name: "UUID-shaped ID", re: /\b[0-9a-f]{8}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{4}-?[0-9a-f]{12}\b/gi },
   { name: "Notion key prefix", re: new RegExp("\\b(?:secret|ntn)_[A-Za-z0-9]+", "g") },
-  { name: "absolute home path", re: new RegExp("(?:/home/|/Users/|[A-Z]:\\\\Users\\\\)[A-Za-z0-9._-]+", "g") },
+  { name: "absolute home path", re: new RegExp("(?:\\/home\\/|\\/Users\\/|[A-Z]:\\\\Users\\\\)[A-Za-z0-9._-]+", "g") },
   // Written as h[e] etc. so this file doesn't match itself.
   { name: "masculine pronoun", re: new RegExp("\\b(?:h[e]|h[i]s|h[i]m)\\b", "gi") },
 ];
