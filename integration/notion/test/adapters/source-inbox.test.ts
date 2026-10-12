@@ -58,7 +58,7 @@ test("provisioner: unshared parent names the fix; the native status form can be 
 });
 
 test("parsePageId accepts a page URL or an ID, with or without dashes", () => {
-  const hex = "0123456789abcdef0123456789abcdef";
+  const hex = "0123456789abcdef".repeat(2);
   const dashed = [hex.slice(0, 8), hex.slice(8, 12), hex.slice(12, 16), hex.slice(16, 20), hex.slice(20)].join("-");
   assert.equal(parsePageId(hex), dashed);
   assert.equal(parsePageId(dashed), dashed);
