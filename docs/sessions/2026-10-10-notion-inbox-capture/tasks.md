@@ -21,7 +21,7 @@ budget:
 - [x] DES-017 (part 1): opt-in live spike `test/live/spike.live.ts` checking A1–A5; skips cleanly when the test-workspace env vars are unset; never holds a key (depends on: 1)
 - [ ] DES-017 (part 2): run the spike against the operator's test workspace, record the A1–A5 findings in `src/adapters/notion/http-client.ts`'s header comment, and confirm or correct the `NOTION_VERSION` constant and the preferred Status form (depends on: 2, 9)
 - [x] DES-018: domain model (`src/domain/capture.ts`, `src/domain/lifecycle.ts`) and `src/application/ports.ts`, with `test/domain/` unit tests (depends on: 1)
-- [ ] DES-001: ingest session seam `src/ingest/session.ts` (`openIngestSession` / `processOne` / `close`, exported `ingestPreflight`), `runIngest` as a thin wrapper; existing `test/` suite unchanged plus new session tests (depends on: 1)
+- [x] DES-001: ingest session seam `src/ingest/session.ts` (`openIngestSession` / `processOne` / `close`, exported `ingestPreflight`), `runIngest` as a thin wrapper; existing `test/` suite unchanged plus new session tests (depends on: 1)
 - [ ] DES-003: source inbox template `template/source-inbox.json` (five properties, Status in both forms, instructions-row text) (depends on: 1)
 - [ ] DES-004: connector config adapter `src/adapters/config/yaml-config.ts` (`ConfigStore`, atomic 0600 write, `guardConfigPath`) with tests (depends on: 4)
 - [ ] DES-007: connector ledger adapter `src/adapters/ledger/jsonl-ledger.ts` (`PullLedger`) with tests (depends on: 4)
