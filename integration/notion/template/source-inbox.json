@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "title": "Capture inbox",
+  "properties": {
+    "Name": { "title": {} },
+    "URL": { "url": {} },
+    "Area or project": { "rich_text": {} },
+    "Reason": { "rich_text": {} }
+  },
+  "status": {
+    "property": "Status",
+    "forms": {
+      "status": {
+        "status": {
+          "options": [
+            { "name": "New", "color": "blue" },
+            { "name": "Ingested", "color": "green" },
+            { "name": "Failed", "color": "red" }
+          ]
+        }
+      },
+      "select": {
+        "select": {
+          "options": [
+            { "name": "New", "color": "blue" },
+            { "name": "Ingested", "color": "green" },
+            { "name": "Failed", "color": "red" }
+          ]
+        }
+      }
+    }
+  },
+  "instructions": {
+    "title": "How to capture (read me)",
+    "paragraphs": [
+      "Add one row per capture. Give it a title, write or paste the note in the row's page, and put a link in URL if the capture is about a web page. Area or project is optional: the name of an area or project note in the vault, such as career, to link the capture to it.",
+      "A scheduled pull copies new rows into the vault's inbox and files each one. You don't need to set anything else.",
+      "Status: New (or blank) means waiting to be pulled. Ingested means it's in the vault. Failed means it needs a look; Reason says why. A row that couldn't be read is retried on the next pull, and after three failed pulls it stops with Reason saying so: set Status back to New to retry it. A row the vault couldn't file has an ask in the vault's inbox, named in Reason.",
+      "Supported content: paragraphs, headings, bulleted and numbered lists, to-dos and links. Other content, such as images, files and embeds, is left out, and the vault note says what was left out.",
+      "Once a row has been pulled, later edits to it are ignored. Rows are never deleted. This row is never pulled."
+    ]
+  }
+}
