@@ -51,7 +51,8 @@ export class JsonlPullLedger implements PullLedger {
     return this.cache;
   }
 
-  private async write(rec: PullRecord): Promise<void> {
+  /** Append one line and sync. Tests override this to keep the ledger in memory. */
+  protected async persist(rec: PullRecord): Promise<void> {
     await mkdir(path.dirname(this.file), { recursive: true });
     const fh = await open(this.file, "a");
     try {
@@ -60,6 +61,10 @@ export class JsonlPullLedger implements PullLedger {
     } finally {
       await fh.close();
     }
+  }
+
+  private async write(rec: PullRecord): Promise<void> {
+    await this.persist(rec);
     this.cache.push(rec);
   }
 
