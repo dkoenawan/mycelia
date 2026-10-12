@@ -34,7 +34,7 @@ budget:
 - [x] DES-016: privacy guard test `test/privacy.test.ts` over the template, `integration/` and the README (depends on: 6)
 - [x] DES-005: setup use case `src/application/setup-inbox.ts`, `src/adapters/cli/key-prompt.ts`, `src/adapters/notion/template.ts`, tested against fakes (depends on: 6, 7, 9)
 - [x] DES-009 (part 1): pull and preflight use cases `src/application/pull-inbox.ts` and `src/application/preflight.ts`, tested against in-memory fakes in `test/fakes/` (depends on: 5, 7, 8, 9, 11, 12, 13)
-- [ ] DES-009 (part 2): ingest-session adapter `src/adapters/ingest/session.ts` and integration tests on a temp git vault with the fake Notion API and a fake provider (REQ-014, REQ-026, REQ-027, REQ-029, REQ-030) (depends on: 17)
+- [x] DES-009 (part 2): ingest-session adapter `src/adapters/ingest/session.ts` and integration tests on a temp git vault with the fake Notion API and a fake provider (REQ-014, REQ-026, REQ-027, REQ-029, REQ-030) (depends on: 17)
 - [ ] DES-011: composition root `src/cli.ts` and the `notion:setup`, `notion:pull`, `notion:pull:preflight` tasks in `Taskfile.yml` (depends on: 16, 18)
 - [ ] DES-015: README "Phone capture (Notion)" section (six topics, exit codes) (depends on: 19)
 
