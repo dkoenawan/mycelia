@@ -2,7 +2,7 @@
 session: 2026-10-10-notion-inbox-capture
 type: feature
 issue: 21
-phase: design
+phase: implement
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: define
+milestone: design
 active_agent: main
-next_step: "Design gate: operator approves / adjusts / rethinks design/"
+next_step: "Hand off to compass-labs:implement (tasks.md, DES-017 spike first)"
 ---
 # Session Log: Notion inbox: capture from phone into the vault inbox (#21)
 
@@ -29,6 +29,7 @@ next_step: "Design gate: operator approves / adjusts / rethinks design/"
 
 ## Key decisions
 
+- **2026-10-12**: ✅ Design complete — 18 DES items, 8 decisions, all 44 REQs covered; five traded-off marks confirmed.
 - **2026-10-12**: D8 clean architecture inside `integration/notion/src` (`domain/` ← `application/` + ports ← `adapters/` ← `cli.ts`), layer rule enforced by ESLint; repo-wide adoption is #22, upstream dkoenawan/compass-labs#62.
 - **2026-10-10**: D7 code layout: `integration/notion/{src,template,test}`, Notion-only behind `NotionApi`; gate/tsconfig/eslint/Taskfile widened (operator's own choice).
 - **2026-10-10**: D6 new ADR on credentialed egress for capture-source connectors, written at Close.
@@ -167,4 +168,9 @@ next_step: "Design gate: operator approves / adjusts / rethinks design/"
 - Only adapters import from `src/`. DES-012 adds an ESLint `no-restricted-imports` layer rule. New DES-018 covers the domain model and the ports. D7's "no generic `CaptureSource`" stands.
 - `src/ingest/` is out of scope here. Raised #22 (adopt the convention repo-wide, refactor `src/ingest/`) and dkoenawan/compass-labs#62 (backend-shaped code always follows clean architecture).
 - The component diagram wasn't render-checked: mermaid-cli has no headless browser on this machine.
+
+### 2026-10-12 — main — milestone: ✅ Design complete
+- Operator approved `design/` at the gate: 18 DES items, D1–D8, all 44 live REQs covered.
+- Confirmed the five *traded off* marks: DES-001 OCP, D4, D7/DES-012, D8.
+- Carried into Implement: DES-017 spike first (A1–A5, settles D4 and the API version); build in the D8 layers with the DES-012 lint rule.
 

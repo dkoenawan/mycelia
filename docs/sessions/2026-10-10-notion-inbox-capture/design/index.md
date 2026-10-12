@@ -1,6 +1,6 @@
 # Design: Notion inbox: capture from phone into the vault inbox
 
-> Phase: Design | Started: 2026-10-10 | Status: Draft, ready for the Design gate
+> Phase: Design | Started: 2026-10-10 | Status: Approved (Design complete 2026-10-12)
 > Requirements: [`define/index.md`](../define/index.md) · Session history: [`log.md`](../log.md)
 
 ## Contents
