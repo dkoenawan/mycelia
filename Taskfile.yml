@@ -44,6 +44,25 @@ tasks:
     cmds:
       - node src/ingest/cli.ts --preflight
 
+  notion:setup:
+    desc: Connect the Notion capture inbox (task notion:setup -- <page URL>); creates it under a page shared with your integration and asks for the integration secret.
+    interactive: true
+    deps: [deps:node]
+    cmds:
+      - node integration/notion/src/cli.ts setup "{{.CLI_ARGS}}"
+
+  notion:pull:
+    desc: Pull the Notion capture inbox into the vault and ingest it (oldest first, up to 10; needs Node and a logged-in Claude Code; never commits).
+    deps: [deps:node]
+    cmds:
+      - node integration/notion/src/cli.ts pull
+
+  notion:pull:preflight:
+    desc: Check the Notion pull can run (config, key, source inbox, ingester) without changing anything.
+    deps: [deps:node]
+    cmds:
+      - node integration/notion/src/cli.ts pull --preflight
+
   check:node:
     desc: Quality gates for the TypeScript code (tsc strict, eslint, node:test).
     deps: [deps:node]

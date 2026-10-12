@@ -61,6 +61,7 @@ class SessionRun implements IngestRun {
 export class SessionIngester implements Ingester {
   private readonly o: SessionIngesterOptions;
   private readonly locks = new WeakMap<RunLock, Lock>();
+  private readonly held = new Set<Lock>();
   private ingested: Set<string> | null = null;
 
   constructor(o: SessionIngesterOptions) {
@@ -83,8 +84,9 @@ export class SessionIngester implements Ingester {
   async lock(): Promise<RunLock> {
     try {
       const lock = await acquireLock(path.join(this.o.root, STATE_DIR), this.now(), this.o.log);
-      const handle: RunLock = { release: () => { lock.release(); } };
+      const handle: RunLock = { release: () => { this.held.delete(lock); lock.release(); } };
       this.locks.set(handle, lock);
+      this.held.add(lock);
       return handle;
     } catch (e) {
       if (e instanceof LockHeld) throw new RunLocked(e.message);
@@ -102,6 +104,12 @@ export class SessionIngester implements Ingester {
       if (e instanceof CantStart || e instanceof RunAbort) throw new IngestAborted(`${e.name}: ${e.message}`);
       throw e;
     }
+  }
+
+  /** Release every lock still held; synchronous, for signal handlers. */
+  releaseAll(): void {
+    for (const l of this.held) l.release();
+    this.held.clear();
   }
 
   wasIngested(capture: string): boolean {
