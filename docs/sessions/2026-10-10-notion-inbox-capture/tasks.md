@@ -23,7 +23,7 @@ budget:
 - [x] DES-018: domain model (`src/domain/capture.ts`, `src/domain/lifecycle.ts`) and `src/application/ports.ts`, with `test/domain/` unit tests (depends on: 1)
 - [x] DES-001: ingest session seam `src/ingest/session.ts` (`openIngestSession` / `processOne` / `close`, exported `ingestPreflight`), `runIngest` as a thin wrapper; existing `test/` suite unchanged plus new session tests (depends on: 1)
 - [x] DES-003: source inbox template `template/source-inbox.json` (five properties, Status in both forms, instructions-row text) (depends on: 1)
-- [ ] DES-004: connector config adapter `src/adapters/config/yaml-config.ts` (`ConfigStore`, atomic 0600 write, `guardConfigPath`) with tests (depends on: 4)
+- [x] DES-004: connector config adapter `src/adapters/config/yaml-config.ts` (`ConfigStore`, atomic 0600 write, `guardConfigPath`) with tests (depends on: 4)
 - [ ] DES-007: connector ledger adapter `src/adapters/ledger/jsonl-ledger.ts` (`PullLedger`) with tests (depends on: 4)
 - [ ] DES-002: Notion HTTP client `src/adapters/notion/http-client.ts` (`NotionApi`, typed errors, 429 retry, redirect refused, pinned version) and `src/adapters/notion/source-inbox.ts` (`SourceInbox`, `InboxProvisioner`), tested against a local recording server (depends on: 4)
 - [ ] DES-014: `notion-pull` example job in `control/estate.example.yaml` (depends on: 1)
