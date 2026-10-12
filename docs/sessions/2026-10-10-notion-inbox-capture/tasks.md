@@ -28,7 +28,7 @@ budget:
 - [x] DES-002: Notion HTTP client `src/adapters/notion/http-client.ts` (`NotionApi`, typed errors, 429 retry, redirect refused, pinned version) and `src/adapters/notion/source-inbox.ts` (`SourceInbox`, `InboxProvisioner`), tested against a local recording server (depends on: 4)
 - [x] DES-014: `notion-pull` example job in `control/estate.example.yaml` (depends on: 1)
 - [x] DES-006: converter `src/adapters/notion/blocks.ts` and pure `src/domain/capture-item.ts`, reproducing REQ-011/REQ-012 fixtures and the REQ-024 `extractUrls` check (depends on: 9)
-- [ ] DES-008: eligibility and selection `src/domain/eligibility.ts` with REQ-010/019/035 tests (depends on: 4, 8)
+- [x] DES-008: eligibility and selection `src/domain/eligibility.ts` with REQ-010/019/035 tests (depends on: 4, 8)
 - [ ] DES-010: stopped-item ask `src/domain/stopped-ask.ts` and `src/adapters/vault/vault-writer.ts` (capture items with `wx`, asks, daily block, hint lookup) with tests (depends on: 4, 11)
 - [ ] DES-013: `scripts/doctor.sh` check 9 (not configured is a note; present must be gitignored, 0600, parse) (depends on: 7)
 - [ ] DES-016: privacy guard test `test/privacy.test.ts` over the template, `integration/` and the README (depends on: 6)

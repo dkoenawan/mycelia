@@ -2,6 +2,7 @@
 // InboxProvisioner ports on top of NotionApi, mapping Notion rows and errors
 // into domain types so no Notion type crosses into application/.
 import type { Capture, SourceRow, Status } from "../../domain/capture.ts";
+import { byCreation } from "../../domain/eligibility.ts";
 import {
   SourceAuthRejected, SourceItemError, SourceNoAccess, SourceUnavailable, StatusFormRejected,
   type InboxProvisioner, type SourceInbox, type StatusForm,
@@ -77,12 +78,6 @@ export function toRow(page: NotionPage, form: StatusForm): SourceRow {
   return { id: page.id, title: rowTitle(page), status: rowStatus(page, form), createdTime: page.created_time };
 }
 
-/** Oldest first by (createdTime, id): Notion rounds created_time to the minute (A5). */
-export function byAge(a: SourceRow, b: SourceRow): number {
-  if (a.createdTime !== b.createdTime) return a.createdTime < b.createdTime ? -1 : 1;
-  return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
-}
-
 export interface InboxRef {
   dataSourceId: string;
   form: StatusForm;
@@ -107,7 +102,7 @@ export class NotionSourceInbox implements SourceInbox {
   async rowsNotIngested(): Promise<SourceRow[]> {
     const filter = { property: PROP.status, [this.ref.form]: { does_not_equal: "Ingested" } };
     const pages = await mapped("querying the source inbox", () => this.api.queryDataSource(this.ref.dataSourceId, filter));
-    return pages.map((p) => toRow(p, this.ref.form)).filter((r) => r.status !== "Ingested").sort(byAge);
+    return pages.map((p) => toRow(p, this.ref.form)).filter((r) => r.status !== "Ingested").sort(byCreation);
   }
 
   setStatus(id: string, status: Status, reason: string): Promise<void> {
