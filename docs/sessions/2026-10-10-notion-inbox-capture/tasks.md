@@ -26,7 +26,7 @@ budget:
 - [x] DES-004: connector config adapter `src/adapters/config/yaml-config.ts` (`ConfigStore`, atomic 0600 write, `guardConfigPath`) with tests (depends on: 4)
 - [x] DES-007: connector ledger adapter `src/adapters/ledger/jsonl-ledger.ts` (`PullLedger`) with tests (depends on: 4)
 - [x] DES-002: Notion HTTP client `src/adapters/notion/http-client.ts` (`NotionApi`, typed errors, 429 retry, redirect refused, pinned version) and `src/adapters/notion/source-inbox.ts` (`SourceInbox`, `InboxProvisioner`), tested against a local recording server (depends on: 4)
-- [ ] DES-014: `notion-pull` example job in `control/estate.example.yaml` (depends on: 1)
+- [x] DES-014: `notion-pull` example job in `control/estate.example.yaml` (depends on: 1)
 - [ ] DES-006: converter `src/adapters/notion/blocks.ts` and pure `src/domain/capture-item.ts`, reproducing REQ-011/REQ-012 fixtures and the REQ-024 `extractUrls` check (depends on: 9)
 - [ ] DES-008: eligibility and selection `src/domain/eligibility.ts` with REQ-010/019/035 tests (depends on: 4, 8)
 - [ ] DES-010: stopped-item ask `src/domain/stopped-ask.ts` and `src/adapters/vault/vault-writer.ts` (capture items with `wx`, asks, daily block, hint lookup) with tests (depends on: 4, 11)

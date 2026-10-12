@@ -108,6 +108,30 @@ jobs:
       undone if the check fails. The scheduler's PATH must include task and node.
       See ADR-0006.
 
+  # The Notion phone-capture pull (#21): the same commits: false shape as the
+  # ingester, which it drives. The schedule is yours to choose.
+  - id: notion-pull
+    description: Pull the Notion capture inbox into 00-inbox/capture/ and ingest it, up to 10 items per run.
+    repo: ${repos}/my-vault
+    script: "task -d ${repos}/my-vault notion:pull"
+    schedule: "0 7,13,19 * * *"
+    ledger: .state/notion-pull/ledger.jsonl
+    gate: "built-in per-item check; task notion:pull:preflight checks readiness"
+    commits: false
+    branch: null
+    log: ${logs}/notion-pull.log
+    tier: standard
+    max_silence_hours: 30
+    status: healthy
+    note: >-
+      commits: false is deliberate here, not the lost-work defect. Every file this
+      job writes (capture items, resource notes, archived captures, asks, the
+      daily note and both ledgers) is gitignored vault content or local state
+      (ADR-0006). Its only other writes are the Status and Reason of the rows it
+      processes in the Notion source inbox. The schedule is the operator's
+      choice: the pull assumes no interval between runs, so any cron works. The
+      scheduler's PATH must include task and node.
+
   # A deliberately broken example, kept because the failure it shows is the most
   # common one in practice.
   - id: example-broken-job
