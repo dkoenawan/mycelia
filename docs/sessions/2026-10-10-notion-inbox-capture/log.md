@@ -29,6 +29,7 @@ next_step: "Design gate: operator approves / adjusts / rethinks design/"
 
 ## Key decisions
 
+- **2026-10-12**: D8 clean architecture inside `integration/notion/src` (`domain/` ← `application/` + ports ← `adapters/` ← `cli.ts`), layer rule enforced by ESLint; repo-wide adoption is #22, upstream dkoenawan/compass-labs#62.
 - **2026-10-10**: D7 code layout: `integration/notion/{src,template,test}`, Notion-only behind `NotionApi`; gate/tsconfig/eslint/Taskfile widened (operator's own choice).
 - **2026-10-10**: D6 new ADR on credentialed egress for capture-source connectors, written at Close.
 - **2026-10-10**: D5 config in `control/notion.local.yaml` (0600); ledger `.state/notion-pull/ledger.jsonl`.
@@ -159,3 +160,11 @@ next_step: "Design gate: operator approves / adjusts / rethinks design/"
 - Four "traded off" marks (DES-001 open/closed, D4, D7/DES-012), all from the operator's own choices, for confirmation at the gate.
 - Open for Test: REQ-025 uses a recording server instead of a proxy.
 - Open for Close: write the D6 ADR.
+
+### 2026-10-12 — main — decision: D8 clean architecture inside the connector
+- The operator found the flat nine-module `integration/notion/src/` too flat and asked for clean architecture.
+- Layers: `domain/` (pure: capture, lifecycle, eligibility, note rendering) ← `application/` (setup, pull and preflight use cases, plus `ports.ts`) ← `adapters/` (Notion HTTP client and source inbox, blocks mapping, YAML config, JSONL ledger, vault writer, key prompt, ingest-session wrapper) ← `cli.ts` composition root.
+- Only adapters import from `src/`. DES-012 adds an ESLint `no-restricted-imports` layer rule. New DES-018 covers the domain model and the ports. D7's "no generic `CaptureSource`" stands.
+- `src/ingest/` is out of scope here. Raised #22 (adopt the convention repo-wide, refactor `src/ingest/`) and dkoenawan/compass-labs#62 (backend-shaped code always follows clean architecture).
+- The component diagram wasn't render-checked: mermaid-cli has no headless browser on this machine.
+
