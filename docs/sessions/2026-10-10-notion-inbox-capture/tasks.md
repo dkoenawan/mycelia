@@ -18,7 +18,7 @@ budget:
 > Order follows the design's implementation order. Connector paths are under `integration/notion/`.
 
 - [x] DES-012: gate wiring for `integration/`: `tsconfig.json` include, `package.json` `test`/`test:live` globs, ESLint tests override plus the D8 layer rule (`no-restricted-imports` per folder), the no-`.md` repo test extended to `integration/`, and a placeholder test under `integration/notion/test/`
-- [ ] DES-017 (part 1): opt-in live spike `test/live/spike.live.ts` checking A1–A5; skips cleanly when the test-workspace env vars are unset; never holds a key (depends on: 1)
+- [x] DES-017 (part 1): opt-in live spike `test/live/spike.live.ts` checking A1–A5; skips cleanly when the test-workspace env vars are unset; never holds a key (depends on: 1)
 - [ ] DES-017 (part 2): run the spike against the operator's test workspace, record the A1–A5 findings in `src/adapters/notion/http-client.ts`'s header comment, and confirm or correct the `NOTION_VERSION` constant and the preferred Status form (depends on: 2, 9)
 - [ ] DES-018: domain model (`src/domain/capture.ts`, `src/domain/lifecycle.ts`) and `src/application/ports.ts`, with `test/domain/` unit tests (depends on: 1)
 - [ ] DES-001: ingest session seam `src/ingest/session.ts` (`openIngestSession` / `processOne` / `close`, exported `ingestPreflight`), `runIngest` as a thin wrapper; existing `test/` suite unchanged plus new session tests (depends on: 1)
