@@ -196,3 +196,13 @@ next_step: "Operator runs the DES-017 live spike in a test workspace; then imple
 - See `tasks.md` → "Deviations from design". None changes a REQ. DES-002 and DES-005 no longer wait on DES-017.
 - Carry forward: the Close ADR (D6) takes A1–A5 from DES-017 part 2; the README's ADR link is still to add.
 
+
+### 2026-10-17 — main — attempt: DES-017 part 2, live spike run against the operator's test workspace
+- 4/4 Notion checks pass. A1: create under a shared page 200; an unshared page 404 `object_not_found`. A2: current key 200 (bot); revoked-key case not run. A3/D4: native `status` is created, so setup's first branch holds and no REQ-002 glossary decision is needed. A4: `Notion-Version 2025-09-03` confirmed for create, data-source query and update. A5: 2,001-char rich text refused with 400; `created_time` minute-rounded; a 40-request burst drew no 429, so `Retry-After` is covered by unit tests only.
+- Findings recorded in `integration/notion/src/adapters/notion/http-client.ts`'s header. Gate 185/185.
+- Gap found: the spike passes `NOTION_TEST_PAGE_ID` raw, so a slug-form value has to be trimmed to its ID by hand; `notion:setup` parses URLs.
+
+### 2026-10-17 — main — milestone: ✅ Implement complete
+- 20 of 20 tasks done, one commit per ticked task, `task check:node` 185/185.
+- Carried into Test: end-to-end `notion:setup` and `notion:pull` against the test page with real phone captures. Carried into Close: the credentialed-egress ADR (D6) with the A1–A5 findings, and the README's ADR link.
+- Process note: the Implement agent executed `tasks.md` without returning it for approval first.
