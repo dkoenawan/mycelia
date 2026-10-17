@@ -13,7 +13,7 @@ status: active
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: deploy
 active_agent: main
-next_step: "Close: fold back into as-built docs, D6 ADR, Diátaxis docs for the connector; then operator merges PR #23 and tags v0.4.1"
+next_step: "Close gate: operator reviews ADR-0008 + Diátaxis docs; then archive, operator merges PR #23 and tags v0.4.1"
 ---
 # Session Log: Notion inbox: capture from phone into the vault inbox (#21)
 
@@ -22,13 +22,13 @@ next_step: "Close: fold back into as-built docs, D6 ADR, Diátaxis docs for the 
 
 ## Open items
 
-- Test: REQ-025 uses a local recording server, not a proxy (client ignores env proxies by design).
-- Close: write the D6 ADR (credentialed egress for capture-source connectors; `integration/` as connector home).
-- Close: Diátaxis docs for the connector (tutorial, how-to, reference, explanation); README section shrinks to a summary + links (operator request, 2026-10-17).
-- Spike reads `NOTION_TEST_PAGE_ID` raw; a slug-form value must be trimmed to its ID by hand.
+- #24: extend the privacy test to scan docs/.
+- Spike reads `NOTION_TEST_PAGE_ID` raw; a slug-form value must be trimmed to its ID by hand (documented in the how-to).
+- After merge: the operator tags v0.4.1 and sets up the real connector in the second-brain checkout.
 
 ## Key decisions
 
+- **2026-10-17**: Follow-up #24: extend the privacy test to scan docs/.
 - **2026-10-17**: ✅ Deploy complete — release.md ready (Completeness: complete, no gaps; no schema bump); PR #23 open, CI green; merge and v0.4.1 tag follow Close.
 - **2026-10-17**: Release plan: PR #23 merges after Close (operator merges in the UI); tag v0.4.1 (operator's PATCH call over ADR-0004's MINOR reading).
 - **2026-10-17**: ✅ Test complete — all 44 REQs traced to passing VER rows; capture-name defect found and fixed in aa38209 (VER-046/047), gate 191/191.
@@ -297,3 +297,26 @@ next_step: "Close: fold back into as-built docs, D6 ADR, Diátaxis docs for the 
 ### 2026-10-17 — main — milestone: ✅ Deploy complete
 - Operator approved: Deploy is done with PR #23 ready and CI green; the merge and the `v0.4.1` tag wait for Close so its docs ship in the same PR. release.md's Completeness section: complete, no gaps.
 - PR #23 body updated to name `v0.4.1`.
+
+---
+
+## Phase: Close
+
+### 2026-10-17 — main — handoff: orchestrator → compass-labs:close (as-built docs, D6 ADR, Diátaxis docs)
+- **Input:** Fold the session into as-built docs (one Origin line per doc). Write the D6 ADR (credentialed egress for capture-source connectors; `integration/` as connector home) with the A1–A5 findings. Write Diátaxis docs for the Notion connector: tutorial (first phone capture end to end), how-to (schedule + register the pull, reconnect after inbox deletion, rotate key, retry a Failed row), reference (config fields, database columns, statuses, `task notion:*` commands, exit codes), explanation (pull-only one-way design, security boundary → ADR). Include the post-milestone capture-name fix (log's Test phase) in the as-built design. README stays outside the agent's scope: return the shortened Phone capture section (summary + links) for the orchestrator to apply.
+- **Output:** done; ADR-0008 and four Diátaxis docs (docs/tutorials/, docs/how-to/, docs/reference/notion-capture/, docs/explanation/notion-capture/), uncommitted; README section returned and applied by the orchestrator (Phone capture section shortened to summary + links; `docs/` added to the Layout tree). Gate 191/191; README links resolve.
+
+### 2026-10-17 — compass-labs:close — attempt: as-built docs and ADR-0008 written
+- ADR-0008 (credentialed egress for capture-source connectors; `integration/<name>/` as connector home) with the A1–A5 live findings.
+- Diátaxis docs: docs/tutorials/notion-first-phone-capture.md, docs/how-to/notion-capture.md (schedule + register, reconnect, rotate key, retry Failed, test workspace + spike), docs/reference/notion-capture/connector.md, docs/explanation/notion-capture/overview.md.
+- Post-milestone capture-name fix (aa38209) folded in: full 32-hex row ID in the name, recovery checks `source_id`, ledger answers with the latest record. tasks.md deviations reflected as current fact.
+- `task check:node` 191/191; privacy patterns, session-ID grep and relative links checked by hand on the new docs (the privacy test doesn't scan docs/).
+
+### 2026-10-17 — compass-labs:close — note: Fold-back ready — README section returned for the orchestrator
+- Folded requirements/design/as-built into the four docs above plus ADR-0008. No constructs registered: the repo has no docs/registry/ (ADR-0000 rejected that model).
+- README's previous held-row sentence was inaccurate: a pull doesn't re-ingest a held item; `task ingest-inbox` must run first, then the pull catches up. The replacement section drops it; the docs state it correctly.
+- Key rotation is an in-place edit of `api_key`, not a setup re-run (setup with a config present never asks for a key; deleting the config creates a new inbox).
+- Possible follow-up: widen the privacy test to scan docs/.
+
+### 2026-10-17 — main — decision: follow-up #24 — extend the privacy test to docs/
+- Operator approved opening #24: the privacy test scans only `integration/` and `README.md`, so the new public docs under `docs/` go unchecked. Deferred out of #21.
