@@ -12,7 +12,7 @@ status: active
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: test
-active_agent: main
+active_agent: compass-labs:deploy
 next_step: "Deploy agent writes release.md; Close follows (D6 ADR, Diátaxis docs)"
 ---
 # Session Log: Notion inbox: capture from phone into the vault inbox (#21)
@@ -29,6 +29,7 @@ next_step: "Deploy agent writes release.md; Close follows (D6 ADR, Diátaxis doc
 
 ## Key decisions
 
+- **2026-10-17**: Release plan: PR #23 merges after Close (operator merges in the UI); tag v0.4.1 (operator's PATCH call over ADR-0004's MINOR reading).
 - **2026-10-17**: ✅ Test complete — all 44 REQs traced to passing VER rows; capture-name defect found and fixed in aa38209 (VER-046/047), gate 191/191.
 - **2026-10-17**: Test gate held: fix the capture-name collision (same-title rows share a filename) in Implement before approving Test.
 - **2026-10-17**: ✅ Implement complete — 20/20 tasks, gate 185/185; DES-017 live spike passed: native Status (D4 first branch), Notion-Version 2025-09-03 confirmed.
@@ -269,3 +270,25 @@ next_step: "Deploy agent writes release.md; Close follows (D6 ADR, Diátaxis doc
 - Operator approved at the Test gate. check-traceability.sh exits 0; 47 VER rows (VER-044/045 kept as the 4337be2 failure record, re-checked by VER-046/047 on aa38209).
 - Partial coverage accepted: REQ-008 hidden TTY prompt not exercised (stdin path only); REQ-009/013/033 and REQ-018/019/029/044 partly or wholly via harness.
 - Test artifacts to clean: a second Capture inbox and ~36 rows in the test workspace; gitignored test vault content in this checkout, including test links appended to the one `10-projects/` note.
+
+---
+
+## Phase: Deploy
+
+### 2026-10-17 — main — handoff: orchestrator → compass-labs:deploy (release.md, PR to main)
+- **Input:** Write release.md with its Completeness section, following the repo's own release path (ADR-0004: PR to main, then a hand-pushed SemVer tag the operator chooses; release.yml validates the tag and smoke-tests a bare checkout). Open the PR from `feat/21-notion-inbox-capture`; check CI. Don't merge, tag or bump versions without returning needs_input. Note the post-merge steps for the operator's second-brain checkout (pull, `task install`, real `notion:setup`, cron, estate registry entry).
+- **Output:** needs_input; release.md (new, uncommitted). PR #23 open, CI green, BLOCKED on one code-owner review.
+
+### 2026-10-17 — compass-labs:deploy — attempt: Release prepared, PR #23 opened, CI green
+- Gate re-run on `913a1d8`: 191/191. Bare-checkout smoke test (`task install && task doctor:ci`): 8/8. Opened PR #23 into `main` (no closing keyword for #21). PR CI `check-node` passed on both runs. The PR is MERGEABLE but BLOCKED until a code owner approves it; all commits are signature-verified. `release.md` drafted with the Completeness check (complete, no gaps), the proposed tag, rollback, and the operator's post-merge steps.
+
+### 2026-10-17 — compass-labs:deploy — note: No schema version bump; proposed tag v0.5.0
+- `control/estate.example.yaml` only gains one example job (`notion-pull`) using existing fields, so ADR-0002's `version:` stays at 1 and no `control/UPGRADE-N.md` is needed. Doctor check #8 passes. Proposed tag `v0.5.0` (MINOR: new optional, backwards-compatible feature; still 0.x per ADR-0004), pending the operator's decision. No tag pushed and no merge done.
+
+### 2026-10-17 — compass-labs:deploy — decision: Release plan per operator — merge after Close, tag v0.4.1
+- PR #23 merges after Close, so the Close docs (the credentialed-egress ADR and the Diátaxis docs) ship in it. The operator merges it in the GitHub UI, with no `--admin`.
+- The tag is `v0.4.1`, pushed after the merge. The operator's reasoning is that the feature is optional and minor. ADR-0004's 0.x policy would read a new feature as a MINOR bump (`v0.5.0` was proposed), and the operator chose PATCH knowing that.
+- Deploy counts as done with the PR ready and CI green. The post-merge steps on the second-brain checkout stay as listed and don't block Deploy.
+
+### 2026-10-17 — compass-labs:deploy — attempt: release.md updated to release-ready
+- `release.md` status set to "Ready for release". Merge order, merger, the `v0.4.1` tag after merge with the policy note, and the rollback tag (`v0.4.2`) updated. The PR #23 body still named `v0.5.0`; the orchestrator updates it.
