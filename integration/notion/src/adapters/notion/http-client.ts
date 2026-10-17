@@ -4,16 +4,27 @@
 // base URL can be injected through the constructor for tests only; the CLI
 // never sets it.
 //
-// Live findings (DES-017, assumptions A1-A5): NOT YET RECORDED. The spike in
-// test/live/spike.live.ts hasn't been run against a test workspace yet, so
-// NOTION_VERSION below is provisional (the data-source model's first version,
-// A4), and setup tries the native status form first and falls back to select
-// when the API refuses it (A3, D4). Replace this paragraph with the findings
-// once the spike has run.
+// Live findings (DES-017, test/live/spike.live.ts against a test workspace):
+// - A1: creating a database under a page shared with the integration succeeds;
+//   under a page not shared with it the API answers 404 object_not_found,
+//   naming the integration. The unshared-page case on a separate page wasn't run.
+// - A2: users/me with a working key returns 200, type bot. Behaviour of a
+//   regenerated (old) key wasn't checked live; it rests on the docs.
+// - A3 / D4: the API does create a native status property, so setup's first
+//   try (status) is the branch taken; the select fallback stays as a guard.
+//   A row created with only a title reads Status: New.
+// - A4: under Notion-Version 2025-09-03 the create response carries
+//   data_sources[0].id; /v1/data_sources/{id}/query with a does_not_equal
+//   filter returns the New row; updating Status and a 2,000-character Reason
+//   succeeds.
+// - A5: a 2,001-character rich-text segment is refused with 400, so
+//   RICH_TEXT_MAX holds. created_time is rounded to the minute. A burst of 40
+//   parallel requests drew no 429, so Retry-After handling is unexercised live
+//   and rests on the docs and the unit tests.
 import type { StatusForm } from "../../application/ports.ts";
 
 export const NOTION_HOST = "https://api.notion.com";
-/** Pinned API version (D3). Provisional until DES-017 confirms it. */
+/** Pinned API version (D3), confirmed against the live API by DES-017 (A4). */
 export const NOTION_VERSION = "2025-09-03";
 export const PAGE_SIZE = 100;
 /** Rich-text segment limit (A5); longer reasons are truncated with an ellipsis. */
