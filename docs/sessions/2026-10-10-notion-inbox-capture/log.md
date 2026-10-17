@@ -2,7 +2,7 @@
 session: 2026-10-10-notion-inbox-capture
 type: feature
 issue: 21
-phase: implement
+phase: test
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: design
+milestone: implement
 active_agent: main
-next_step: "Operator runs the DES-017 live spike in a test workspace; then implement records findings and ticks task 3"
+next_step: "Test agent writes verification.md; end-to-end setup + pull against the test Capture inbox"
 ---
 # Session Log: Notion inbox: capture from phone into the vault inbox (#21)
 
@@ -22,13 +22,14 @@ next_step: "Operator runs the DES-017 live spike in a test workspace; then imple
 
 ## Open items
 
-- Notion API assumptions A1–A5 unverified; DES-017 live spike is Implement's first task (also settles D4 status type and pins API version).
 - Test: REQ-025 uses a local recording server, not a proxy (client ignores env proxies by design).
 - Close: write the D6 ADR (credentialed egress for capture-source connectors; `integration/` as connector home).
-- If the spike forces the `select` fallback, log that REQ-002 "has status New" is read through the glossary (blank = New).
+- Close: Diátaxis docs for the connector (tutorial, how-to, reference, explanation); README section shrinks to a summary + links (operator request, 2026-10-17).
+- Spike reads `NOTION_TEST_PAGE_ID` raw; a slug-form value must be trimmed to its ID by hand.
 
 ## Key decisions
 
+- **2026-10-17**: ✅ Implement complete — 20/20 tasks, gate 185/185; DES-017 live spike passed: native Status (D4 first branch), Notion-Version 2025-09-03 confirmed.
 - **2026-10-12**: ✅ Design complete — 18 DES items, 8 decisions, all 44 REQs covered; five traded-off marks confirmed.
 - **2026-10-12**: D8 clean architecture inside `integration/notion/src` (`domain/` ← `application/` + ports ← `adapters/` ← `cli.ts`), layer rule enforced by ESLint; repo-wide adoption is #22, upstream dkoenawan/compass-labs#62.
 - **2026-10-10**: D7 code layout: `integration/notion/{src,template,test}`, Notion-only behind `NotionApi`; gate/tsconfig/eslint/Taskfile widened (operator's own choice).
