@@ -2,7 +2,7 @@
 session: 2026-10-10-notion-inbox-capture
 type: feature
 issue: 21
-phase: deploy
+phase: close
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: test
-active_agent: compass-labs:deploy
-next_step: "Deploy agent writes release.md; Close follows (D6 ADR, Diátaxis docs)"
+milestone: deploy
+active_agent: main
+next_step: "Close: fold back into as-built docs, D6 ADR, Diátaxis docs for the connector; then operator merges PR #23 and tags v0.4.1"
 ---
 # Session Log: Notion inbox: capture from phone into the vault inbox (#21)
 
@@ -29,6 +29,7 @@ next_step: "Deploy agent writes release.md; Close follows (D6 ADR, Diátaxis doc
 
 ## Key decisions
 
+- **2026-10-17**: ✅ Deploy complete — release.md ready (Completeness: complete, no gaps; no schema bump); PR #23 open, CI green; merge and v0.4.1 tag follow Close.
 - **2026-10-17**: Release plan: PR #23 merges after Close (operator merges in the UI); tag v0.4.1 (operator's PATCH call over ADR-0004's MINOR reading).
 - **2026-10-17**: ✅ Test complete — all 44 REQs traced to passing VER rows; capture-name defect found and fixed in aa38209 (VER-046/047), gate 191/191.
 - **2026-10-17**: Test gate held: fix the capture-name collision (same-title rows share a filename) in Implement before approving Test.
@@ -292,3 +293,7 @@ next_step: "Deploy agent writes release.md; Close follows (D6 ADR, Diátaxis doc
 
 ### 2026-10-17 — compass-labs:deploy — attempt: release.md updated to release-ready
 - `release.md` status set to "Ready for release". Merge order, merger, the `v0.4.1` tag after merge with the policy note, and the rollback tag (`v0.4.2`) updated. The PR #23 body still named `v0.5.0`; the orchestrator updates it.
+
+### 2026-10-17 — main — milestone: ✅ Deploy complete
+- Operator approved: Deploy is done with PR #23 ready and CI green; the merge and the `v0.4.1` tag wait for Close so its docs ship in the same PR. release.md's Completeness section: complete, no gaps.
+- PR #23 body updated to name `v0.4.1`.
