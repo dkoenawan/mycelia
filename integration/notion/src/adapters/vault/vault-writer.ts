@@ -6,6 +6,7 @@ import { open, stat } from "node:fs/promises";
 import path from "node:path";
 import { INBOX_DIR } from "../../../../../src/ingest/asks.ts";
 import { CAPTURE_DIR } from "../../../../../src/ingest/capture.ts";
+import { readFrontmatter } from "../../../../../src/ingest/frontmatter.ts";
 import { VaultIndex } from "../../../../../src/ingest/vault.ts";
 import { appendDaily } from "../../../../../src/lib/daily.ts";
 import type { VaultWriter } from "../../application/ports.ts";
@@ -49,6 +50,15 @@ export class FsVaultWriter implements VaultWriter {
 
   captureExists(name: string): Promise<boolean> {
     return exists(path.join(this.root, CAPTURE_DIR, name));
+  }
+
+  async captureSourceId(name: string): Promise<string | null> {
+    try {
+      const v = (await readFrontmatter(path.join(this.root, CAPTURE_DIR, name))).data?.["source_id"];
+      return typeof v === "string" ? v : null;
+    } catch {
+      return null; // missing or unreadable: nothing names an owner
+    }
   }
 
   async writeCapture(name: string, content: string): Promise<string> {

@@ -300,3 +300,57 @@ test("a capture write failure is a pull failure, and the intent is safely re-pul
   assert.equal(await w.run(), EXIT.ok);
   assert.equal(r.status, "Ingested");
 });
+
+// Regression: Notion IDs created close together share their leading hex digits, so
+// two same-title rows (every untitled row is "capture") must still get distinct
+// capture names. IDs are built at runtime (DES-016: no UUID-shaped literal).
+const closeId = (tail: string): string => ["1e2f3a4b", "5c6d", "8000", "9000", tail.padStart(12, "0")].join("-");
+const holdNoteA = (aId: string): Decide => (c, content) =>
+  content.includes(`source_id: "${aId}"`) ? { kind: "held", reason: "no-fit", ask: `00-inbox/2026-10-12-ingest-${c.replace(/\.md$/, "")}.md` } : ingestAll(c, content);
+
+test("defect: catch-up doesn't set a held row Ingested because another row with the same title was ingested (REQ-016, REQ-020)", async () => {
+  const w = world((c, content) => (content.includes(`source_id: "${closeId("b")}"`) ? { kind: "held", reason: "no-fit", ask: `00-inbox/2026-10-12-ingest-${c.replace(/\.md$/, "")}.md` } : ingestAll(c, content)));
+  const a = w.inbox.add("Note", { id: closeId("a") });
+  const b = w.inbox.add("Note", { id: closeId("b") });
+  assert.equal(await w.run(), EXIT.ok, w.out.lines.join("\n"));
+  assert.equal(a.status, "Ingested");
+  assert.equal(b.status, "Failed");
+  const heldReason = b.reason;
+  assert.match(heldReason, /^held: /);
+  assert.equal(await w.run(), EXIT.ok, w.out.lines.join("\n"));
+  assert.deepEqual([b.status, b.reason], ["Failed", heldReason]);
+  assert.ok(!items(w).some((r) => r.id === b.id && r.outcome === "synced"));
+});
+
+test("defect: a same-title row's capture isn't 'recovered' against another row's file (REQ-011, REQ-017)", async () => {
+  const seen = new Map<string, string>();
+  const decide = holdNoteA(closeId("a"));
+  const w = world((c, content) => { seen.set(c, content); return decide(c, content); });
+  const a = w.inbox.add("", { id: closeId("a") });
+  const b = w.inbox.add("", { id: closeId("b") });
+  await w.run();
+  await w.run();
+  assert.equal(a.status, "Failed"); // held, its capture item still in the capture folder
+  assert.equal(b.status, "Ingested", w.out.lines.join("\n"));
+  const bCapture = items(w).find((r) => r.id === b.id && r.outcome === "ingested")?.capture ?? "";
+  assert.ok(seen.get(bCapture)?.includes(`source_id: "${b.id}"`), `B was ingested from ${bCapture}, which isn't B's capture item`);
+  assert.ok(!w.out.lines.some((l) => l.startsWith("recovered")));
+});
+
+test("recovery doesn't adopt a capture file that names a different row (legacy colliding intent)", async () => {
+  const w = world(holdNoteA(closeId("a")));
+  const a = w.inbox.add("Note", { id: closeId("a") });
+  const b = w.inbox.add("Note", { id: closeId("b") });
+  w.inbox.failingReads.add(b.id);
+  await w.run();
+  assert.deepEqual([a.status, b.status, w.ledger.isPulled(b.id)], ["Failed", "Failed", false]);
+  const aCapture = w.ledger.captureOf(a.id) ?? "";
+  // An intent left by an older build, whose name collided with A's capture item.
+  w.ledger.startRun("2026-10-12T05:00:00Z");
+  await w.ledger.intent(b.id, aCapture);
+  w.inbox.failingReads.clear();
+  await w.run();
+  assert.ok(!w.out.lines.some((l) => l.startsWith(`recovered ${aCapture}`)), w.out.lines.join("\n"));
+  assert.notEqual(w.ledger.captureOf(b.id), aCapture);
+  assert.equal(b.status, "Ingested");
+});

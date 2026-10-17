@@ -109,6 +109,12 @@ class PullRun {
   /** Step 3: an intent with no pulled record. */
   async recover(): Promise<void> {
     for (const i of this.d.ledger.openIntents()) {
+      const owner = await this.d.vault.captureSourceId(i.capture);
+      if (owner !== null && owner !== i.id) {
+        // Another row's capture item holds this name; never adopt it. The row is re-pulled.
+        this.d.log(`not recovering ${i.capture}: it holds another source item's capture`);
+        continue;
+      }
       if ((await this.d.vault.captureExists(i.capture)) || this.d.ingester.wasIngested(i.capture)) {
         await this.d.ledger.pulled(i.id, i.capture, "recovered");
         this.d.log(`recovered ${i.capture}: it was written before an interrupted run recorded it`);

@@ -104,9 +104,16 @@ export class JsonlPullLedger implements PullLedger {
     return this.cache.some((r) => r.event === "pulled" && r.id === id);
   }
 
+  /** The latest pulled name, else the latest intent's: a row re-pulled under a new name answers with the new one. */
   captureOf(id: string): string | null {
-    for (const r of this.cache) if ((r.event === "pulled" || r.event === "intent") && r.id === id) return r.capture;
-    return null;
+    let intent: string | null = null;
+    for (let k = this.cache.length - 1; k >= 0; k--) {
+      const r = this.cache[k];
+      if ((r?.event !== "pulled" && r?.event !== "intent") || r.id !== id) continue;
+      if (r.event === "pulled") return r.capture;
+      intent ??= r.capture;
+    }
+    return intent;
   }
 
   events(id: string): ItemEvent[] {
@@ -120,12 +127,11 @@ export class JsonlPullLedger implements PullLedger {
     });
   }
 
+  /** Each unpulled row's latest intent, in first-intent order. */
   openIntents(): { id: string; capture: string }[] {
-    const out: { id: string; capture: string }[] = [];
-    for (const r of this.cache) {
-      if (r.event === "intent" && !this.isPulled(r.id) && !out.some((o) => o.id === r.id)) out.push({ id: r.id, capture: r.capture });
-    }
-    return out;
+    const out = new Map<string, string>();
+    for (const r of this.cache) if (r.event === "intent" && !this.isPulled(r.id)) out.set(r.id, r.capture);
+    return [...out].map(([id, capture]) => ({ id, capture }));
   }
 
   allPulled(): { id: string; capture: string }[] {

@@ -21,9 +21,17 @@ test("frontmatter carries source and identity; no URL line when unset", () => {
 });
 
 test("names are deterministic and safe", () => {
-  assert.equal(captureName(row), "notion-interview-prep-abcd1234.md");
+  assert.equal(captureName(row), "notion-interview-prep-abcd12340000.md");
   assert.equal(captureName({ id: "ffff0000", title: "!!!" }), "notion-capture-ffff0000.md");
   assert.equal(slugify("Café déjà vu"), "cafe-deja-vu");
   assert.equal(omittedLine({ image: 2, file: 1 }), "Left out: 1 file, 2 images.");
   assert.equal(omittedLine({}), "");
+});
+
+test("same-title rows whose IDs share their leading digits get distinct names (the whole ID is used)", () => {
+  const id = (tail: string): string => ["1e2f3a4b", "5c6d", "8000", "9000", tail.padStart(12, "0")].join("-");
+  const a = captureName({ id: id("a"), title: "" });
+  const b = captureName({ id: id("b"), title: "" });
+  assert.notEqual(a, b);
+  assert.equal(a, `notion-capture-${id("a").replace(/-/g, "")}.md`);
 });

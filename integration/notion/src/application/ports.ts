@@ -139,6 +139,8 @@ export interface VaultWriter {
   unignoredPaths(): Promise<string[]>;
   /** True if `00-inbox/capture/<name>` exists. */
   captureExists(name: string): Promise<boolean>;
+  /** The `source_id` in that capture item's frontmatter, or null when it's missing, unreadable or has none. */
+  captureSourceId(name: string): Promise<string | null>;
   /** Create `00-inbox/capture/<name>` exclusively; returns its SHA-256. Throws if it exists. */
   writeCapture(name: string, content: string): Promise<string>;
   /** True if `20-areas/<slug>.md` or `10-projects/<slug>.md` exists. */

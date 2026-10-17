@@ -24,6 +24,18 @@ test("capture items are created exclusively and hashed", async () => {
   } finally { v.done(); }
 });
 
+test("a capture item's source_id is read from its frontmatter; null when missing or absent", async () => {
+  const v = tempVault();
+  try {
+    const w = new FsVaultWriter(v.root);
+    assert.equal(await w.captureSourceId("none.md"), null);
+    await w.writeCapture("a.md", '---\nsource: notion\nsource_id: "row-1"\n---\n\n# A\n');
+    assert.equal(await w.captureSourceId("a.md"), "row-1");
+    await w.writeCapture("b.md", "hand-dropped, no frontmatter\n");
+    assert.equal(await w.captureSourceId("b.md"), null);
+  } finally { v.done(); }
+});
+
 test("hint targets: areas and projects only", async () => {
   const v = tempVault({ "20-areas/career.md": "x", "10-projects/garden.md": "x" });
   try {

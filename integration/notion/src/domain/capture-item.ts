@@ -19,10 +19,15 @@ export function hintSlug(hint: string | null): string | null {
   return SLUG.test(s) ? s : null;
 }
 
-/** Deterministic capture filename: the same row always gets the same name (REQ-013 recovery). */
+/**
+ * Deterministic capture filename: the same row always gets the same name
+ * (REQ-013 recovery), and no two rows share one. It carries the row's whole ID:
+ * Notion IDs created close together share their leading digits, so a prefix
+ * collides for same-title rows (every untitled row slugs to "capture").
+ */
 export function captureName(row: Pick<SourceRow, "id" | "title">): string {
-  const short = row.id.replace(/[^0-9a-zA-Z]/g, "").slice(0, 8).toLowerCase();
-  return `notion-${slugify(row.title) || "capture"}-${short}.md`;
+  const id = row.id.replace(/[^0-9a-zA-Z]/g, "").toLowerCase();
+  return `notion-${slugify(row.title) || "capture"}-${id}.md`;
 }
 
 function plural(label: string, n: number): string {

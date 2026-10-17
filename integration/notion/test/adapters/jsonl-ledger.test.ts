@@ -56,6 +56,21 @@ test("an intent with no pulled record shows up for recovery; pending tracks sett
   } finally { d.done(); }
 });
 
+test("a row re-pulled under a new name answers with its latest intent and pulled name", async () => {
+  const d = dir();
+  try {
+    const l = new JsonlPullLedger(d.file);
+    l.startRun("r1");
+    await l.intent("a", "old.md");
+    await l.intent("a", "new.md");
+    assert.deepEqual(l.openIntents(), [{ id: "a", capture: "new.md" }]);
+    assert.equal(l.captureOf("a"), "new.md");
+    await l.pulled("a", "new.md", "sha");
+    assert.deepEqual(l.openIntents(), []);
+    assert.equal(l.captureOf("a"), "new.md");
+  } finally { d.done(); }
+});
+
 test("a no-op run leaves the file byte-identical (and absent if it was)", async () => {
   const d = dir();
   try {

@@ -139,6 +139,11 @@ export class MemoryVault implements VaultWriter {
     return Promise.resolve(this.captures.has(name));
   }
 
+  captureSourceId(name: string): Promise<string | null> {
+    const m = /^source_id: (".*")$/m.exec(this.captures.get(name) ?? "");
+    return Promise.resolve(m?.[1] ? (JSON.parse(m[1]) as string) : null);
+  }
+
   writeCapture(name: string, content: string): Promise<string> {
     if (this.failingWrites.has(name)) return Promise.reject(new Error("EIO: i/o error"));
     if (this.captures.has(name)) return Promise.reject(Object.assign(new Error("EEXIST"), { code: "EEXIST" }));
