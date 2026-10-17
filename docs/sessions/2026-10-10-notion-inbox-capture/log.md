@@ -13,7 +13,7 @@ status: active
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: implement
 active_agent: main
-next_step: "Test agent writes verification.md; end-to-end setup + pull against the test Capture inbox"
+next_step: "Implement fixes captureName collision (VER-044/045); Test re-verifies; then Test gate"
 ---
 # Session Log: Notion inbox: capture from phone into the vault inbox (#21)
 
@@ -29,6 +29,7 @@ next_step: "Test agent writes verification.md; end-to-end setup + pull against t
 
 ## Key decisions
 
+- **2026-10-17**: Test gate held: fix the capture-name collision (same-title rows share a filename) in Implement before approving Test.
 - **2026-10-17**: ✅ Implement complete — 20/20 tasks, gate 185/185; DES-017 live spike passed: native Status (D4 first branch), Notion-Version 2025-09-03 confirmed.
 - **2026-10-12**: ✅ Design complete — 18 DES items, 8 decisions, all 44 REQs covered; five traded-off marks confirmed.
 - **2026-10-12**: D8 clean architecture inside `integration/notion/src` (`domain/` ← `application/` + ports ← `adapters/` ← `cli.ts`), layer rule enforced by ESLint; repo-wide adoption is #22, upstream dkoenawan/compass-labs#62.
@@ -207,3 +208,32 @@ next_step: "Test agent writes verification.md; end-to-end setup + pull against t
 - 20 of 20 tasks done, one commit per ticked task, `task check:node` 185/185.
 - Carried into Test: end-to-end `notion:setup` and `notion:pull` against the test page with real phone captures. Carried into Close: the credentialed-egress ADR (D6) with the A1–A5 findings, and the README's ADR link.
 - Process note: the Implement agent executed `tasks.md` without returning it for approval first.
+
+---
+
+## Phase: Test
+
+### 2026-10-17 — main — handoff: orchestrator → compass-labs:test (verification.md, live end-to-end)
+- **Input:** Verify all 44 live REQs into `verification.md` (VER-* rows, the fixed column order `check-traceability.sh` reads). Automated suite: `task check:node`. Live: `control/notion.local.yaml` already points at a test-workspace Capture inbox (native Status); `~/.notion-test.env` holds `NOTION_TEST_KEY` and `NOTION_TEST_PAGE_ID` (slug form; extract the 32-hex ID). Create test rows through the API with that key (never print or commit it), then run `task notion:setup` (re-run = idempotent), `task notion:pull:preflight` and `task notion:pull`, and check the vault, ledger, daily note and the rows' Status/Reason. Not the operator's real workspace; don't use the Notion MCP connector.
+- **Output:** done; verification.md (new). 45 VER rows, gate exits 0, but VER-044/045 fail on a real defect; agent recommends an Implement fix before approving Test.
+
+### 2026-10-17 — compass-labs:test — attempt: verification.md written; 44 REQs traced, one defect found
+- 45 VER rows. VER-001…043 pass, so every REQ has a passing row and check-traceability.sh exits 0. VER-044 (REQ-016, REQ-020) and VER-045 (REQ-011, REQ-017) fail.
+- Evidence: `task check:node` 185/185 on 4337be2. Live run against the throwaway Notion workspace: setup re-run, preflight, 11 pull runs over 31 rows, row snapshots before and after. Fresh clone of 4337be2: setup and its failure paths, release smoke test. Scratch integration harness (not committed) for REQ-018/019/029/044, which can't be triggered safely live.
+- Method vocabulary follows the verification template (integration/inspection, Implement tests as "Supporting:"), not the agent definition's unit/e2e/manual; the gate reads only columns 2 and 4.
+
+### 2026-10-17 — compass-labs:test — note: defect: same-title rows get the same capture filename
+- `captureName()` uses the title slug plus the first 8 hex digits of the row ID. Notion IDs created close together share those digits (live: every row in the inbox), so same-title rows, including all untitled ones, get the same capture name.
+- Effect 1: catch-up sets a held row to Ingested and clears its Reason when another row with that title was ingested.
+- Effect 2: a same-title row whose capture write fails is "recovered" against the other row's file and marked Ingested, although none of its content reached the vault.
+- Seen live and reproduced by two failing harness probes. The gate stays green because the fixture rows for the affected REQs pass. Recommend an Implement fix before approving Test.
+
+### 2026-10-17 — compass-labs:test — note: test artifacts left for cleanup
+- Notion test workspace: a second "Capture inbox" under the test page (trashing it via the API was denied by the auto-mode classifier) and 31 test rows in the main inbox.
+- Vault in this checkout (gitignored): about 22 test resource notes with their archived originals, 4 asks and 4 held captures, daily/2026-10-17.md blocks, both .state ledgers, and about 20 test links appended to the one existing 10-projects/ note.
+
+### 2026-10-17 — main — decision: fix the capture-name collision before approving Test
+- Operator chose fix-first at the Test gate. Implement names captures by the full row ID (not its first 8 hex digits), adds regression tests for both effects (held row set Ingested by catch-up; failed-write row "recovered" against another row's file), then Test re-runs VER-044/045.
+
+### 2026-10-17 — main — handoff: orchestrator → compass-labs:implement (fix capture-name collision)
+- **Input:** Fix `captureName()` in `integration/notion/src/domain/capture-item.ts` so the filename is unique per row (full row ID), keeping existing behaviour otherwise; add regression tests for both effects in log's defect note; one commit behind `task check:node`. Record the fix as a deviation/follow-up task in tasks.md if the guard allows; otherwise return the tasks.md change for the orchestrator.
