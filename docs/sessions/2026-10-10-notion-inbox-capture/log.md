@@ -2,7 +2,7 @@
 session: 2026-10-10-notion-inbox-capture
 type: feature
 issue: 21
-phase: test
+phase: deploy
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: implement
+milestone: test
 active_agent: main
-next_step: "Implement fixes captureName collision (VER-044/045); Test re-verifies; then Test gate"
+next_step: "Deploy agent writes release.md; Close follows (D6 ADR, Diátaxis docs)"
 ---
 # Session Log: Notion inbox: capture from phone into the vault inbox (#21)
 
@@ -29,6 +29,7 @@ next_step: "Implement fixes captureName collision (VER-044/045); Test re-verifie
 
 ## Key decisions
 
+- **2026-10-17**: ✅ Test complete — all 44 REQs traced to passing VER rows; capture-name defect found and fixed in aa38209 (VER-046/047), gate 191/191.
 - **2026-10-17**: Test gate held: fix the capture-name collision (same-title rows share a filename) in Implement before approving Test.
 - **2026-10-17**: ✅ Implement complete — 20/20 tasks, gate 185/185; DES-017 live spike passed: native Status (D4 first branch), Notion-Version 2025-09-03 confirmed.
 - **2026-10-12**: ✅ Design complete — 18 DES items, 8 decisions, all 44 REQs covered; five traded-off marks confirmed.
@@ -237,3 +238,34 @@ next_step: "Implement fixes captureName collision (VER-044/045); Test re-verifie
 
 ### 2026-10-17 — main — handoff: orchestrator → compass-labs:implement (fix capture-name collision)
 - **Input:** Fix `captureName()` in `integration/notion/src/domain/capture-item.ts` so the filename is unique per row (full row ID), keeping existing behaviour otherwise; add regression tests for both effects in log's defect note; one commit behind `task check:node`. Record the fix as a deviation/follow-up task in tasks.md if the guard allows; otherwise return the tasks.md change for the orchestrator.
+- **Output:** done; aa38209 (10 files: capture-item, pull-inbox, ports, jsonl-ledger, vault-writer, and their tests). Gate 191/191, re-run by the orchestrator.
+
+### 2026-10-17 — compass-labs:implement — attempt: capture-name collision fixed (VER-044/VER-045)
+- aa38209: `captureName()` uses the full 32-hex row ID. Recovery skips a capture item whose `source_id` names another row. `PullLedger.captureOf`/`openIntents` return the latest record. New port `VaultWriter.captureSourceId`.
+- Regression tests for both effects plus a legacy colliding intent. All fail before the fix, and the legacy test also fails with the `source_id` guard alone disabled. `task check:node` 191/191.
+- Catch-up still matches by name: the ingester's ledger has no `source_id`, and unique names make that sufficient.
+
+### 2026-10-17 — compass-labs:implement — note: tasks.md entry blocked by the guard (frozen at the Implement milestone)
+- The guard refused the tasks.md edit. The orchestrator leaves tasks.md frozen; this log section is the record of the post-milestone fix and its deviation (DES-006 name carries the full ID; DES-009 Recover checks `source_id`; ledger returns the latest record). Close folds it into the as-built docs.
+- Before Test re-runs VER-044/045: ledger records from the old build keep their 8-digit names, so use fresh rows.
+
+### 2026-10-17 — main — handoff: orchestrator → compass-labs:test (re-verify VER-044/045 on aa38209)
+- **Input:** Re-run VER-044 and VER-045 live on aa38209 with fresh same-title and untitled rows (old-build ledger records keep 8-digit names); update those rows and the gate evidence in verification.md.
+- **Output:** done; verification.md (updated). VER-046/047 pass live on aa38209; VER-044/045 kept as fail for 4337be2; traceability exits 0.
+
+### 2026-10-17 — compass-labs:test — attempt: capture-name fix re-verified live on aa38209
+- Gate on aa38209: `task check:node` 191/191; Test's scratch harness 6/6 (defect probes A and B now pass, new probe C passes).
+- VER-046 (REQ-016, REQ-020), live, fresh rows: two "Pair" rows and two untitled rows. One of each was ingested and one held; the held rows stayed Failed with unchanged Reasons on the next pull. That pull changed no row and no file. Capture names carry the full 32-hex row ID (`notion-capture-<id>.md` when untitled).
+- VER-047 (REQ-011, REQ-017), live: a capture file planted under a fresh row's name, holding another row's source_id. Recovery refused it ("not recovering … another source item's capture") and the row stayed Failed across two runs. After the file was removed, the row's own capture item was written.
+- VER-044/045 kept as `fail` for 4337be2, annotated as fixed in aa38209 and re-checked by VER-046/047. check-traceability.sh exits 0.
+
+### 2026-10-17 — compass-labs:test — note: final Ingested for the effect-2 row not observed
+- The last pull stopped with exit 4 when the Claude provider hit its five-hour rate limit. Completed items were kept and nothing was recorded against the row. "Planted" stays Failed with its capture item waiting in 00-inbox/capture/; the next pull after the limit resets should ingest it.
+
+### 2026-10-17 — main — note: effect-2 row's final Ingested observed
+- After the provider limit reset, the orchestrator ran `task notion:pull` on aa38209: exit 0, "Planted" ingested to `30-resources/planted.md`, ledger outcome `ingested`. This closes the gap in VER-047's caveat.
+
+### 2026-10-17 — main — milestone: ✅ Test complete
+- Operator approved at the Test gate. check-traceability.sh exits 0; 47 VER rows (VER-044/045 kept as the 4337be2 failure record, re-checked by VER-046/047 on aa38209).
+- Partial coverage accepted: REQ-008 hidden TTY prompt not exercised (stdin path only); REQ-009/013/033 and REQ-018/019/029/044 partly or wholly via harness.
+- Test artifacts to clean: a second Capture inbox and ~36 rows in the test workspace; gitignored test vault content in this checkout, including test links appended to the one `10-projects/` note.
