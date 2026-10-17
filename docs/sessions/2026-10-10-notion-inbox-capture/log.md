@@ -3,7 +3,7 @@ session: 2026-10-10-notion-inbox-capture
 type: feature
 issue: 21
 phase: close
-status: active
+status: archived
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
 # implement | test | deploy | close. "none" until the first milestone
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: deploy
+milestone: close
 active_agent: main
-next_step: "Close gate: operator reviews ADR-0008 + Diátaxis docs; then archive, operator merges PR #23 and tags v0.4.1"
+next_step: "Operator merges PR #23 and tags v0.4.1; then sets up the real connector in the second-brain checkout"
 ---
 # Session Log: Notion inbox: capture from phone into the vault inbox (#21)
 
@@ -28,6 +28,7 @@ next_step: "Close gate: operator reviews ADR-0008 + Diátaxis docs; then archive
 
 ## Key decisions
 
+- **2026-10-17**: ✅ Session closed — ADR-0008 and Diátaxis docs for the connector shipped in PR #23; README section shortened to summary + links; follow-up #24.
 - **2026-10-17**: Follow-up #24: extend the privacy test to scan docs/.
 - **2026-10-17**: ✅ Deploy complete — release.md ready (Completeness: complete, no gaps; no schema bump); PR #23 open, CI green; merge and v0.4.1 tag follow Close.
 - **2026-10-17**: Release plan: PR #23 merges after Close (operator merges in the UI); tag v0.4.1 (operator's PATCH call over ADR-0004's MINOR reading).
@@ -320,3 +321,8 @@ next_step: "Close gate: operator reviews ADR-0008 + Diátaxis docs; then archive
 
 ### 2026-10-17 — main — decision: follow-up #24 — extend the privacy test to docs/
 - Operator approved opening #24: the privacy test scans only `integration/` and `README.md`, so the new public docs under `docs/` go unchecked. Deferred out of #21.
+
+### 2026-10-17 — main — milestone: ✅ Session closed
+- Operator approved at the Close gate. Fold-back: ADR-0008, docs/tutorials/notion-first-phone-capture.md, docs/how-to/notion-capture.md, docs/reference/notion-capture/connector.md, docs/explanation/notion-capture/overview.md; README Phone capture section shortened to summary + links, `docs/` added to the Layout tree.
+- Two README corrections carried by the docs: a held row needs `task ingest-inbox` before a pull can catch it up; key rotation is an in-place `api_key` edit.
+- Follow-up: #24. Remaining after archive: operator merges PR #23 and tags v0.4.1.

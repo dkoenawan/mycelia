@@ -51,6 +51,7 @@ mycelia/
 ├── src/            # TypeScript runners (the inbox ingester) and their shared library
 ├── test/           # tests for src/, run by `task check:node`
 ├── integration/    # optional third-party connectors (Notion phone capture), with their tests
+├── docs/           # ADRs, research briefs, and Diátaxis docs (tutorials, how-to, reference, explanation)
 └── handoff/        # TUI design specification
 ```
 
@@ -139,72 +140,33 @@ Origin: #12
 
 ## Phone capture (Notion)
 
-Capture on your phone into a Notion database, and a scheduled pull brings each row into
-`00-inbox/capture/` and ingests it through the ingester above. The connector lives in
+Capture on your phone into a Notion database. A scheduled pull brings each row into
+`00-inbox/capture/`, ingests it through the ingester above, and writes the outcome back
+onto the row: Ingested, or Failed with a reason. The connector lives in
 `integration/notion/`. It's optional: without it, nothing changes.
 
-**Needs:** everything the ingester needs, plus a Notion account and outbound HTTPS to
-`api.notion.com`.
+**Needs:** everything the ingester needs, plus a Notion account with an internal
+integration, and outbound HTTPS to `api.notion.com`.
 
-1. **Create an internal integration.** In Notion, open Settings, then Connections, then
-   *Develop or manage integrations*, and create a new internal integration for your
-   workspace. It needs to read content, update content and insert content. Copy its
-   secret; you'll paste it once in step 3.
-2. **Share a parent page with it.** Pick or create a page (for example *Capture*), open
-   its `...` menu, choose *Connections*, and add your integration. The connector can only
-   create its database under a page shared this way.
-3. **Run setup** with that page's link (from *Share*, then *Copy link*) or ID:
+```bash
+task notion:setup -- "<link to a page shared with your integration>"   # once; asks for the secret
+task notion:pull:preflight                                             # check readiness; changes nothing
+task notion:pull                                                       # one run: oldest first, up to 10 rows
+```
 
-   ```bash
-   task notion:setup -- "https://www.notion.so/Capture-<page id>"
-   ```
+The secret lives only in `control/notion.local.yaml` (gitignored, mode 600) and is sent
+only to `api.notion.com`. In Notion, the connector changes only the Status and Reason of
+rows it processes. Nothing it writes is committed.
 
-   It asks for the secret with hidden input, or reads one line of stdin, so the secret
-   never appears in your shell history or process list. It creates a *Capture inbox*
-   database under the page, with an instructions row, and saves the secret and the
-   database's IDs to `control/notion.local.yaml` (gitignored, mode 600). Running it again
-   reports the existing inbox and creates nothing. If the inbox was deleted, it says so:
-   delete `control/notion.local.yaml` and run setup again.
-4. **Schedule the pull.** `task notion:pull` takes the oldest 10 waiting rows per run,
-   writes each as a capture item and ingests it, then sets the row's Status. Add a cron
-   entry on whatever schedule suits you (it assumes no interval between runs), with
-   `task` and `node` on the scheduler's PATH, and register it in your
-   `control/estate.local.yaml` like the `notion-pull` example in
-   `control/estate.example.yaml`. `task notion:pull:preflight` checks the config, the key,
-   access to the inbox and the ingester's readiness, and changes nothing. Pulls and
-   `task ingest-inbox` share one lock, so they never run at the same time.
-
-**What the statuses mean:**
-
-| Status | Meaning |
-|---|---|
-| New (or blank) | Waiting to be pulled. If Notion couldn't create a native Status property, the column is a plain select and new rows start blank, which means the same as New. |
-| Ingested | In the vault: a resource note exists and the original is archived. |
-| Failed | Needs a look; *Reason* says why. A row that couldn't be read is retried on the next pull. After three failed pulls in a row it stops, with one ask in `00-inbox/`; set its Status back to New to retry it. A row the ingester held names the ingester's ask in *Reason*; resolve it in the vault and the next pull sets the row to Ingested. |
-
-**What content is supported:** a row's title, its URL property, and the page's
-paragraphs, headings, bulleted and numbered lists (nested), to-dos and links. Bookmarks
-become links. Anything else, such as images, files, embeds, code blocks, toggles and
-tables, is left out, and the capture item says what was left out. Text styling is
-dropped and the text kept. The optional *Area or project* property, when it names an
-existing note in `20-areas/` or `10-projects/` (for example `career`), links the capture
-to it. Once a row has been pulled, later edits to it are ignored. The connector never
-deletes rows, and in Notion it changes only the Status and Reason of rows it processes.
-
-The secret is sent only to `api.notion.com`, in the `Authorization` header, and redirects
-are refused. Nothing the connector writes is committed: the capture items and everything
-the ingester writes are gitignored vault content, and its ledger is
-`.state/notion-pull/ledger.jsonl`. Each pull that processes a row appends a *Phone
-capture* block to the day's note in `daily/`. `task doctor` reports the connector as not
-configured until setup has run.
-
-Exit codes from `node integration/notion/src/cli.ts` are the ingester's: 0 done or
-nothing to do; 1 at least one row failed or stopped (the rest were processed); 2 can't
-start and nothing was changed (not set up, key rejected, inbox inaccessible, a path not
-gitignored, or the ingester can't start); 3 another pull or ingester run is in progress;
-4 stopped early because Notion or the agent provider became unavailable, with completed
-rows kept and nothing recorded against the rest. As with `task ingest-inbox`, go-task
-reports 201 for any failure.
+- **Tutorial:** [your first phone capture](docs/tutorials/notion-first-phone-capture.md)
+- **How-to:** [schedule and register the pull, reconnect, rotate the key, retry a Failed
+  row, test against a throwaway workspace](docs/how-to/notion-capture.md)
+- **Reference:** [commands, exit codes, config, columns, statuses, file formats and the
+  ledger](docs/reference/notion-capture/connector.md)
+- **Explanation:** [why it's pull-only and one-way, the security boundary, and how it
+  rides the ingester](docs/explanation/notion-capture/overview.md)
+- **Decision:** [ADR-0008](docs/adr/0008-credentialed-egress-for-capture-source-connectors.md),
+  credentialed egress for capture-source connectors
 
 Origin: #21
 
