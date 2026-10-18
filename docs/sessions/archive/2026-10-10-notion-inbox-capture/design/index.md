@@ -50,10 +50,10 @@ The operator confirmed this checklist on 2026-10-10.
 
 ```mermaid
 flowchart LR
-  classDef new fill:#DCFCE7,stroke:#166534
-  classDef changed fill:#FEF3C7,stroke:#92400E
-  classDef deprecated fill:#FEE2E2,stroke:#991B1B,stroke-dasharray:4 3
-  classDef unchanged fill:#F1F5F9,stroke:#475569
+  classDef new fill:#DCFCE7,stroke:#166534,color:#0F172A
+  classDef changed fill:#FEF3C7,stroke:#92400E,color:#0F172A
+  classDef deprecated fill:#FEE2E2,stroke:#991B1B,color:#0F172A,stroke-dasharray:4 3
+  classDef unchanged fill:#F1F5F9,stroke:#475569,color:#0F172A
   OPP["Operator on the phone (person)"]
   OPM["Operator or installer at the machine (person)"]
   SCH["Operator's scheduler (external) [unchanged]"]:::unchanged
@@ -94,10 +94,10 @@ The ingester's agent still has no network access and can't read `control/` (ADR-
 
 ```mermaid
 flowchart TB
-  classDef new fill:#DCFCE7,stroke:#166534
-  classDef changed fill:#FEF3C7,stroke:#92400E
-  classDef deprecated fill:#FEE2E2,stroke:#991B1B,stroke-dasharray:4 3
-  classDef unchanged fill:#F1F5F9,stroke:#475569
+  classDef new fill:#DCFCE7,stroke:#166534,color:#0F172A
+  classDef changed fill:#FEF3C7,stroke:#92400E,color:#0F172A
+  classDef deprecated fill:#FEE2E2,stroke:#991B1B,color:#0F172A,stroke-dasharray:4 3
+  classDef unchanged fill:#F1F5F9,stroke:#475569,color:#0F172A
   subgraph INT["integration/notion/src (clean architecture, D8) [new]"]
     CLI["cli.ts: composition root, setup / pull / pull --preflight [new]"]:::new
     subgraph APP["application/ [new]"]
@@ -157,10 +157,10 @@ Dependencies point inward (D8): `domain/` imports nothing outside itself; `appli
 
 ```mermaid
 flowchart TD
-  classDef new fill:#DCFCE7,stroke:#166534
-  classDef changed fill:#FEF3C7,stroke:#92400E
-  classDef deprecated fill:#FEE2E2,stroke:#991B1B,stroke-dasharray:4 3
-  classDef unchanged fill:#F1F5F9,stroke:#475569
+  classDef new fill:#DCFCE7,stroke:#166534,color:#0F172A
+  classDef changed fill:#FEF3C7,stroke:#92400E,color:#0F172A
+  classDef deprecated fill:#FEE2E2,stroke:#991B1B,color:#0F172A,stroke-dasharray:4 3
+  classDef unchanged fill:#F1F5F9,stroke:#475569,color:#0F172A
   P1["1 Can-start checks: config, key, data source, ingester preflight, gitignore probes; any fail: exit 2, nothing changed [new]"]:::new
   P2["2 Take the shared lock .state/ingest-inbox/lock; held: exit 3 [new]"]:::new
   P3["3 Recover: an intent with no pulled record [new]"]:::new
@@ -183,10 +183,10 @@ flowchart TD
 
 ```mermaid
 flowchart LR
-  classDef new fill:#DCFCE7,stroke:#166534
-  classDef changed fill:#FEF3C7,stroke:#92400E
-  classDef deprecated fill:#FEE2E2,stroke:#991B1B,stroke-dasharray:4 3
-  classDef unchanged fill:#F1F5F9,stroke:#475569
+  classDef new fill:#DCFCE7,stroke:#166534,color:#0F172A
+  classDef changed fill:#FEF3C7,stroke:#92400E,color:#0F172A
+  classDef deprecated fill:#FEE2E2,stroke:#991B1B,color:#0F172A,stroke-dasharray:4 3
+  classDef unchanged fill:#F1F5F9,stroke:#475569,color:#0F172A
   NEW["New, or blank [new]"]:::new
   ING["Ingested [new]"]:::new
   FP["Failed: pull failure, retried [new]"]:::new

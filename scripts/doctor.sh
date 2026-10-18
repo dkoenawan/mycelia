@@ -214,6 +214,32 @@ else
   pass "framework still at version 1 — no UPGRADE docs required yet"
 fi
 
+# --- 9. Notion phone-capture connector (#21): optional --------------------
+# Not configured is a note, not a check: the connector is opt-in. When its
+# config exists it holds an API key, so it must be gitignored, readable by the
+# owner only, and parse. No network call is made.
+
+NOTION_CFG="$MYCELIA_CONTROL/notion.local.yaml"
+if [[ ! -f "$NOTION_CFG" ]]; then
+  note "Notion connector not configured (optional; \`task notion:setup\`)"
+else
+  NOTION_PROBLEMS=""
+  if git -C "$MYCELIA_ROOT" rev-parse --is-inside-work-tree &>/dev/null \
+    && ! git -C "$MYCELIA_ROOT" check-ignore -q --no-index control/notion.local.yaml; then
+    NOTION_PROBLEMS+="not gitignored; "
+  fi
+  NOTION_MODE="$(stat -c '%a' "$NOTION_CFG" 2>/dev/null || stat -f '%Lp' "$NOTION_CFG" 2>/dev/null)"
+  [[ "$NOTION_MODE" == "600" ]] || NOTION_PROBLEMS+="mode is ${NOTION_MODE:-unknown}, not 600 (chmod 600 control/notion.local.yaml); "
+  if command -v python3 &>/dev/null && python3 -c "import yaml" &>/dev/null; then
+    yaml_parses "$NOTION_CFG" || NOTION_PROBLEMS+="does not parse as YAML; "
+  fi
+  if [[ -z "$NOTION_PROBLEMS" ]]; then
+    pass "control/notion.local.yaml is gitignored, mode 600 and parses (Notion connector configured)"
+  else
+    fail "control/notion.local.yaml: ${NOTION_PROBLEMS%; }"
+  fi
+fi
+
 echo ""
 if [[ "$FAILURES" -eq 0 ]]; then
   echo "$CHECKS/$CHECKS checks passed. Install looks healthy."

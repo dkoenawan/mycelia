@@ -9,9 +9,9 @@
   "scripts": {
     "typecheck": "tsc -p tsconfig.json",
     "lint": "eslint .",
-    "test": "node --test \"test/**/*.test.ts\"",
+    "test": "node --test \"test/**/*.test.ts\" \"integration/*/test/**/*.test.ts\"",
     "check": "npm run typecheck && npm run lint && npm test",
-    "test:live": "node --test \"test/live/*.live.ts\""
+    "test:live": "node --test \"test/live/*.live.ts\" \"integration/*/test/live/*.live.ts\""
   },
   "dependencies": {
     "@anthropic-ai/claude-agent-sdk": "0.3.289",

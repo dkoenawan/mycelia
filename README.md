@@ -50,6 +50,8 @@ mycelia/
 ├── scripts/        # bash runners, and the shared library they build on
 ├── src/            # TypeScript runners (the inbox ingester) and their shared library
 ├── test/           # tests for src/, run by `task check:node`
+├── integration/    # optional third-party connectors (Notion phone capture), with their tests
+├── docs/           # ADRs, research briefs, and Diátaxis docs (tutorials, how-to, reference, explanation)
 └── handoff/        # TUI design specification
 ```
 
@@ -135,6 +137,38 @@ Known issues:
   item's name.
 
 Origin: #12
+
+## Phone capture (Notion)
+
+Capture on your phone into a Notion database. A scheduled pull brings each row into
+`00-inbox/capture/`, ingests it through the ingester above, and writes the outcome back
+onto the row: Ingested, or Failed with a reason. The connector lives in
+`integration/notion/`. It's optional: without it, nothing changes.
+
+**Needs:** everything the ingester needs, plus a Notion account with an internal
+integration, and outbound HTTPS to `api.notion.com`.
+
+```bash
+task notion:setup -- "<link to a page shared with your integration>"   # once; asks for the secret
+task notion:pull:preflight                                             # check readiness; changes nothing
+task notion:pull                                                       # one run: oldest first, up to 10 rows
+```
+
+The secret lives only in `control/notion.local.yaml` (gitignored, mode 600) and is sent
+only to `api.notion.com`. In Notion, the connector changes only the Status and Reason of
+rows it processes. Nothing it writes is committed.
+
+- **Tutorial:** [your first phone capture](docs/tutorials/notion-first-phone-capture.md)
+- **How-to:** [schedule and register the pull, reconnect, rotate the key, retry a Failed
+  row, test against a throwaway workspace](docs/how-to/notion-capture.md)
+- **Reference:** [commands, exit codes, config, columns, statuses, file formats and the
+  ledger](docs/reference/notion-capture/connector.md)
+- **Explanation:** [why it's pull-only and one-way, the security boundary, and how it
+  rides the ingester](docs/explanation/notion-capture/overview.md)
+- **Decision:** [ADR-0008](docs/adr/0008-credentialed-egress-for-capture-source-connectors.md),
+  credentialed egress for capture-source connectors
+
+Origin: #21
 
 ## Writing a runner
 
