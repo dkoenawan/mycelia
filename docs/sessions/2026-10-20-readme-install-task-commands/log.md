@@ -26,6 +26,8 @@ next_step: "Define gate: operator approves the requirements (REQ-001 to REQ-011)
 
 ## Key decisions
 
+- **2026-10-20**: Requirements agreed — REQ-001…REQ-011 (9 Must, 2 Should, none deferred); README and install.sh give the same full order; fresh clone passes doctor with 7 area notes.
+
 - **2026-10-20**: Follow-up #25: doctor treating Node and Claude Code as optional for installs that don't run the ingester.
 - **2026-10-20**: Tier short; scope option B: README Install section plus install.sh's printed next steps gain `task deps:node` (no behaviour change); doctor optionality deferred to #25.
 
@@ -58,3 +60,9 @@ next_step: "Define gate: operator approves the requirements (REQ-001 to REQ-011)
 - **Scope: option B.** The root README's `## Install` section and the next steps `scripts/install.sh` prints; the printed next steps gain `task deps:node` before `task doctor` (REQ-011). No script behaviour changes.
 - **Moved to a follow-up:** doctor optionality for Node and Claude Code, #25. Until then, the README lists both as prerequisites (REQ-002).
 - **Anchor:** complete, aligns, no update (action: none).
+
+### 2026-10-20 — compass-labs:define — decision: Requirements agreed (REQ-001 to REQ-011)
+- 11 live requirements: 9 Must, 2 Should. None deferred.
+- `task install` replaces the manual `cp` lines; prerequisites and platforms listed; edit steps, `task deps:node`, `task doctor`, the areas edit and `task bootstrap-areas` appear in order, then open in Obsidian; re-running `task install` is safe; a fresh clone set up from the README passes `task doctor` with 7 area notes (REQ-010); `install.sh`'s printed next steps add `task deps:node` (REQ-011).
+- REQ-007 tightened per orchestrator review: README and install.sh's next steps give the same full order.
+- OUT-01: fresh clone passes doctor and has its area notes. OUT-02: zero mismatches with Taskfile.yml and install.sh.
