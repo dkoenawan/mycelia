@@ -13,7 +13,7 @@ status: active
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: define
 active_agent: main
-next_step: "Design: compass-labs:design drafts design/ for REQ-001 to REQ-011"
+next_step: "Design gate: operator approves design/index.md (DES-001, DES-002)"
 ---
 # Session Log: Root README Install section: use task install / task bootstrap-areas (#10)
 
@@ -26,6 +26,7 @@ next_step: "Design: compass-labs:design drafts design/ for REQ-001 to REQ-011"
 
 ## Key decisions
 
+- **2026-10-24**: D1 A: README steps as a numbered list, one command block per step; D2 A: install.sh gains a new step 3 `task deps:node`, later steps renumbered 4–7.
 - **2026-10-24**: Design kind Plugin/tooling; scope confirmed: README `## Install` + install.sh printed next steps only, text only.
 - **2026-10-24**: ✅ Define complete — operator approved REQ-001…REQ-011 (tier short, scope option B).
 - **2026-10-20**: Requirements agreed — REQ-001…REQ-011 (9 Must, 2 Should, none deferred); README and install.sh give the same full order; fresh clone passes doctor with 7 area notes.
@@ -90,3 +91,12 @@ next_step: "Design: compass-labs:design drafts design/ for REQ-001 to REQ-011"
 ### 2026-10-24 — compass-labs:design — decision: Classification and scope confirmed
 - **Kind: Plugin/tooling**, confirmed by the operator. No in-depth path yet (compass-labs#51), so the design is `design/index.md` only.
 - **Scope, confirmed as drafted:** In: the root README `## Install` section, and the next-step `log` lines `scripts/install.sh` prints (text only). Out: Taskfile.yml, doctor.sh, bootstrap-areas.sh, scripts/lib (doctor's optional checks are #25); process/workflow; infrastructure/CI; frontend, backend, database; visual UI; tutorial, how-to and other README sections.
+
+### 2026-10-24 — compass-labs:design — decision: D1 and D2 chosen (option A both)
+- **D1, README layout: A.** Numbered list, one step per item, each command in its own short code block; lines up with install.sh's steps so REQ-007's order can be checked by eye. B (single commented bash block) rejected.
+- **D2, install.sh step: A.** New step 3 "Run 'task deps:node' (or npm ci) …", later steps renumbered 4 to 7. B (fold into the doctor step) rejected.
+- Neither is architecture-level; no ADR. No principle traded off.
+
+### 2026-10-24 — compass-labs:design — attempt: Design ready for the gate
+- DES-001 README Install section (REQ-001 to REQ-010); DES-002 install.sh next steps (REQ-011, REQ-007). Order: DES-002 → DES-001. All 11 live REQs covered.
+- Mermaid parse check not run (mermaid-cli denied).
