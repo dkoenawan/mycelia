@@ -2,7 +2,7 @@
 session: 2026-10-20-readme-install-task-commands
 type: feature
 issue: 10
-phase: implement
+phase: test
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: design
+milestone: implement
 active_agent: main
-next_step: "Implement: compass-labs:implement builds DES-002 then DES-001"
+next_step: "Test: compass-labs:test writes verification.md (VER-* for REQ-001 to REQ-011, incl. REQ-010 fresh-clone run)"
 ---
 # Session Log: Root README Install section: use task install / task bootstrap-areas (#10)
 
@@ -26,6 +26,7 @@ next_step: "Implement: compass-labs:implement builds DES-002 then DES-001"
 
 ## Key decisions
 
+- **2026-10-24**: ✅ Implement complete — DES-001 and DES-002 built as designed, no variations (628b85a, f9b6c8b).
 - **2026-10-24**: ✅ Design complete — operator approved design/index.md (DES-001 README Install, DES-002 install.sh next steps).
 - **2026-10-24**: D1 A: README steps as a numbered list, one command block per step; D2 A: install.sh gains a new step 3 `task deps:node`, later steps renumbered 4–7.
 - **2026-10-24**: Design kind Plugin/tooling; scope confirmed: README `## Install` + install.sh printed next steps only, text only.
@@ -112,3 +113,23 @@ next_step: "Implement: compass-labs:implement builds DES-002 then DES-001"
 
 ### 2026-10-24 — main — handoff: orchestrator → compass-labs:implement (build DES-002, DES-001)
 - **Input:** Build from frozen design/index.md: DES-002 (install.sh next-steps text) then DES-001 (README Install section). Write implement/tasks.md and implement/as-built.md; commit per task.
+- **Output:** done; scripts/install.sh, README.md, implement/tasks.md, implement/as-built.md
+
+### 2026-10-24 — compass-labs:implement — attempt: DES-002 built, install.sh prints task deps:node as step 3
+- New step 3 in `scripts/install.sh`'s "Next steps:" lines; old steps 3 to 6 renumbered 4 to 7. Only those `log` lines changed; `bash -n` passes. Commit 628b85a.
+
+### 2026-10-24 — compass-labs:implement — attempt: DES-001 built, README Install section rewritten
+- Prerequisites paragraph, seven numbered steps in `install.sh`'s order, closing Obsidian line. Task names checked against `Taskfile.yml`; no cp/$EDITOR/script paths, absolute paths or real URLs. Commit f9b6c8b.
+
+### 2026-10-24 — compass-labs:implement — note: Implement ready for the gate
+- `implement/as-built.md`: DES-001 and DES-002 built as designed, no variations. README step numbers sit one off from install.sh's (README step 1 is clone + `task install`; install.sh step 7 is the README's closing paragraph); relative order is identical, as REQ-007 asks. Three checks handed to Test, including the REQ-010 fresh-clone run.
+
+### 2026-10-24 — main — milestone: ✅ Implement complete
+- Operator approved the as-built at the Implement gate: DES-002 (628b85a) and DES-001 (f9b6c8b) built as designed. No variations, so no variation decisions were needed.
+
+---
+
+## Phase: Test
+
+### 2026-10-24 — main — handoff: orchestrator → compass-labs:test (verify REQ-001 to REQ-011)
+- **Input:** Write verification.md with a VER-* row per REQ-001 to REQ-011, running the three checks handed over in implement/as-built.md, including the REQ-010 fresh-clone run in a scratch directory.
