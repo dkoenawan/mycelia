@@ -1,6 +1,7 @@
 # mycelia
 
-A framework for running a second brain that your agents feed, instead of one you feed.
+A framework for a self-growing agent that helps you reach your goals. It runs a second brain
+that your agents feed, research and grow, instead of one you feed.
 
 Most personal knowledge systems fail the same way: they need constant input, the input is
 work, and the work is the thing you were trying to reduce. Mycelia inverts that. Scheduled
@@ -257,22 +258,27 @@ MIT
 
 ### Vision
 
-A second brain that the operator's agents feed, instead of one the operator feeds: the operator reads and steers, and stops being the message bus between their own systems.
+A self-growing agent that supports one person in achieving their goals. It learns their life through the PARA structure, researches and plans on their behalf, and grows that structure to fit them. The operator sets direction and trims what grows, and stops being the message bus between their own systems.
 
 ### Mission
 
-Mycelia is an installable framework (vault conventions, an estate registry and runner tooling) that lets scheduled agents write, file and connect an operator's knowledge in plain Markdown, and keeps their automated estate visible and healthy, with autonomy licensed by machine-checkable gates.
+Mycelia is an installable framework: vault conventions, an estate registry and runner tooling. With it, scheduled agents run a loop for the operator. They link each project to the areas it serves, work out what the operator still needs to know or own, research it into cited resources, and turn that into plans. Yearly goals (a Mandala Chart with a primary goal plus secondary goals) and quarterly focus and retros steer where that effort goes. Everything lands in plain Markdown behind machine-checkable gates. Decisions that are the operator's go to the inbox, and what the operator prunes teaches the agents what not to grow.
 
 ### Scope
 
 - Vault structure and conventions: PARA directories, note format and linking, as plain Markdown in git, readable without mycelia.
-- The estate registry and health checks for scheduled jobs, with failures pushed to the operator rather than logged.
-- Runner tooling (the shared library, install and bootstrap scripts) for scheduled agents that land their own work behind gates.
-- Agent workflows that capture, file, connect and summarise vault content.
-- Framework only: generic defaults and schemas; every operator's notes and estate stay local configuration.
+- Area profiles (state, goals and inventories) and a structure that grows from evidence: new areas, sub-areas and resource branches are proposed, then accepted or pruned by the operator.
+- Proactive support: project → area linking, gap detection, web research into cited resources, and plan generation.
+- Goal pursuit: yearly goal setting, quarterly focus, in-quarter guidance, and agent-drafted quarterly retros and year reviews built from vault evidence.
+- Agents that advance the operator's code projects in their own repositories, landing work behind gates.
+- The estate registry and health checks for every scheduled job, with failures pushed to the operator rather than logged: the safety layer under all of the above.
+- Capture and delivery channels (inbox folder, phone capture, and later email).
+- Framework only: generic defaults, schemas and shareable area templates. Every operator's notes and estate stay local configuration.
 
 ### Non-goals
 
+- Acting outside the vault on the operator's behalf without their decision: purchases, commitments, messages.
+- Even growth: the agent follows the operator's goals and focus, and isn't meant to fill every area.
 - Committing an operator's notes, estate or paths to the framework repository, or requiring an instance to be its own repo or fork.
 - A database or proprietary store; the vault stays plain Markdown in git.
 - Depending on Obsidian plugins.
