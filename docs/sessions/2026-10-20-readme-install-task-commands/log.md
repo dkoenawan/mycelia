@@ -2,7 +2,7 @@
 session: 2026-10-20-readme-install-task-commands
 type: feature
 issue: 10
-phase: design
+phase: implement
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: define
+milestone: design
 active_agent: main
-next_step: "Design gate: operator approves design/index.md (DES-001, DES-002)"
+next_step: "Implement: compass-labs:implement builds DES-002 then DES-001"
 ---
 # Session Log: Root README Install section: use task install / task bootstrap-areas (#10)
 
@@ -26,6 +26,7 @@ next_step: "Design gate: operator approves design/index.md (DES-001, DES-002)"
 
 ## Key decisions
 
+- **2026-10-24**: ✅ Design complete — operator approved design/index.md (DES-001 README Install, DES-002 install.sh next steps).
 - **2026-10-24**: D1 A: README steps as a numbered list, one command block per step; D2 A: install.sh gains a new step 3 `task deps:node`, later steps renumbered 4–7.
 - **2026-10-24**: Design kind Plugin/tooling; scope confirmed: README `## Install` + install.sh printed next steps only, text only.
 - **2026-10-24**: ✅ Define complete — operator approved REQ-001…REQ-011 (tier short, scope option B).
@@ -100,3 +101,14 @@ next_step: "Design gate: operator approves design/index.md (DES-001, DES-002)"
 ### 2026-10-24 — compass-labs:design — attempt: Design ready for the gate
 - DES-001 README Install section (REQ-001 to REQ-010); DES-002 install.sh next steps (REQ-011, REQ-007). Order: DES-002 → DES-001. All 11 live REQs covered.
 - Mermaid parse check not run (mermaid-cli denied).
+
+### 2026-10-24 — main — milestone: ✅ Design complete
+- Operator approved design/index.md at the Design gate: DES-001 (README Install section, REQ-001 to REQ-010) and DES-002 (install.sh printed next steps, REQ-011, REQ-007). Order DES-002 → DES-001.
+- a4: check-design.sh ok. Mermaid context view not parse-checked (mermaid-cli denied).
+
+---
+
+## Phase: Implement
+
+### 2026-10-24 — main — handoff: orchestrator → compass-labs:implement (build DES-002, DES-001)
+- **Input:** Build from frozen design/index.md: DES-002 (install.sh next-steps text) then DES-001 (README Install section). Write implement/tasks.md and implement/as-built.md; commit per task.
