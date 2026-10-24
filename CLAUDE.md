@@ -3,6 +3,16 @@
 This repository is both a **vault** (Obsidian-compatible Markdown) and a **control plane**
 (the registry of the operator's automated estate). Read this before writing anything here.
 
+## What mycelia is for
+
+Mycelia is a self-growing agent that supports one person in achieving their goals. PARA is its
+structure. Agents link projects to areas, find gaps, research them, and plan, all steered by
+yearly goals and quarterly focus and retros. The operator sets direction and prunes. The estate
+registry and runner rules below are the safety layer under that loop, not its purpose. The
+canonical statement is the project anchor (Vision, Mission, Scope, Non-goals) at the end of
+`README.md`. Read it before scoping features, and update it, not this paragraph, when the
+direction changes.
+
 ## The one rule
 
 Mycelia exists to **reduce the operator's workload**. Every change should move information toward
