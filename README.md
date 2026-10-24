@@ -60,14 +60,44 @@ with no plugins; `.obsidian/app.json` is committed so the config is reproducible
 
 ## Install
 
-```bash
-git clone <this-repo> mycelia && cd mycelia
-cp control/roots.example.yaml  control/roots.local.yaml    # your paths
-cp control/estate.example.yaml control/estate.local.yaml   # your jobs
-$EDITOR control/roots.local.yaml control/estate.local.yaml
-```
+**Prerequisites:** [go-task](https://taskfile.dev/installation/) (the `task` command, which runs every install step), Node.js 22.18 or later, Claude Code, and python3 with PyYAML for the areas bootstrap. The install runs on Linux and macOS, and on Windows under WSL.
 
-Then open the directory in Obsidian, or just use it as files.
+1. Clone the repository and seed your local configuration:
+
+   ```bash
+   git clone <this-repo> mycelia && cd mycelia
+   task install
+   ```
+
+   `task install` creates only the `control/*.local.yaml` files that are missing and never overwrites an existing one, so it is safe to re-run.
+
+2. Edit `control/roots.local.yaml`: set this machine's `home`, `repos` and `logs` paths (each must be an existing directory) and your repo aliases.
+
+3. Edit `control/estate.local.yaml`: describe your own scheduled jobs, or leave the jobs list empty.
+
+4. Install the pinned Node dependencies:
+
+   ```bash
+   task deps:node
+   ```
+
+5. Verify the install:
+
+   ```bash
+   task doctor
+   ```
+
+   The install is healthy when doctor reports no failed checks.
+
+6. Edit `control/areas.local.yaml` to list the areas of your life (slug and one-line description), or keep the shipped defaults.
+
+7. Create one `20-areas/` note per area:
+
+   ```bash
+   task bootstrap-areas
+   ```
+
+Then open the folder as a vault in Obsidian, or just use it as plain Markdown files.
 
 ## Framework vs. configuration
 
