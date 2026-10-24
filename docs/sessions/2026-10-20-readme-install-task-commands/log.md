@@ -13,7 +13,7 @@ status: active
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: test
 active_agent: main
-next_step: "Deploy: compass-labs:deploy writes release.md"
+next_step: "Deploy gate: operator approves release.md and decides whether to tag v0.4.2"
 ---
 # Session Log: Root README Install section: use task install / task bootstrap-areas (#10)
 
@@ -26,6 +26,7 @@ next_step: "Deploy: compass-labs:deploy writes release.md"
 
 ## Key decisions
 
+- **2026-10-24**: Tag v0.4.2 (ADR-0004 PATCH) after the squash-merge; the operator pushes the tag.
 - **2026-10-24**: ✅ Test complete — VER-001…VER-011 all pass; traceability ok; fresh-clone install passes doctor 14/14 with 7 area notes.
 - **2026-10-24**: ✅ Implement complete — DES-001 and DES-002 built as designed, no variations (628b85a, f9b6c8b).
 - **2026-10-24**: ✅ Design complete — operator approved design/index.md (DES-001 README Install, DES-002 install.sh next steps).
@@ -148,3 +149,19 @@ next_step: "Deploy: compass-labs:deploy writes release.md"
 ---
 
 ## Phase: Deploy
+
+### 2026-10-24 — main — handoff: orchestrator → compass-labs:deploy (write release.md)
+- **Input:** Write release.md for #10: version/target (latest tag v0.4.1; ADR-0004), what changed, Completeness checked in a fresh clone of the pushed branch HEAD. No PR exists yet; the orchestrator opens it. Don't push, tag, merge or open a PR.
+- **Output:** done (one question for the gate: tag v0.4.2?); release.md
+
+### 2026-10-24 — compass-labs:deploy — attempt: release.md drafted for #10
+- Smoke test on a fresh clone of pushed HEAD `f15eea6`: `task install && task doctor:ci` exited 0, doctor 8/8. Completeness checked against `git diff --name-status origin/main...HEAD` (11 entries, as it ships): only complete components, none left out. Proposed `v0.4.2` (ADR-0004 PATCH; schema axis unchanged at 1); tagging left to the operator. Target `main` through the session PR, squash-merged at Close.
+
+### 2026-10-24 — compass-labs:deploy — note: hygiene scan result
+- Only hits in the branch's added lines: two citations of the public GitHub owner handle (`<owner>/compass-labs#51`) in `design/index.md`, as archived releases already do. No absolute home paths, email addresses or gendered pronouns in `README.md` or `install.sh`.
+
+### 2026-10-24 — main — note: release.md path-hygiene fix requested at the gate
+- Orchestrator review found absolute scratchpad paths in release.md that leaked the local username (missed by the agent's own hygiene scan). Relayed a fix with the gate answers; release.md now has no `/tmp/` or `/home/` strings.
+
+### 2026-10-24 — compass-labs:deploy — decision: tag v0.4.2 for #10
+- Operator decided at the Deploy gate to cut `v0.4.2`: SemVer PATCH over `v0.4.1` under ADR-0004 (docs and printed-text fix; no behaviour, schema or surface change; schema axis stays at `version: 1`). The operator pushes the tag on the squash-merge commit after the session PR merges; `release.yml` on that tag is the confirmation of record.
