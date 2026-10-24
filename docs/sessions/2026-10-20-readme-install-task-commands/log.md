@@ -2,7 +2,7 @@
 session: 2026-10-20-readme-install-task-commands
 type: feature
 issue: 10
-phase: define
+phase: design
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: none
+milestone: define
 active_agent: main
-next_step: "Define gate: operator approves the requirements (REQ-001 to REQ-011)"
+next_step: "Design: compass-labs:design drafts design/ for REQ-001 to REQ-011"
 ---
 # Session Log: Root README Install section: use task install / task bootstrap-areas (#10)
 
@@ -26,6 +26,7 @@ next_step: "Define gate: operator approves the requirements (REQ-001 to REQ-011)
 
 ## Key decisions
 
+- **2026-10-24**: ✅ Define complete — operator approved REQ-001…REQ-011 (tier short, scope option B).
 - **2026-10-20**: Requirements agreed — REQ-001…REQ-011 (9 Must, 2 Should, none deferred); README and install.sh give the same full order; fresh clone passes doctor with 7 area notes.
 
 - **2026-10-20**: Follow-up #25: doctor treating Node and Claude Code as optional for installs that don't run the ingester.
@@ -66,3 +67,11 @@ next_step: "Define gate: operator approves the requirements (REQ-001 to REQ-011)
 - `task install` replaces the manual `cp` lines; prerequisites and platforms listed; edit steps, `task deps:node`, `task doctor`, the areas edit and `task bootstrap-areas` appear in order, then open in Obsidian; re-running `task install` is safe; a fresh clone set up from the README passes `task doctor` with 7 area notes (REQ-010); `install.sh`'s printed next steps add `task deps:node` (REQ-011).
 - REQ-007 tightened per orchestrator review: README and install.sh's next steps give the same full order.
 - OUT-01: fresh clone passes doctor and has its area notes. OUT-02: zero mismatches with Taskfile.yml and install.sh.
+
+### 2026-10-24 — main — milestone: ✅ Define complete
+- Operator approved the requirements, REQ-001 to REQ-011 (9 Must, 2 Should, none deferred), at the Define gate.
+- a3 check: anchor-update action is `none`, so no README anchor write is needed.
+
+---
+
+## Phase: Design
