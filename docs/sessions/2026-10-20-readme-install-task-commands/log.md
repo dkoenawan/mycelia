@@ -2,7 +2,7 @@
 session: 2026-10-20-readme-install-task-commands
 type: feature
 issue: 10
-phase: deploy
+phase: close
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: test
+milestone: deploy
 active_agent: main
-next_step: "Deploy gate: operator approves release.md and decides whether to tag v0.4.2"
+next_step: "Close: compass-labs:close folds the session into as-built docs; operator merges the session PR"
 ---
 # Session Log: Root README Install section: use task install / task bootstrap-areas (#10)
 
@@ -26,6 +26,7 @@ next_step: "Deploy gate: operator approves release.md and decides whether to tag
 
 ## Key decisions
 
+- **2026-10-24**: ✅ Deploy complete — release.md approved; fresh-clone smoke test 8/8; manifest complete; v0.4.2 after merge.
 - **2026-10-24**: Tag v0.4.2 (ADR-0004 PATCH) after the squash-merge; the operator pushes the tag.
 - **2026-10-24**: ✅ Test complete — VER-001…VER-011 all pass; traceability ok; fresh-clone install passes doctor 14/14 with 7 area notes.
 - **2026-10-24**: ✅ Implement complete — DES-001 and DES-002 built as designed, no variations (628b85a, f9b6c8b).
@@ -165,3 +166,10 @@ next_step: "Deploy gate: operator approves release.md and decides whether to tag
 
 ### 2026-10-24 — compass-labs:deploy — decision: tag v0.4.2 for #10
 - Operator decided at the Deploy gate to cut `v0.4.2`: SemVer PATCH over `v0.4.1` under ADR-0004 (docs and printed-text fix; no behaviour, schema or surface change; schema axis stays at `version: 1`). The operator pushes the tag on the squash-merge commit after the session PR merges; `release.yml` on that tag is the confirmation of record.
+
+### 2026-10-24 — main — milestone: ✅ Deploy complete
+- Operator approved release.md at the Deploy gate. a2: Completeness says the manifest lists only complete components and leaves none out. Fresh-clone `task install && task doctor:ci` 8/8.
+
+---
+
+## Phase: Close
