@@ -26,6 +26,7 @@ next_step: "Design: compass-labs:design drafts design/ for REQ-001 to REQ-011"
 
 ## Key decisions
 
+- **2026-10-24**: Design kind Plugin/tooling; scope confirmed: README `## Install` + install.sh printed next steps only, text only.
 - **2026-10-24**: ✅ Define complete — operator approved REQ-001…REQ-011 (tier short, scope option B).
 - **2026-10-20**: Requirements agreed — REQ-001…REQ-011 (9 Must, 2 Should, none deferred); README and install.sh give the same full order; fresh clone passes doctor with 7 area notes.
 
@@ -75,3 +76,17 @@ next_step: "Design: compass-labs:design drafts design/ for REQ-001 to REQ-011"
 ---
 
 ## Phase: Design
+
+### 2026-10-24 — main — handoff: orchestrator → compass-labs:design (design README Install + install.sh next steps)
+- **Input:** Design for #10 from frozen define/ (REQ-001 to REQ-011, tier short, option B). Docs-only: README `## Install` section and `scripts/install.sh` printed next steps; no behaviour change. Operator expects a light design.
+- **Output:** needs_input → done (after one relay: kind Plugin/tooling, scope confirmed, D1 A, D2 A); design/index.md
+
+### 2026-10-24 — compass-labs:design — attempt: Design drafted for #10, awaiting kind/scope confirmation and D1/D2
+- Proposed kind: Plugin/tooling (no in-depth path, compass-labs#51). Scope in: the README `## Install` section and the install.sh next-step lines only. Everything else is out.
+- DES-001 (README Install section, REQ-001 to REQ-010) depends on DES-002 (install.sh next steps, REQ-011 and REQ-007). All 11 live REQs covered. Order: DES-002 → DES-001.
+- D1 (README layout) and D2 (install.sh step shape) open, option A recommended for both. No traded-off principles. Rejected under YAGNI: go-task check in the Taskfile, direct-script equivalents, doctor optionality (#25), a mechanical README/install.sh order check, edits to other docs.
+- Optional Mermaid render check didn't run (permission denied); the context view hasn't been parse-checked.
+
+### 2026-10-24 — compass-labs:design — decision: Classification and scope confirmed
+- **Kind: Plugin/tooling**, confirmed by the operator. No in-depth path yet (compass-labs#51), so the design is `design/index.md` only.
+- **Scope, confirmed as drafted:** In: the root README `## Install` section, and the next-step `log` lines `scripts/install.sh` prints (text only). Out: Taskfile.yml, doctor.sh, bootstrap-areas.sh, scripts/lib (doctor's optional checks are #25); process/workflow; infrastructure/CI; frontend, backend, database; visual UI; tutorial, how-to and other README sections.
