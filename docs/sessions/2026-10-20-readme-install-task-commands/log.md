@@ -2,7 +2,7 @@
 session: 2026-10-20-readme-install-task-commands
 type: feature
 issue: 10
-phase: test
+phase: deploy
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: implement
+milestone: test
 active_agent: main
-next_step: "Test: compass-labs:test writes verification.md (VER-* for REQ-001 to REQ-011, incl. REQ-010 fresh-clone run)"
+next_step: "Deploy: compass-labs:deploy writes release.md"
 ---
 # Session Log: Root README Install section: use task install / task bootstrap-areas (#10)
 
@@ -26,6 +26,7 @@ next_step: "Test: compass-labs:test writes verification.md (VER-* for REQ-001 to
 
 ## Key decisions
 
+- **2026-10-24**: ✅ Test complete — VER-001…VER-011 all pass; traceability ok; fresh-clone install passes doctor 14/14 with 7 area notes.
 - **2026-10-24**: ✅ Implement complete — DES-001 and DES-002 built as designed, no variations (628b85a, f9b6c8b).
 - **2026-10-24**: ✅ Design complete — operator approved design/index.md (DES-001 README Install, DES-002 install.sh next steps).
 - **2026-10-24**: D1 A: README steps as a numbered list, one command block per step; D2 A: install.sh gains a new step 3 `task deps:node`, later steps renumbered 4–7.
@@ -133,3 +134,17 @@ next_step: "Test: compass-labs:test writes verification.md (VER-* for REQ-001 to
 
 ### 2026-10-24 — main — handoff: orchestrator → compass-labs:test (verify REQ-001 to REQ-011)
 - **Input:** Write verification.md with a VER-* row per REQ-001 to REQ-011, running the three checks handed over in implement/as-built.md, including the REQ-010 fresh-clone run in a scratch directory.
+- **Output:** done; verification.md
+
+### 2026-10-24 — compass-labs:test — attempt: Verification written, all REQ-001 to REQ-011 pass
+- VER-001 to VER-011, all passing, at 6aa76a9. VER-001 to VER-009: inspection of the README Install section against `Taskfile.yml` and `install.sh`. VER-010 (REQ-011): fresh-clone `task install` seeds the same three files and prints `task deps:node` (step 3) before `task doctor` (step 4). VER-011 (REQ-010): fresh-clone end-to-end, `task doctor` 14/14 passed, `task bootstrap-areas` created 7 `20-areas/` notes. `check-traceability.sh` exits 0.
+
+### 2026-10-24 — compass-labs:test — note: First doctor run failed because of a test-setup error, not the build
+- In VER-011 the first `task doctor` run failed its `version:` check because the tester replaced `estate.local.yaml` with a file lacking `version:`. Following the README ("leave the jobs list empty", keep the rest of the file) passes. No code or README change needed.
+
+### 2026-10-24 — main — milestone: ✅ Test complete
+- Operator approved verification.md at the Test gate. check-traceability.sh: every REQ-* has a passing VER-* (exit 0).
+
+---
+
+## Phase: Deploy
