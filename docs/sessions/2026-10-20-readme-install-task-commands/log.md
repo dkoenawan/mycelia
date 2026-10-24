@@ -3,7 +3,7 @@ session: 2026-10-20-readme-install-task-commands
 type: feature
 issue: 10
 phase: close
-status: active
+status: archived
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
 # implement | test | deploy | close. "none" until the first milestone
@@ -11,9 +11,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: deploy
+milestone: close
 active_agent: main
-next_step: "Close: compass-labs:close folds the session into as-built docs; operator merges the session PR"
+next_step: "Operator squash-merges PR #26 (closes #10), then pushes tag v0.4.2"
 ---
 # Session Log: Root README Install section: use task install / task bootstrap-areas (#10)
 
@@ -26,6 +26,8 @@ next_step: "Close: compass-labs:close folds the session into as-built docs; oper
 
 ## Key decisions
 
+- **2026-10-24**: ✅ Closed — no fold-back needed; session archived; PR #26 awaits the operator's squash-merge, which closes #10; tag v0.4.2 after.
+- **2026-10-24**: Issue #10 closes on merge of PR #26 (`Closes #10`), not before.
 - **2026-10-24**: ✅ Deploy complete — release.md approved; fresh-clone smoke test 8/8; manifest complete; v0.4.2 after merge.
 - **2026-10-24**: Tag v0.4.2 (ADR-0004 PATCH) after the squash-merge; the operator pushes the tag.
 - **2026-10-24**: ✅ Test complete — VER-001…VER-011 all pass; traceability ok; fresh-clone install passes doctor 14/14 with 7 area notes.
@@ -173,3 +175,20 @@ next_step: "Close: compass-labs:close folds the session into as-built docs; oper
 ---
 
 ## Phase: Close
+
+### 2026-10-24 — main — note: session PR opened
+- PR #26 (docs/issue-10-readme-install → main), squash-merge, tag v0.4.2 after merge. Opened by the orchestrator per the operator's request for one PR carrying the whole session.
+
+### 2026-10-24 — main — handoff: orchestrator → compass-labs:close (fold session into as-built docs)
+- **Input:** Fold #10 back into as-built docs (docs/reference, docs/explanation, docs/registry as applicable), one Origin line per doc, no session narrative. Writes docs/ only; don't commit or touch the session folder.
+- **Output:** done; no files changed
+
+### 2026-10-24 — compass-labs:close — note: Fold-back ready — no as-built docs changed
+- No doc under docs/ describes the install path. Every requirement for #10 is about the root README `## Install` section or install.sh's printed next steps, which already hold the built text (628b85a, f9b6c8b). The Notion tutorial and how-to only assume `task install` / `task bootstrap-areas` and still match; connector.md already notes the Notion tasks depend on `task deps:node`.
+- No ADR (D1, D2 not ADR-level), no constructs (no docs/registry/), no how-to. Follow-up #25 stays open.
+
+### 2026-10-24 — main — decision: issue #10 closes on merge
+- Operator chose to let PR #26's `Closes #10` close the issue on merge, rather than closing it at the Close milestone.
+
+### 2026-10-24 — main — milestone: ✅ Session closed
+- Operator approved the Close gate. Fold-back: no as-built doc changed (none describes the install path). Session archived to docs/sessions/archive/. Open: operator squash-merges PR #26, then pushes v0.4.2. Follow-up #25 stays open.
