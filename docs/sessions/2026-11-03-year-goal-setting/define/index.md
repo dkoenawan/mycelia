@@ -15,7 +15,7 @@
 ## Framing
 
 - **Tier:** full: #36 creates the vision-layer contract that #37 to #42 all read, and it spans a note format, a template, a parser and validator, docs, tests and an agent-guided session.
-- **Verdict:** aligns with the anchor's Scope line "Goal pursuit: yearly goal setting…". The operator also approved an `extend` to the Scope line about area profiles, so the anchor matches the 2026-11-03 ruling. See [framing.md](framing.md).
+- **Verdict:** aligns with the anchor's Scope line "Goal pursuit: yearly goal setting…". The operator also approved an `extend` with two changes. The Scope line about area profiles is replaced, so the anchor matches the 2026-11-03 ruling. A phrase in the Mission is reworded, so it reflects one or more main goals. See [framing.md](framing.md).
 
 ## Problem statement
 
@@ -52,8 +52,13 @@ How main and secondary goals fit together now that a year can hold several main 
 
 ## Open questions
 
-Settled at the Define gate (2026-11-03): secondary goals are a short list (REQ-004); missing area links get a warning (REQ-005); signing off again updates the year's goals (REQ-014); the amendment flow is deferred to #46; and the appetite is one week.
+All questions resolved. Settled at the Define gate (2026-11-03):
 
-1. **More than 8 pillars, or more than 8 actions in a pillar: warning, not error. Confirm.** The operator's earlier answer called 8 × 8 a maximum. The gate then asked for every rule about how the operator structures their goals to be loosened to a warning, so REQ-021 warns rather than rejects. If the 8 × 8 maximum should stay a hard rule, REQ-021's first two cases move back into REQ-003 before freeze.
-2. **Stale issue text.** #36's body still says "Related: #28", names a single "primary goal", and its acceptance says "valid 9×9 chart". Per the operator's answers, the acceptance now reads "a signed-off year-goals note whose main goals each pass the validator (charts of up to 8 pillars × 8 actions around the centre goal, partly filled allowed)". The operator updates the issue body, as with the existing open item for #27.
-3. **Mission wording. Does the anchor need a second update?** The anchor's Mission says "a Mandala Chart with a primary goal plus secondary goals", which now reads as exactly one charted goal. Define reads it as compatible: the recommended case is still one main goal, and the verdict stays aligns. But if the operator wants the anchor to reflect several main goals, that's a separate `extend` to the Mission, drafted with them. The approved anchor update touches only Scope, and the operator earlier asked for the Mission to stay unchanged.
+- Secondary goals are a short list (REQ-004).
+- Missing area links get a warning (REQ-005).
+- Signing off again updates the year's goals (REQ-014).
+- The amendment flow is deferred to #46.
+- The appetite is one week.
+- More than 8 pillars, or more than 8 actions in a pillar, gives a warning, not an error (REQ-021). The operator confirmed this.
+- #36's issue body has been updated by the orchestrator to match: main goals, short-list secondary goals, `01-vision/`, the up-to-8×8 acceptance, and #46 out of scope.
+- The anchor's Mission is reworded to "Yearly goals (one or more main goals, each a Mandala Chart, plus secondary goals)…". It's a second `extend` in [framing.md](framing.md#anchor-update), alongside the Scope update.

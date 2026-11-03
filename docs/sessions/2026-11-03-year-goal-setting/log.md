@@ -29,6 +29,7 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 
 ## Key decisions
 
+- **2026-11-03**: Define open questions settled: going past 8 × 8 stays a warning (REQ-021); #36 body updated.
 - **2026-11-03**: README anchor Mission reworded: "Yearly goals (one or more main goals, each a Mandala Chart, plus secondary goals)".
 - **2026-11-03**: Define revised: one note per year holding one or more charted main goals (warn above 3); errors only for unreadable notes, structure rules are warnings; re-sign-off updates the note and archives the earlier one to `40-archive/`; REQ-008 struck.
 - **2026-11-03**: Define gate: adjust. Several goals per year allowed (warn above 3, never reject); goals may break into sub-goals or quarterly goals; re-sign-off updates instead of refusing; secondary goals as a short list; amendment flow deferred to #46.
@@ -99,3 +100,10 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 ### 2026-11-03 — compass-labs:define — decision: anchor Mission reworded for several main goals (extend)
 - The operator chose to reword the Mission. "Yearly goals (a Mandala Chart with a primary goal plus secondary goals)" becomes "Yearly goals (one or more main goals, each a Mandala Chart, plus secondary goals)". The rest of the Mission is unchanged.
 - Recorded as change 2 in `define/framing.md`'s anchor-update block (action extend, elements: scope and mission). The orchestrator wrote it into README.md in this commit. Verdict stays aligns.
+
+### 2026-11-03 — compass-labs:define — decision: remaining Define open questions settled
+- REQ-021 confirmed: more than 8 pillars or more than 8 actions in a pillar gives a warning, not an error.
+- The #36 issue body was updated by the orchestrator to match the revised scope. `index.md`'s Open questions now reads "All questions resolved" and lists what was settled.
+
+### 2026-11-03 — compass-labs:define — attempt: define/ ready for approval
+- REQ-001 to REQ-021: REQ-008 struck, #46 deferred. 20 live requirements: 17 Must, 3 Should (REQ-005, REQ-011, REQ-021). No open questions remain.
