@@ -25,22 +25,22 @@
 
 ## Anchor
 
-- **State:** complete. The markers appear once in `README.md`. Vision, Mission, Scope and Non-goals are all present and non-empty, and no restatement elsewhere in the README conflicts with them (CLAUDE.md's "What mycelia is for" points to the anchor). The structure passes, but Scope line 2 ("Area profiles (state, goals and inventories)…") contradicts the operator's 2026-11-03 ruling that areas hold knowledge and goals live only in the vision layer. That line is corrected below.
+- **State:** complete. The markers appear once in `README.md`. Vision, Mission, Scope and Non-goals are all present and non-empty, and no restatement elsewhere in the README conflicts with them (CLAUDE.md's "What mycelia is for" points to the anchor). The structure passes, but Scope line 2 ("Area profiles (state, goals and inventories)…") contradicts the operator's 2026-11-03 ruling that areas hold knowledge and goals live only in the vision layer. That line is corrected below. At the Define gate, the Mission's "a Mandala Chart with a primary goal plus secondary goals" was also found to read as exactly one charted goal, which conflicts with the gate's ruling that a year may hold several main goals. That phrase is reworded below, so the Mission now reflects several main goals.
 - **Verdict:** aligns
 - **Rests on:**
   - Scope: "Goal pursuit: yearly goal setting, quarterly focus, in-quarter guidance, and agent-drafted quarterly retros and year reviews built from vault evidence." Yearly goal setting is named outright.
   - Scope: "Framework only: generic defaults, schemas and shareable area templates. Every operator's notes and estate stay local configuration." The format is committed, and the notes stay local (REQ-016).
   - Non-goal: "Even growth: the agent follows the operator's goals and focus, and isn't meant to fill every area." This work gives the agent goals to follow.
   - Non-goals: "Committing an operator's notes…", "A database or proprietary store…" and "Depending on Obsidian plugins". None is crossed: the notes are plain Markdown, kept local, with no plugin.
-  - Mission: "Yearly goals (a Mandala Chart with a primary goal plus secondary goals) and quarterly focus and retros steer where that effort goes."
+  - Mission, as updated below: "Yearly goals (one or more main goals, each a Mandala Chart, plus secondary goals) and quarterly focus and retros steer where that effort goes."
 
 ### Anchor update
 
 - **Action:** extend
-- **Elements:** scope (one line replaced; every other anchor line unchanged, including the Mission's "work out what the operator still needs to know or own")
+- **Elements:** scope (one line replaced) and mission (one phrase replaced). Everything else in the anchor is unchanged, including the Mission's "work out what the operator still needs to know or own".
 - **Agreed text:**
 
-Scope: replace the line
+**1. Scope:** replace the line
 
 > - Area profiles (state, goals and inventories) and a structure that grows from evidence: new areas, sub-areas and resource branches are proposed, then accepted or pruned by the operator.
 
@@ -49,6 +49,16 @@ with
 > - A structure that grows from evidence: areas hold the knowledge that accumulates over the year, and new areas, sub-areas and resource branches are proposed, then accepted or pruned by the operator. The operator's goals and direction live in the goal-pursuit layer, not in areas.
 
 The operator approved this text as written on 2026-11-03.
+
+**2. Mission:** in the Mission paragraph, replace the phrase
+
+> Yearly goals (a Mandala Chart with a primary goal plus secondary goals)
+
+with
+
+> Yearly goals (one or more main goals, each a Mandala Chart, plus secondary goals)
+
+The rest of the Mission paragraph stays as it is. The operator chose this rewording at the Define gate on 2026-11-03.
 
 ## Overlaps
 

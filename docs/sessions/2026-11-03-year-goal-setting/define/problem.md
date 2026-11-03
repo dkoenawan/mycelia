@@ -5,7 +5,7 @@
 
 ### Context
 
-**Situation:** mycelia organises the operator's material by PARA and grows that structure with agents. Its Vision and Mission say the agent supports one person in reaching their goals, and that yearly goals, set as a Mandala Chart with a primary goal plus secondary goals, steer where the effort goes [observed: README project anchor].
+**Situation:** mycelia organises the operator's material by PARA and grows that structure with agents. Its Vision and Mission say the agent supports one person in reaching their goals, and that yearly goals, set as a Mandala Chart with a primary goal plus secondary goals, steer where the effort goes [observed: README project anchor]. That Mission phrase is reworded to "one or more main goals, each a Mandala Chart" in this session's anchor update (see [framing.md](framing.md#anchor-update)).
 
 **Complication:** nothing in the framework records what those goals are [observed: no goal format, runner or ADR in the repo, 2026-11-03]. Areas were briefly meant to hold goals (#28), but the operator ruled on 2026-11-03 that areas hold only accumulated knowledge and closed #28 [observed: log.md, Key decisions]. That leaves goals with no home. Meanwhile six follow-on features (#37 to #42) all need the year's goals as their input [observed: issue list relayed by the operator, 2026-11-03].
 

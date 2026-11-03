@@ -262,7 +262,7 @@ A self-growing agent that supports one person in achieving their goals. It learn
 
 ### Mission
 
-Mycelia is an installable framework: vault conventions, an estate registry and runner tooling. With it, scheduled agents run a loop for the operator. They link each project to the areas it serves, work out what the operator still needs to know or own, research it into cited resources, and turn that into plans. Yearly goals (a Mandala Chart with a primary goal plus secondary goals) and quarterly focus and retros steer where that effort goes. Everything lands in plain Markdown behind machine-checkable gates. Decisions that are the operator's go to the inbox, and what the operator prunes teaches the agents what not to grow.
+Mycelia is an installable framework: vault conventions, an estate registry and runner tooling. With it, scheduled agents run a loop for the operator. They link each project to the areas it serves, work out what the operator still needs to know or own, research it into cited resources, and turn that into plans. Yearly goals (one or more main goals, each a Mandala Chart, plus secondary goals) and quarterly focus and retros steer where that effort goes. Everything lands in plain Markdown behind machine-checkable gates. Decisions that are the operator's go to the inbox, and what the operator prunes teaches the agents what not to grow.
 
 ### Scope
 
