@@ -24,10 +24,12 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 
 ## Open items
 
+- #46: agent-guided amendment flow for signed-off goals (deferred from #36).
 - Epic #27 and issue #36 bodies still reference #28 (area profiles), closed 2026-11-03. Editing them was blocked by the auto-mode classifier; the operator updates them, or approves the edit.
 
 ## Key decisions
 
+- **2026-11-03**: Define gate: adjust. Several goals per year allowed (warn above 3, never reject); goals may break into sub-goals or quarterly goals; re-sign-off updates instead of refusing; secondary goals as a short list; amendment flow deferred to #46.
 - **2026-11-03**: README anchor Scope: "Area profiles (state, goals and inventories)" replaced; areas hold accumulated knowledge, goals live in the goal-pursuit layer.
 - **2026-11-03**: Define tier full; the Mandala Chart is the need; scope includes the guided session; `01-vision/` holds year goals; chart is at most 8×8; in-year changes recorded in the note.
 - **2026-11-03**: Areas are a parking lot of cumulative knowledge, not profiles with state or goals; goals live only in the vision layer. #28 closed as not planned.
@@ -71,3 +73,10 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 ### 2026-11-03 — compass-labs:define — decision: anchor Scope update approved (extend)
 - Verdict: aligns, on Scope "Goal pursuit: yearly goal setting…". The operator approved replacing the Scope line "Area profiles (state, goals and inventories) and a structure that grows from evidence: …" with: "A structure that grows from evidence: areas hold the knowledge that accumulates over the year, and new areas, sub-areas and resource branches are proposed, then accepted or pruned by the operator. The operator's goals and direction live in the goal-pursuit layer, not in areas."
 - Mission and all other anchor lines unchanged. Agreed text is in `define/framing.md`'s anchor-update block; the orchestrator wrote it into README.md in this commit.
+
+### 2026-11-03 — main — decision: Define gate — adjust
+- Operator didn't approve; requested changes. REQ-008 (and REQ-003's single-primary-goal rule): a year can hold more than one goal; more than 3 is strongly discouraged (warning), never rejected. A yearly goal may be broken into sub-goals or quarterly goals; the format must not confine that.
+- Secondary goals: short list, as proposed (REQ-004).
+- REQ-014: signing off again for a year that already has signed-off goals updates them instead of refusing. Goals may be achieved early or abandoned; the lifecycle stays open for now.
+- Amendment flow: deferred to follow-up #46.
+- Relayed to compass-labs:define for a revision pass (same phase).
