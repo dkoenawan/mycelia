@@ -11,7 +11,7 @@
 
 ### Need and stakeholders
 
-- **NEED-01:** When a new year is about to start, the operator wants to set one primary goal as a Mandala Chart (a centre goal, up to 8 pillars, up to 8 actions per pillar), plus any secondary goals, in a guided conversation with the agent. That way mycelia knows what they're working towards without them writing the structure by hand.
+- **NEED-01:** When a new year is about to start, the operator wants to set their main goals in a guided conversation with the agent: usually one, rarely more than 3, each drafted as a Mandala Chart (a centre goal, pillars, actions per pillar). They also want to add any secondary goals, without the format confining how they break a goal down. That way mycelia knows what they're working towards without them writing the structure by hand.
 - **NEED-02:** When the agent has drafted the year's goals, the operator wants the draft to stay a draft until they sign it off. That way no agent steers by goals they haven't agreed to.
 - **NEED-03:** When a downstream goal-pursuit agent (#37 to #42) links, focuses, prioritises, guides or reviews, it needs one dependable, machine-readable statement of the year's signed-off goals and their later changes. That way it can steer without asking the operator.
 - **NEED-04:** When someone else installs mycelia, they want the goal format, a template and the folder it lives in to come with the framework, while their own goals never enter the framework repository. That way they can use goal setting without forking it or leaking personal material.
@@ -24,9 +24,11 @@
 - Areas hold accumulated knowledge, not the operator's state or goals [observed: operator ruling 2026-11-03, log.md; #28 closed as not planned].
 - #37, #38, #39, #40, #41 and #42 consume the year's goals [observed: the operator's handoff, 2026-11-03].
 - A partly filled chart is valid, and 8 pillars × 8 actions is a maximum, not a requirement [observed: operator answer, 2026-11-03].
+- "We can have more than one goal, but highly not recommend more than 3. A yearly goal can be broken to sub-goals or quarterly goals. Let's not confine us too much here." [observed: operator, Define gate, 2026-11-03].
+- A goal may be achieved early or abandoned, and signing off again should update the year's goals. The lifecycle is to be kept open for now [observed: operator, Define gate, 2026-11-03].
 - Changes made during the year must be recorded in the note itself for the retro and year review to read [observed: operator answer, 2026-11-03].
 - Most years the operator won't fill all 64 actions at the first sitting [assumed].
-- #38 picks quarterly focus mainly from the primary goal's pillars, so secondary goals need less structure [assumed; to be confirmed when #38 is defined].
+- #38 picks quarterly focus mainly from the main goals' pillars, so secondary goals need less structure [assumed; to be confirmed when #38 is defined].
 
 ### Impact and why now
 
@@ -43,5 +45,5 @@
 
 ### Appetite and no-gos
 
-- **Appetite:** one week of focused work. This is proposed by Define and still needs confirming (index Open question 5).
+- **Appetite:** one week of focused work. The operator confirmed it at the Define gate, 2026-11-03.
 - **No-gos:** see [Non-goals](index.md#non-goals).

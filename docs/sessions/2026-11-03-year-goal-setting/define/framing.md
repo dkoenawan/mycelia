@@ -8,13 +8,15 @@
 ### Solution-first (XY)
 
 - **Need behind the request:** the operator wants to state, once a year and with the agent's help, what they're trying to achieve. That statement has to be in a form mycelia's agents can steer by, so effort follows the goals instead of growing the vault evenly.
-- **Outcome:** the operator confirmed that the requested fix is the need (2026-11-03). The Mandala Chart is the operator's chosen goal-setting method, and both #36 and the anchor's Mission name it. So the problem statement keeps it, as a centre goal with at most 8 pillars × 8 actions. The operator relaxed the issue's fixed 8 × 8 to a maximum, so a partly filled chart is valid.
+- **Outcome:** the operator confirmed that the requested fix is the need (2026-11-03). The Mandala Chart is the operator's chosen goal-setting method, and both #36 and the anchor's Mission name it. So the problem statement keeps it, as a centre goal with pillars and actions per pillar, and a partly filled chart is valid. At the Define gate the operator widened the issue's "one primary goal" in two ways. First, a year may hold several main goals, each charted; more than 3 is strongly discouraged but never refused. Second, the format must not confine how a goal is broken down. So the chart is the need, but how many charts a year holds, and how strictly their shape is enforced, are not.
 
 **Candidate solutions:** implementation choices kept out of the requirements for Design to settle:
 - How the chart is laid out in Markdown: a 9×9 grid table, or nested headings and lists. REQ-017 only requires every element to be visible as text.
 - How sign-off happens: a task command, or an agent step at the end of the session that moves the note and sets its status. REQ-013 states only the result.
 - How the session runs: a TypeScript runner that drives `claude` through the agent provider (ADR-0007), or an interactive slash command or skill.
-- A smaller chart for secondary goals. Define proposes a short list instead (REQ-004; see index Open question 1).
+- Several main goals as one note per year, or as one note per goal. Define chose one note per year holding all main goals (REQ-002, REQ-014): it keeps the current-goals lookup to one file and gives the changes section one place to live.
+- A smaller chart for secondary goals. Rejected at the Define gate in favour of a short list (REQ-004).
+- How a replaced note is kept: Define chose moving it to `40-archive/` (REQ-014). Keeping version history inside the note was the alternative.
 
 ### Symptom and cause
 

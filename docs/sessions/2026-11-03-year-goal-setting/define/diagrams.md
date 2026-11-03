@@ -26,12 +26,13 @@ mindmap
           REQ-006
           REQ-007
           REQ-012
-        Trust that a note is well formed
+        Trust that a note is readable while its structure stays open
           REQ-002
           REQ-003
           REQ-004
           REQ-005
-          REQ-008
+          REQ-019
+          REQ-021
       Framework developers
         Build on a documented and tested format
           REQ-001
@@ -45,6 +46,8 @@ mindmap
           REQ-016
 ```
 
+REQ-014 and REQ-020 serve needs directly (NEED-02, NEED-03 and NEED-01, NEED-03), so they appear in the traceability diagram below rather than under an outcome here. REQ-017 likewise serves NEED-01 and NEED-04.
+
 ## Context diagram
 
 ```mermaid
@@ -55,21 +58,23 @@ flowchart LR
     G["Sign-off"]
     F["01-vision/ folder, README only"]
   end
-  OP["Operator"] -->|"answers prompts, signs off the draft"| S
-  OP -->|"signs off"| G
+  OP["Operator"] -->|"answers prompts"| S
+  OP -->|"signs off, or signs off again to update"| G
   S -->|"asks the model via the agent provider"| CL["claude CLI"]
   S -->|"writes the draft note"| IN["00-inbox/ root"]
-  G -->|"moves the signed-off note"| F
+  G -->|"places the signed-off note"| F
+  G -->|"moves a replaced note"| AC["40-archive/"]
   S -.->|"reads area names only"| AR["20-areas/"]
   V -.->|"checks area links exist"| AR
   DS["Downstream agents 37 to 42"] -->|"read current goals"| V
+  AM["Amendment flow, later in 46"] -.->|"writes changes entries"| V
   OT["Other operators"] -->|"install the format, template and folder"| F
   CI["task check:node"] -->|"runs parser and validator tests"| V
 ```
 
 ## Traceability
 
-There are 18 requirements and several many-to-many Serves links, so this uses a `flowchart LR` coloured by priority. NEED-01, NEED-02, NEED-03 and NEED-04 appear where a REQ serves them alongside, or instead of, an outcome. Nothing is struck or deferred.
+There are 20 live requirements and several many-to-many Serves links, so this uses a `flowchart LR` coloured by priority. NEED-01 to NEED-04 appear where a REQ serves them alongside, or instead of, an outcome. Struck REQ-008 and the deferred #46 item are left out.
 
 ```mermaid
 flowchart LR
@@ -94,8 +99,6 @@ flowchart LR
   R006 --> N03
   R007["REQ-007"]:::must --> N03
   R007 --> O02
-  R008["REQ-008"]:::should --> O02
-  R008 --> N03
   R009["REQ-009"]:::must --> N01
   R009 --> O01
   R010["REQ-010"]:::must --> O01
@@ -105,7 +108,8 @@ flowchart LR
   R012 --> O02
   R013["REQ-013"]:::must --> O01
   R013 --> N02
-  R014["REQ-014"]:::should --> N02
+  R014["REQ-014"]:::must --> N02
+  R014 --> N03
   R015["REQ-015"]:::must --> O03
   R015 --> N01
   R016["REQ-016"]:::must --> O03
@@ -113,6 +117,11 @@ flowchart LR
   R017["REQ-017"]:::must --> N01
   R017 --> N04
   R018["REQ-018"]:::must --> O02
+  R019["REQ-019"]:::must --> N01
+  R019 --> O02
+  R020["REQ-020"]:::must --> N01
+  R020 --> N03
+  R021["REQ-021"]:::should --> O02
 ```
 
 ## As-is and to-be

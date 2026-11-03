@@ -29,6 +29,7 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 
 ## Key decisions
 
+- **2026-11-03**: Define revised: one note per year holding one or more charted main goals (warn above 3); errors only for unreadable notes, structure rules are warnings; re-sign-off updates the note and archives the earlier one to `40-archive/`; REQ-008 struck.
 - **2026-11-03**: Define gate: adjust. Several goals per year allowed (warn above 3, never reject); goals may break into sub-goals or quarterly goals; re-sign-off updates instead of refusing; secondary goals as a short list; amendment flow deferred to #46.
 - **2026-11-03**: README anchor Scope: "Area profiles (state, goals and inventories)" replaced; areas hold accumulated knowledge, goals live in the goal-pursuit layer.
 - **2026-11-03**: Define tier full; the Mandala Chart is the need; scope includes the guided session; `01-vision/` holds year goals; chart is at most 8×8; in-year changes recorded in the note.
@@ -80,3 +81,13 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 - REQ-014: signing off again for a year that already has signed-off goals updates them instead of refusing. Goals may be achieved early or abandoned; the lifecycle stays open for now.
 - Amendment flow: deferred to follow-up #46.
 - Relayed to compass-labs:define for a revision pass (same phase).
+
+### 2026-11-03 — compass-labs:define — decision: Define gate adjustments applied (multiple main goals, open structure, re-sign-off updates)
+- A year may hold several main goals, each a Mandala Chart, in one year-goals note per year. More than 3 gives a warning that strongly discourages it, never a rejection (REQ-019).
+- Validator errors only for content that makes the note unreadable (REQ-003). Every rule about how the operator structures their goals is a warning (REQ-005, REQ-019, REQ-021); content the format doesn't define is tolerated (REQ-020).
+- REQ-008 struck: a second note for the same year can't arise. REQ-014 reworked: re-sign-off updates the year's goals, keeps the changes entries, records the update and archives the earlier note to `40-archive/`.
+- Secondary goals stay a short list (REQ-004). Missing-area warning and one-week appetite confirmed. Amendment flow deferred to #46. Lifecycle stays open through free-text changes entries.
+
+### 2026-11-03 — compass-labs:define — attempt: define/ revised after gate adjustments
+- REQ-001 to REQ-021: REQ-008 struck; REQ-019, REQ-020, REQ-021 added; #46 in the Deferred table. 20 live requirements: 17 Must, 3 Should (REQ-005, REQ-011, REQ-021).
+- Open for the operator at the gate: whether the 8 × 8 limit stays a warning (REQ-021), the stale #36 issue body, and whether the Mission's "a primary goal" wording needs its own anchor update.
