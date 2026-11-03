@@ -267,7 +267,7 @@ Mycelia is an installable framework: vault conventions, an estate registry and r
 ### Scope
 
 - Vault structure and conventions: PARA directories, note format and linking, as plain Markdown in git, readable without mycelia.
-- Area profiles (state, goals and inventories) and a structure that grows from evidence: new areas, sub-areas and resource branches are proposed, then accepted or pruned by the operator.
+- A structure that grows from evidence: areas hold the knowledge that accumulates over the year, and new areas, sub-areas and resource branches are proposed, then accepted or pruned by the operator. The operator's goals and direction live in the goal-pursuit layer, not in areas.
 - Proactive support: project → area linking, gap detection, web research into cited resources, and plan generation.
 - Goal pursuit: yearly goal setting, quarterly focus, in-quarter guidance, and agent-drafted quarterly retros and year reviews built from vault evidence.
 - Agents that advance the operator's code projects in their own repositories, landing work behind gates.

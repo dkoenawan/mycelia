@@ -25,10 +25,10 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 ## Open items
 
 - Epic #27 and issue #36 bodies still reference #28 (area profiles), closed 2026-11-03. Editing them was blocked by the auto-mode classifier; the operator updates them, or approves the edit.
-- README project anchor (Scope) still lists "Area profiles (state, goals and inventories)". Contradicts the operator's 2026-11-03 ruling; Define's anchor check should propose the fix.
 
 ## Key decisions
 
+- **2026-11-03**: README anchor Scope: "Area profiles (state, goals and inventories)" replaced; areas hold accumulated knowledge, goals live in the goal-pursuit layer.
 - **2026-11-03**: Define tier full; the Mandala Chart is the need; scope includes the guided session; `01-vision/` holds year goals; chart is at most 8×8; in-year changes recorded in the note.
 - **2026-11-03**: Areas are a parking lot of cumulative knowledge, not profiles with state or goals; goals live only in the vision layer. #28 closed as not planned.
 
@@ -67,3 +67,7 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 ### 2026-11-03 — compass-labs:define — attempt: define/ written at full tier
 - Six files: index, framing, problem, requirements, quality, diagrams. REQ-001 to REQ-018 (14 Must, 4 Should, none deferred), NEED-01 to NEED-04, OUT-01 to OUT-03, full 25010 coverage (performance efficiency and safety N/A, with reasons), NFR measures for REQ-016 to REQ-018; impact map, context and traceability diagrams.
 - Proposals for the operator at the gate: secondary goals as a short list (REQ-004), a warning for missing area links (REQ-005), refusing a second sign-off for the same year (REQ-014), a one-week appetite, and the amendment flow out of scope.
+
+### 2026-11-03 — compass-labs:define — decision: anchor Scope update approved (extend)
+- Verdict: aligns, on Scope "Goal pursuit: yearly goal setting…". The operator approved replacing the Scope line "Area profiles (state, goals and inventories) and a structure that grows from evidence: …" with: "A structure that grows from evidence: areas hold the knowledge that accumulates over the year, and new areas, sub-areas and resource branches are proposed, then accepted or pruned by the operator. The operator's goals and direction live in the goal-pursuit layer, not in areas."
+- Mission and all other anchor lines unchanged. Agreed text is in `define/framing.md`'s anchor-update block; the orchestrator wrote it into README.md in this commit.
