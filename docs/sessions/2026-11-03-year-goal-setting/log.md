@@ -4,7 +4,7 @@ type: feature
 issue: 36
 # branch: the session branch, written once when the session opens, read by Resume.
 branch: feat/36-year-goal-setting
-phase: define
+phase: design
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -13,9 +13,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: none
+milestone: define
 active_agent: main
-next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
+next_step: "Hand off to compass-labs:design to design REQ-001 to REQ-021"
 ---
 # Session Log: Year goal setting: primary goal as a Mandala Chart, plus secondary goals (#36)
 
@@ -29,6 +29,7 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 
 ## Key decisions
 
+- **2026-11-03**: ✅ Define complete — 20 live requirements (17 Must, 3 Should); README anchor Scope and Mission updated.
 - **2026-11-03**: Define open questions settled: going past 8 × 8 stays a warning (REQ-021); #36 body updated.
 - **2026-11-03**: README anchor Mission reworded: "Yearly goals (one or more main goals, each a Mandala Chart, plus secondary goals)".
 - **2026-11-03**: Define revised: one note per year holding one or more charted main goals (warn above 3); errors only for unreadable notes, structure rules are warnings; re-sign-off updates the note and archives the earlier one to `40-archive/`; REQ-008 struck.
@@ -107,3 +108,11 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 
 ### 2026-11-03 — compass-labs:define — attempt: define/ ready for approval
 - REQ-001 to REQ-021: REQ-008 struck, #46 deferred. 20 live requirements: 17 Must, 3 Should (REQ-005, REQ-011, REQ-021). No open questions remain.
+
+### 2026-11-03 — main — milestone: ✅ Define complete
+- Operator approved define/ at the Define gate. a3: full tier, anchor-update action extend (Scope and Mission); both agreed texts are in README.md's marked anchor section.
+- REQ-001 to REQ-021, REQ-008 struck, #46 deferred. No open questions.
+
+---
+
+## Phase: Design
