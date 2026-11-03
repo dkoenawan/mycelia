@@ -30,6 +30,7 @@ next_step: "Hand off to compass-labs:design to design REQ-001 to REQ-021"
 
 ## Key decisions
 
+- **2026-11-03**: Design settled: DES-001 to DES-011 over all 20 live REQs; `src/mycelia.ts` dispatcher with `goals` group (session, save-draft, sign-off, validate); layered `src/goals/`; ADRs flagged for Close: D1 (session outside the AgentProvider seam), D7 (Taskfile install-only).
 - **2026-11-03**: Taskfile is for installation only; runtime commands are TypeScript under one `mycelia` command (`mycelia goals session|sign-off <year>`). Draft written through a deterministic save step; sign-off is a separate command.
 - **2026-11-03**: ✅ Define complete — 20 live requirements (17 Must, 3 Should); README anchor Scope and Mission updated.
 - **2026-11-03**: Define open questions settled: going past 8 × 8 stays a warning (REQ-021); #36 body updated.
@@ -121,6 +122,7 @@ next_step: "Hand off to compass-labs:design to design REQ-001 to REQ-021"
 
 ### 2026-11-03 — main — handoff: orchestrator → compass-labs:design (design REQ-001 to REQ-021)
 - **Input:** Produce design/ for the frozen define/ (REQ-001 to REQ-021, REQ-008 struck). Constraints: TypeScript on Node (ADR-0007) under `task check:node`; framework/configuration boundary (CLAUDE.md, ADR-0002); `01-vision/` ships README-only, content gitignored.
+- **Output:** done; design/index.md
 
 ### 2026-11-03 — compass-labs:design — note: design draft written; classification, scope and choices put to the operator
 - Primary kind proposed: plugin/tooling (no in-depth path: dkoenawan/compass-labs#51). Scope in: plugin/tooling, process/workflow, documentation, vault structure/.gitignore. Out: frontend, backend service, database, infrastructure, estate registry, install/doctor, `20-areas/` (read only), visual UI.
@@ -131,3 +133,15 @@ next_step: "Hand off to compass-labs:design to design REQ-001 to REQ-021"
 - Operator ruling: "Taskfile is for installation only, for mycelia run task can we use typescript". No new `task` targets for this feature. The operator chose one `mycelia` entry point (e.g. `npx mycelia goals session 2027`, `npx mycelia goals sign-off 2027`) that later features add subcommands to.
 - D1: the goal-setting session is a TypeScript launcher under `mycelia goals session`. D2: the agent writes the draft only through the deterministic save step. D4: sign-off is a separate `mycelia goals sign-off` command.
 - Operator asked for every `task goals:*` reference in design/index.md to be replaced. Relayed to compass-labs:design (same phase).
+
+### 2026-11-03 — compass-labs:design — decision: runtime commands through one `mycelia` TypeScript entry point; Taskfile for installation only
+- Operator ruling applied: no `task goals:*` targets. `src/mycelia.ts`, a dispatcher with subcommand groups (`goals` first), exposed as `package.json` `bin.mycelia` (DES-007, D7, flagged ADR).
+- Existing `ingest-inbox` and `notion:*` targets aren't migrated here; a follow-up moves them to `mycelia`.
+
+### 2026-11-03 — compass-labs:design — decision: Design choices settled
+- D1 (A): `mycelia goals session <year>` launches interactive Claude Code with a committed prompt and only the save step as a tool; `ClaudeCodeProvider.preflight()` checks login first. D2 (A): `mycelia goals save-draft <year>` from a JSON draft is the agent's only write path. D4 (A): separate `mycelia goals sign-off <year>`.
+- No objection recorded (shown again at the gate): classification plugin/tooling, scope checklist, D3 headings-and-lists layout, D5 layered `src/goals/`, D6 naming and placement, trade-offs DIP on the launcher and KISS on the layering.
+
+### 2026-11-03 — compass-labs:design — attempt: design/ ready for the Design gate
+- DES-001 to DES-011 cover all 20 live REQs; C4 component context view and process view render; delta list, D1 to D7, principles check. `check-design.sh`: ok.
+- ADRs flagged for Close: D1, D7. Follow-ups: dkoenawan/compass-labs#51, dkoenawan/compass-labs#49, moving existing task targets to `mycelia`.
