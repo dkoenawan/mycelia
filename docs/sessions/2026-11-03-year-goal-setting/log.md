@@ -29,6 +29,7 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 
 ## Key decisions
 
+- **2026-11-03**: Define tier full; the Mandala Chart is the need; scope includes the guided session; `01-vision/` holds year goals; chart is at most 8×8; in-year changes recorded in the note.
 - **2026-11-03**: Areas are a parking lot of cumulative knowledge, not profiles with state or goals; goals live only in the vision layer. #28 closed as not planned.
 
 ---
@@ -40,3 +41,29 @@ next_step: "Hand off to compass-labs:define to frame #36 and write requirements"
 
 ### 2026-11-03 — main — note: session opened
 - Branch `feat/36-year-goal-setting` from `main` at 444e16f (v0.4.3). Operator chose this branch name and asked for a draft PR.
+
+### 2026-11-03 — main — note: draft PR opened
+- https://github.com/dkoenawan/mycelia/pull/45 (draft, `feat/36-year-goal-setting` → `main`, Refs #36). #36 labelled `phase:define`.
+
+### 2026-11-03 — main — handoff: orchestrator → compass-labs:define (frame #36, write requirements)
+- **Input:** Frame #36 and write define/ by the tier the operator confirms. Context: areas are knowledge, not goals (#28 closed); README anchor Scope line "Area profiles (state, goals and inventories)" contradicts that and needs an anchor-update proposal.
+- **Output:** done; define/index.md, framing.md, problem.md, requirements.md, quality.md, diagrams.md
+
+### 2026-11-03 — compass-labs:define — note: tier proposed and framing questions raised
+- Proposed tier: full. Reason: #36 creates a vision-layer contract read by #37, #38, #39, #40, #41 and #42, spanning format, template, parser, docs and tests.
+- Anchor assessed: structurally complete. Scope line 270 ("Area profiles (state, goals and inventories)…") contradicts the 2026-11-03 ruling. Provisional verdict: aligns, on Scope line 272 ("Goal pursuit: yearly goal setting…"). Proposed `extend` replacement text for line 270.
+- Overlap check: no `docs/registry/`; ADRs 0000 to 0008 searched, none overlap.
+- #36's body unread (agent had no shell); orchestrator relays it.
+
+### 2026-11-03 — main — note: operator answers relayed to Define
+- Tier: full. Location: new top-level `01-vision/` (between `00-inbox/` and `10-projects/`; no existing folder renumbered). Chart: 8 pillars × 8 actions is a maximum, partial charts allowed. In-year changes: recorded in a dated changes section in the note. Anchor: replacement Scope text approved as written.
+- Settled from the issue body, not asked: the Mandala Chart is the need (named in the issue and the Mission); scope includes the agent-guided goal-setting session that drafts to `00-inbox/` (issue Ask 1 and 4). Pillar-to-area link check left to Define to propose (default: warning, not failure).
+
+### 2026-11-03 — compass-labs:define — decision: framing tier full, Mandala Chart confirmed as the need
+- The operator confirmed full tier. Reason: #36 creates the vision-layer contract that #37 to #42 read, and spans format, template, parser and validator, docs, tests and an agent-guided session.
+- XY check: the Mandala Chart is the need, not a candidate fix. 8 pillars × 8 actions is a maximum, and a partly filled chart is valid.
+- Scope (b): format, template, parser and validator, docs, and an agent-guided session whose draft lands in `00-inbox/` for sign-off. Location: a new top-level `01-vision/`, with no PARA folder renumbered, shipping only a README and keeping its content local. Changes during the year are recorded in a dated changes section in the note.
+
+### 2026-11-03 — compass-labs:define — attempt: define/ written at full tier
+- Six files: index, framing, problem, requirements, quality, diagrams. REQ-001 to REQ-018 (14 Must, 4 Should, none deferred), NEED-01 to NEED-04, OUT-01 to OUT-03, full 25010 coverage (performance efficiency and safety N/A, with reasons), NFR measures for REQ-016 to REQ-018; impact map, context and traceability diagrams.
+- Proposals for the operator at the gate: secondary goals as a short list (REQ-004), a warning for missing area links (REQ-005), refusing a second sign-off for the same year (REQ-014), a one-week appetite, and the amendment flow out of scope.
