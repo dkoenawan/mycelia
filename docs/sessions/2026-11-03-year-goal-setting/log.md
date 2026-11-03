@@ -24,11 +24,13 @@ next_step: "Hand off to compass-labs:design to design REQ-001 to REQ-021"
 
 ## Open items
 
+- Existing runtime `task` targets (`ingest-inbox`, `notion:setup`, `notion:pull`, and their preflights) break the 2026-11-03 install-only ruling. Candidates to move under the `mycelia` command; no issue opened yet.
 - #46: agent-guided amendment flow for signed-off goals (deferred from #36).
 - Epic #27's body still lists #28 (area profiles, closed 2026-11-03) as F1. The operator updates it, or approves the edit.
 
 ## Key decisions
 
+- **2026-11-03**: Taskfile is for installation only; runtime commands are TypeScript under one `mycelia` command (`mycelia goals session|sign-off <year>`). Draft written through a deterministic save step; sign-off is a separate command.
 - **2026-11-03**: ✅ Define complete — 20 live requirements (17 Must, 3 Should); README anchor Scope and Mission updated.
 - **2026-11-03**: Define open questions settled: going past 8 × 8 stays a warning (REQ-021); #36 body updated.
 - **2026-11-03**: README anchor Mission reworded: "Yearly goals (one or more main goals, each a Mandala Chart, plus secondary goals)".
@@ -116,3 +118,16 @@ next_step: "Hand off to compass-labs:design to design REQ-001 to REQ-021"
 ---
 
 ## Phase: Design
+
+### 2026-11-03 — main — handoff: orchestrator → compass-labs:design (design REQ-001 to REQ-021)
+- **Input:** Produce design/ for the frozen define/ (REQ-001 to REQ-021, REQ-008 struck). Constraints: TypeScript on Node (ADR-0007) under `task check:node`; framework/configuration boundary (CLAUDE.md, ADR-0002); `01-vision/` ships README-only, content gitignored.
+
+### 2026-11-03 — compass-labs:design — note: design draft written; classification, scope and choices put to the operator
+- Primary kind proposed: plugin/tooling (no in-depth path: dkoenawan/compass-labs#51). Scope in: plugin/tooling, process/workflow, documentation, vault structure/.gitignore. Out: frontend, backend service, database, infrastructure, estate registry, install/doctor, `20-areas/` (read only), visual UI.
+- Options with recommendations: D1 session invocation, D2 draft writing, D3 note layout, D4 sign-off, D5 code structure, D6 naming and placement. Trade-offs to resolve: DIP on the launcher (D1), KISS on the layering (D5).
+- Provisional DES-001 to DES-011 cover all 20 live REQs.
+
+### 2026-11-03 — main — decision: Taskfile is install-only; runtime is one `mycelia` TypeScript command
+- Operator ruling: "Taskfile is for installation only, for mycelia run task can we use typescript". No new `task` targets for this feature. The operator chose one `mycelia` entry point (e.g. `npx mycelia goals session 2027`, `npx mycelia goals sign-off 2027`) that later features add subcommands to.
+- D1: the goal-setting session is a TypeScript launcher under `mycelia goals session`. D2: the agent writes the draft only through the deterministic save step. D4: sign-off is a separate `mycelia goals sign-off` command.
+- Operator asked for every `task goals:*` reference in design/index.md to be replaced. Relayed to compass-labs:design (same phase).
