@@ -141,7 +141,13 @@ anywhere else, and nothing writes to `20-areas/`.
 
 - **Reference:** [the note format, its errors and warnings, the commands and their exit
   codes](docs/reference/year-goals/format.md), with a [template](docs/reference/year-goals/template.md)
-  and a [complete example](docs/reference/year-goals/example-2027-goals.md)
+  and a [complete example](docs/reference/year-goals/example-2027-goals.md); [the `mycelia`
+  command](docs/reference/mycelia-command.md)
+- **Explanation:** [why year goals exist, the session, sign-off and how code reads the
+  goals](docs/explanation/year-goals/overview.md)
+- **Decisions:** [ADR-0009](docs/adr/0009-interactive-goal-setting-session-outside-the-agent-provider-seam.md),
+  the session as interactive Claude Code; [ADR-0010](docs/adr/0010-taskfile-install-only-and-the-mycelia-command.md),
+  Taskfile install-only and the `mycelia` command
 
 Origin: #36
 

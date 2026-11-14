@@ -158,3 +158,31 @@ after a crash is safe.
 
 `pillars`, `areas`, `actions` and `secondaryGoals` may be left out or empty. Every text is
 one line. Area names are slugs, written with or without `[[ ]]`.
+
+## Reading the goals from code
+
+Downstream features read a year's goals through the application layer, never by reading
+files themselves:
+
+- `currentGoals(year, { vault })` in `src/goals/application/use-cases.ts` returns
+  `{ none: false, goals }` with the parsed note, or `{ none: true, reason }`. It reads only
+  `01-vision/<year>-goals.md`. It returns none, with a reason, when that file is missing,
+  has errors, isn't `status: signed-off`, or names a different year. Drafts in the inbox
+  are never returned.
+- `goals` is a `YearGoals` (`src/goals/domain/model.ts`): `year`, `status`, `signedOff`
+  (the sign-off date or null), `mainGoals` in note order (each a `centre` and its
+  `pillars`, each pillar a `name`, its `areas` and its `actions`), `secondaryGoals` (each
+  a `text` and its `areas`) and `changes` (each a `date` and `text`, oldest first).
+- `parse(text)` and `validate(text, knownAreas)` in `src/goals/domain/` are pure.
+  `validate` returns diagnostics `{ severity, where, message }`. Pass `null` for
+  `knownAreas` to skip the area check.
+
+## Related
+
+- How it works and why: [year goals](../../explanation/year-goals/overview.md)
+- The command these run under: [`mycelia`](../mycelia-command.md)
+- Decisions: [ADR-0009](../../adr/0009-interactive-goal-setting-session-outside-the-agent-provider-seam.md)
+  (the session), [ADR-0010](../../adr/0010-taskfile-install-only-and-the-mycelia-command.md)
+  (the `mycelia` command)
+
+Origin: #36

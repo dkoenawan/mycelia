@@ -5,7 +5,7 @@ issue: 36
 # branch: the session branch, written once when the session opens, read by Resume.
 branch: feat/36-year-goal-setting
 phase: close
-status: active
+status: archived
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
 # implement | test | deploy | close. "none" until the first milestone
@@ -13,9 +13,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: deploy
+milestone: close
 active_agent: main
-next_step: "Hand off to compass-labs:close to fold the session into as-built docs"
+next_step: "None: session closed; operator reviews and merges PR #45"
 ---
 # Session Log: Year goal setting: primary goal as a Mandala Chart, plus secondary goals (#36)
 
@@ -31,6 +31,7 @@ next_step: "Hand off to compass-labs:close to fold the session into as-built doc
 
 ## Key decisions
 
+- **2026-11-14**: ✅ Closed — folded into ADR-0009, ADR-0010, the year-goals explanation and the `mycelia` command reference; README links them; follow-ups #46, #47.
 - **2026-11-14**: Follow-up #47 opened: move `ingest-inbox` and `notion:*` under `mycelia`.
 - **2026-11-14**: ✅ Deploy complete — tier skip (declared `deployment: none`); release is the operator's merge and pull; VER-011 and VER-018 outstanding.
 - **2026-11-14**: Deploy declaration added: `.claude/deploy.json` = `deployment: none` (local framework, released by merge and pull).
@@ -242,4 +243,15 @@ next_step: "Hand off to compass-labs:close to fold the session into as-built doc
 
 ### 2026-11-14 — main — decision: follow-up #47 opened
 - Moving the `ingest-inbox` and `notion:*` runtime task targets under `mycelia`, deferred from #36 by the install-only ruling. Listed under Open items.
+- **Output:** done; docs/adr/0009-…, docs/adr/0010-…, docs/explanation/year-goals/overview.md, docs/reference/mycelia-command.md, docs/reference/year-goals/format.md
+
+### 2026-11-14 — compass-labs:close — note: Fold-back ready — folded #36 into ADR-0009, ADR-0010, docs/explanation/year-goals/overview.md, docs/reference/year-goals/format.md and docs/reference/mycelia-command.md
+- ADRs flagged at Design written in docs/adr/ (the repo's ADR home, per ADR-0000): ADR-0009, the goal-setting session as interactive Claude Code outside the AgentProvider seam, with tool limits as corrected on 2026-11-14 (writes only via save-draft, read-only repo commands allowed); ADR-0010, Taskfile is for installation only and runtime commands are `mycelia` subcommand groups (refines ADR-0001 and ADR-0007, supersedes neither).
+- Problem, context and to-be process, design context view, the accepted Implement variations and still-true assumptions folded into a new docs/explanation/year-goals/overview.md. A downstream "Reading the goals from code" section (currentGoals, YearGoals, parse/validate) added to docs/reference/year-goals/format.md. New docs/reference/mycelia-command.md for the dispatcher.
+- No constructs registered: the repo has no docs/registry/ (ADR-0000). Follow-ups referenced in the docs: #46 (amendment flow), #47 (move ingest-inbox and notion:* under mycelia).
+- Checked: no session IDs, real names or absolute paths in the touched docs; one Origin: #36 line in each; `task check:node` 291 pass, 0 fail.
+
+### 2026-11-14 — main — milestone: ✅ Closed
+- Gate delegated by the operator. README's Year goals section now links the explanation, the `mycelia` command reference, ADR-0009 and ADR-0010. `task check:node`: 291 pass, 0 fail.
+- Follow-ups confirmed: #46, #47. Outstanding for the operator after merge: VER-011, VER-018. PR #45 is left for the operator to review and merge.
 
