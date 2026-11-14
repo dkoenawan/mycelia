@@ -27,7 +27,7 @@ Every note carries YAML frontmatter:
 ---
 name: <short-kebab-case-slug>        # must match the filename stem
 description: <one line — used to judge relevance during recall>
-type: project | area | resource | feedback | reference | daily
+type: project | area | resource | feedback | reference | daily | vision
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
 ---
@@ -46,6 +46,7 @@ rule gets misapplied later.
 | Directory | Use |
 |---|---|
 | `00-inbox/` | Anything needing the operator's decision, and anything captured but not yet filed. This is the **only** queue they are expected to triage — keep it short and each item actionable. |
+| `01-vision/` | The signed-off year-goals notes, `<year>-goals.md`, one per year (`type: vision`). Notes get here only through `mycelia goals sign-off`; drafts wait in the root of `00-inbox/`. Format: [`docs/reference/year-goals/format.md`](docs/reference/year-goals/format.md). |
 | `10-projects/` | Active, time-bound. Has a finish line. |
 | `20-areas/` | Ongoing responsibility with no finish line — client engagements, life admin, health, finances. |
 | `30-resources/` | Reference that applies across projects: standards, patterns, playbooks. Migrated corrections live here. |
@@ -139,6 +140,11 @@ name whatever they choose; this rule governs the committed framework — README,
 New workflow runners are TypeScript on Node (`src/`, gated by `task check:node`) and follow
 the same rules below; Bash runners remain until #18; Python is reserved for data-analysis
 tasks. See ADR-0007.
+
+New runtime commands are subcommand groups of the one `mycelia` command (`src/mycelia.ts`,
+the `package.json` bin, run as `npx mycelia <group> …`), not new Taskfile targets: Taskfile is
+for installation only. The `goals` group is the first; the older `ingest-inbox` and `notion:*`
+targets predate this and move over later.
 
 Scripts in `scripts/` source `lib/common.sh`. The patterns below are not stylistic
 preferences — each is derived from a failure mode that recurs in unattended agent work.

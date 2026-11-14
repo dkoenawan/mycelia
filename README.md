@@ -42,6 +42,7 @@ it is why mycelia starts there.
 ```
 mycelia/
 ├── 00-inbox/       # the only queue you triage
+├── 01-vision/      # your signed-off year goals, one note per year
 ├── 10-projects/    # PARA: active, time-bound
 ├── 20-areas/       # PARA: ongoing responsibility — life admin included
 ├── 30-resources/   # PARA: reference, standards, captured corrections
@@ -49,7 +50,7 @@ mycelia/
 ├── daily/          # agent-written daily notes
 ├── control/        # the estate registry, the areas manifest, and their schemas
 ├── scripts/        # bash runners, and the shared library they build on
-├── src/            # TypeScript runners (the inbox ingester) and their shared library
+├── src/            # TypeScript runners (the inbox ingester, year goals, the `mycelia` command) and their shared library
 ├── test/           # tests for src/, run by `task check:node`
 ├── integration/    # optional third-party connectors (Notion phone capture), with their tests
 ├── docs/           # ADRs, research briefs, and Diátaxis docs (tutorials, how-to, reference, explanation)
@@ -81,6 +82,9 @@ with no plugins; `.obsidian/app.json` is committed so the config is reproducible
    ```bash
    task deps:node
    ```
+
+   Taskfile is for installation. Runtime commands run as `npx mycelia <group> …` from the
+   repository (or `mycelia …` after `npm link`).
 
 5. Verify the install:
 
@@ -117,6 +121,29 @@ ship with only a README explaining what belongs inside them.
 Keep that boundary if you fork this. It is what lets you pull framework updates without
 merge conflicts against your own notes, and what keeps paths, client names, and personal
 material out of a public repository.
+
+## Year goals
+
+Set each year's goals with an agent: one or more **main goals**, each drafted as a Mandala
+Chart (a centre goal, up to 8 pillars, up to 8 actions per pillar), plus a short list of
+**secondary goals**, each linked to the areas it touches. The goal-pursuit features steer by
+them. Nothing counts until you sign it off, and the notes stay local in `01-vision/`.
+
+```bash
+npx mycelia goals session 2027      # talk it through with the agent; the draft lands in 00-inbox/2027-goals.md
+npx mycelia goals sign-off 2027     # make the draft 2027's goals, in 01-vision/; an earlier one moves to 40-archive/vision/
+npx mycelia goals validate <path>   # check a note: errors, warnings and what it found
+```
+
+**Needs:** Node.js 22.18 or later (`task deps:node`), and for the session, Claude Code
+installed and logged in. The session's agent can only save the draft; it can't write
+anywhere else, and nothing writes to `20-areas/`.
+
+- **Reference:** [the note format, its errors and warnings, the commands and their exit
+  codes](docs/reference/year-goals/format.md), with a [template](docs/reference/year-goals/template.md)
+  and a [complete example](docs/reference/year-goals/example-2027-goals.md)
+
+Origin: #36
 
 ## Inbox ingestion
 
