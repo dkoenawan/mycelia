@@ -4,7 +4,7 @@ type: feature
 issue: 36
 # branch: the session branch, written once when the session opens, read by Resume.
 branch: feat/36-year-goal-setting
-phase: test
+phase: deploy
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -13,9 +13,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: implement
+milestone: test
 active_agent: main
-next_step: "Hand off to compass-labs:test to verify REQ-001 to REQ-021 in verification.md"
+next_step: "Hand off to compass-labs:deploy to record the release in release.md"
 ---
 # Session Log: Year goal setting: primary goal as a Mandala Chart, plus secondary goals (#36)
 
@@ -30,6 +30,7 @@ next_step: "Hand off to compass-labs:test to verify REQ-001 to REQ-021 in verifi
 
 ## Key decisions
 
+- **2026-11-14**: ✅ Test complete — 24 VER rows, every live REQ passing (`check-traceability.sh` ok); VER-011 live interactive session and VER-018 Obsidian render left pending for the operator.
 - **2026-11-14**: Session tool limits: keep behaviour (writes only via `save-draft`, read-only repo commands allowed); correct the spike notes and `format.md` to say so.
 - **2026-11-14**: ✅ Implement complete — DES-001 to DES-011 built, V1 to V5 accepted; `task check:node` 291 pass, 0 fail.
 - **2026-11-14**: Implement variations: V1, V2, V3, V4 and V5 all accepted as built; no rework.
@@ -198,4 +199,15 @@ next_step: "Hand off to compass-labs:test to verify REQ-001 to REQ-021 in verifi
 ### 2026-11-14 — main — decision: correct the session tool-limit statements; keep the behaviour
 - Operator delegated the remaining gates ("go all the way to PR, I'll review after"). Read-only commands inside the repo are harmless and the agent reads areas anyway, so the limits stay; the claims are corrected to match what Test observed.
 - `src/goals/adapters/session.ts` header and `docs/reference/year-goals/format.md` (`goals session` row) now say writes go only through `save-draft` and read-only repo commands are allowed. The Implement spike entry above stands as recorded; this entry supersedes its "denies anything else" claim. `task check:node`: 291 pass, 0 fail.
+
+### 2026-11-14 — main — milestone: ✅ Test complete
+- Gate delegated by the operator ("go all the way to PR, I'll review after"). `check-traceability.sh`: ok.
+- Pending for the operator's review: VER-011 (a live `npx mycelia goals session 2027` in a real terminal: question order, `/exit` or Ctrl+C, interactive denials) and VER-018 (example opened in Obsidian). VER-023's note on format.md is resolved by the tool-limit decision above.
+
+---
+
+## Phase: Deploy
+
+### 2026-11-14 — main — handoff: orchestrator → compass-labs:deploy (release record for #36)
+- **Input:** Validate the repo's deploy declaration (or its absence), propose the Deploy tier, and write release.md for this session's change (`mycelia` bin, `src/goals/`, `01-vision/`, docs). Run no setup step that needs the operator; the operator delegated the gate.
 
