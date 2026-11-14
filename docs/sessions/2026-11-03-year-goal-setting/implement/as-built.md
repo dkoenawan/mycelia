@@ -10,6 +10,7 @@
 |---|---|---|---|---|
 | DES-001 | built with variation | V1. No Implement guidance for plugin/tooling (dkoenawan/compass-labs#89); built to the repo's conventions (ADR-0007, the Notion connector's layering). | `test/goals/domain.test.ts`: one named test per acceptance case of REQ-002 to REQ-007 and REQ-019 to REQ-021, plus the REQ-018 full 8 x 8 chart, partly filled chart and unrecognised-content cases | none: the domain is pure, so unit tests cover it |
 | DES-008 | built as designed | No Implement guidance for plugin/tooling (dkoenawan/compass-labs#89); built to the repo's README and `.gitignore` conventions. | none: a README and ignore rules have no unit | `test/goals/vision-folder.test.ts`: the REQ-016 check-ignore, tracked-files and README tests |
+| DES-009 | built as designed | No Implement guidance for plugin/tooling (dkoenawan/compass-labs#89). `format.md` also documents the exit codes and the structured-draft JSON that DES-005 and DES-006 build; the `save-draft` argument form is V2 (DES-006). | `test/goals/docs.test.ts`: the REQ-001 example (0 errors, 0 warnings against `control/areas.example.yaml`, the 2/8/3/8/2/1 shape, default slugs only), the REQ-006 parse of the example, the template (0 errors), and the format.md coverage of every REQ-002, REQ-004, REQ-007 and REQ-020 element, each command, its exit codes and the file locations | none: documents |
 
 ## Variations
 
@@ -26,4 +27,5 @@ No layer artifact: the design names no layer with Implement guidance (plugin/too
 | DES | Check |
 |---|---|
 | DES-008 | REQ-016 in a fresh clone (integration): `git ls-files 01-vision/` lists only the README, and `01-vision/2027-goals.md` and a draft in `00-inbox/` don't show in `git status --porcelain`. Implement ran it in the working checkout. |
+| DES-009 | REQ-017 (inspection): the example shows both centre goals, all 11 pillars, every action, every area link and both secondary goals as text in GitHub's Markdown preview and in Obsidian with no community plugins, and its frontmatter has `name`, `description`, `type`, `created` and `updated`. |
 

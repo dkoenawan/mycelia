@@ -90,3 +90,6 @@ export function defaultAreas(): ReadonlySet<string> {
   const doc = parse(readFileSync(path.join(REPO_ROOT, "control", "areas.example.yaml"), "utf8")) as { areas: { slug: string }[] };
   return new Set(doc.areas.map((a) => a.slug));
 }
+
+/** The committed example note (DES-009). */
+export const EXAMPLE: string = readFileSync(path.join(REPO_ROOT, "docs", "reference", "year-goals", "example-2027-goals.md"), "utf8");
