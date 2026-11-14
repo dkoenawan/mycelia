@@ -24,12 +24,14 @@ next_step: "Hand off to compass-labs:close to fold the session into as-built doc
 
 ## Open items
 
-- Existing runtime `task` targets (`ingest-inbox`, `notion:setup`, `notion:pull`, and their preflights) break the 2026-11-03 install-only ruling. Candidates to move under the `mycelia` command; no issue opened yet.
+- #47: move the existing runtime `task` targets (`ingest-inbox`, `notion:setup`, `notion:pull`, and their preflights) under the `mycelia` command (2026-11-03 install-only ruling).
+- VER-011 (live interactive goals session) and VER-018 (example in Obsidian): pending, for the operator after merge.
 - #46: agent-guided amendment flow for signed-off goals (deferred from #36).
 - Epic #27's body still lists #28 (area profiles, closed 2026-11-03) as F1. The operator updates it, or approves the edit.
 
 ## Key decisions
 
+- **2026-11-14**: Follow-up #47 opened: move `ingest-inbox` and `notion:*` under `mycelia`.
 - **2026-11-14**: ✅ Deploy complete — tier skip (declared `deployment: none`); release is the operator's merge and pull; VER-011 and VER-018 outstanding.
 - **2026-11-14**: Deploy declaration added: `.claude/deploy.json` = `deployment: none` (local framework, released by merge and pull).
 - **2026-11-14**: ✅ Test complete — 24 VER rows, every live REQ passing (`check-traceability.sh` ok); VER-011 live interactive session and VER-018 Obsidian render left pending for the operator.
@@ -237,4 +239,7 @@ next_step: "Hand off to compass-labs:close to fold the session into as-built doc
 
 ### 2026-11-14 — main — handoff: orchestrator → compass-labs:close (fold #36 into as-built docs)
 - **Input:** Fold the session back into as-built docs per the Close standard, including the ADRs flagged at Design: D1 (goal-setting session launched outside the AgentProvider seam) and D7 (Taskfile install-only; runtime through the one `mycelia` command), in `docs/adr/` (next number after 0007). Follow-ups to confirm: moving `ingest-inbox` and `notion:*` under `mycelia` (no issue yet), #46.
+
+### 2026-11-14 — main — decision: follow-up #47 opened
+- Moving the `ingest-inbox` and `notion:*` runtime task targets under `mycelia`, deferred from #36 by the install-only ruling. Listed under Open items.
 
