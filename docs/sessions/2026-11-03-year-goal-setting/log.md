@@ -4,7 +4,7 @@ type: feature
 issue: 36
 # branch: the session branch, written once when the session opens, read by Resume.
 branch: feat/36-year-goal-setting
-phase: design
+phase: implement
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -13,9 +13,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: define
+milestone: design
 active_agent: main
-next_step: "Hand off to compass-labs:design to design REQ-001 to REQ-021"
+next_step: "Hand off to compass-labs:implement to plan and build DES-001 to DES-011"
 ---
 # Session Log: Year goal setting: primary goal as a Mandala Chart, plus secondary goals (#36)
 
@@ -30,6 +30,7 @@ next_step: "Hand off to compass-labs:design to design REQ-001 to REQ-021"
 
 ## Key decisions
 
+- **2026-11-14**: ✅ Design complete — DES-001 to DES-011 approved as drafted over all 20 live REQs; `check-design.sh` ok.
 - **2026-11-03**: Design settled: DES-001 to DES-011 over all 20 live REQs; `src/mycelia.ts` dispatcher with `goals` group (session, save-draft, sign-off, validate); layered `src/goals/`; ADRs flagged for Close: D1 (session outside the AgentProvider seam), D7 (Taskfile install-only).
 - **2026-11-03**: Taskfile is for installation only; runtime commands are TypeScript under one `mycelia` command (`mycelia goals session|sign-off <year>`). Draft written through a deterministic save step; sign-off is a separate command.
 - **2026-11-03**: ✅ Define complete — 20 live requirements (17 Must, 3 Should); README anchor Scope and Mission updated.
@@ -145,3 +146,11 @@ next_step: "Hand off to compass-labs:design to design REQ-001 to REQ-021"
 ### 2026-11-03 — compass-labs:design — attempt: design/ ready for the Design gate
 - DES-001 to DES-011 cover all 20 live REQs; C4 component context view and process view render; delta list, D1 to D7, principles check. `check-design.sh`: ok.
 - ADRs flagged for Close: D1, D7. Follow-ups: dkoenawan/compass-labs#51, dkoenawan/compass-labs#49, moving existing task targets to `mycelia`.
+
+### 2026-11-14 — main — milestone: ✅ Design complete
+- Operator approved design/ at the Design gate as drafted ("looks good. continue on."): classification plugin/tooling, scope checklist, D1 to D7, DES-001 to DES-011, principles check including the two traded-off marks.
+- `check-design.sh`: ok. ADRs D1 and D7 still flagged for Close.
+
+---
+
+## Phase: Implement
