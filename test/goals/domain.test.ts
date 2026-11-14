@@ -54,6 +54,13 @@ test("REQ-003: a status other than draft or signed-off is an error", () => {
   assert.match(e[0]?.message ?? "", /invalid status "final"/);
 });
 
+test("REQ-003: a missing status is an error", () => {
+  const e = errors(validate(noteText({ frontmatter: "name: 2027-goals\ntype: vision\nyear: 2027", secondary: ["Read 24 books"] }), null));
+  assert.equal(e.length, 1);
+  assert.match(e[0]?.message ?? "", /missing status/);
+  assert.equal(e[0]?.where, "frontmatter: status");
+});
+
 test("REQ-003: a note with no goal at all is an error", () => {
   const e = errors(validate(noteText({}), null));
   assert.equal(e.length, 1);
