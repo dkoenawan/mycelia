@@ -9,6 +9,7 @@
 | DES | Status | Reason | Unit tests | Component tests |
 |---|---|---|---|---|
 | DES-001 | built with variation | V1. No Implement guidance for plugin/tooling (dkoenawan/compass-labs#89); built to the repo's conventions (ADR-0007, the Notion connector's layering). | `test/goals/domain.test.ts`: one named test per acceptance case of REQ-002 to REQ-007 and REQ-019 to REQ-021, plus the REQ-018 full 8 x 8 chart, partly filled chart and unrecognised-content cases | none: the domain is pure, so unit tests cover it |
+| DES-008 | built as designed | No Implement guidance for plugin/tooling (dkoenawan/compass-labs#89); built to the repo's README and `.gitignore` conventions. | none: a README and ignore rules have no unit | `test/goals/vision-folder.test.ts`: the REQ-016 check-ignore, tracked-files and README tests |
 
 ## Variations
 
@@ -24,3 +25,5 @@ No layer artifact: the design names no layer with Implement guidance (plugin/too
 
 | DES | Check |
 |---|---|
+| DES-008 | REQ-016 in a fresh clone (integration): `git ls-files 01-vision/` lists only the README, and `01-vision/2027-goals.md` and a draft in `00-inbox/` don't show in `git status --porcelain`. Implement ran it in the working checkout. |
+

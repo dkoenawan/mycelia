@@ -15,6 +15,7 @@ control/roots.local.yaml
 # The PARA directories ship with only their README explaining what belongs
 # inside. Everything the operator actually writes stays local.
 00-inbox/*
+01-vision/*
 10-projects/*
 20-areas/*
 30-resources/*
@@ -28,6 +29,7 @@ daily/*
 !00-inbox/capture/
 00-inbox/capture/*
 !00-inbox/capture/README.md
+!01-vision/README.md
 !10-projects/README.md
 !20-areas/README.md
 !30-resources/README.md
