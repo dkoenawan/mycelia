@@ -30,6 +30,7 @@ next_step: "Hand off to compass-labs:test to verify REQ-001 to REQ-021 in verifi
 
 ## Key decisions
 
+- **2026-11-14**: Session tool limits: keep behaviour (writes only via `save-draft`, read-only repo commands allowed); correct the spike notes and `format.md` to say so.
 - **2026-11-14**: ✅ Implement complete — DES-001 to DES-011 built, V1 to V5 accepted; `task check:node` 291 pass, 0 fail.
 - **2026-11-14**: Implement variations: V1, V2, V3, V4 and V5 all accepted as built; no rework.
 - **2026-11-14**: ✅ Design complete — DES-001 to DES-011 approved as drafted over all 20 live REQs; `check-design.sh` ok.
@@ -183,4 +184,18 @@ next_step: "Hand off to compass-labs:test to verify REQ-001 to REQ-021 in verifi
 
 ### 2026-11-14 — main — handoff: orchestrator → compass-labs:test (verify REQ-001 to REQ-021)
 - **Input:** Write verification.md with a VER-* row per live REQ (REQ-008 struck). Use the automated suite (`task check:node`) and the items Implement handed to Test: DES-006 manual `mycelia goals session` run (REQ-009, REQ-011, agent tool limits), DES-007 and DES-008 fresh-clone checks (REQ-016), DES-009 render check in GitHub and Obsidian (REQ-017), DES-011 reading check of README and CLAUDE.md. Manual checks that need the operator come back as questions.
+- **Output:** done; verification.md
+
+### 2026-11-14 — compass-labs:test — attempt: verification.md ready for the Test gate
+- 24 VER rows. Every live REQ (REQ-001 to REQ-021, REQ-008 struck) has a passing Test-owned row, and `check-traceability.sh` exits 0.
+- Fresh-clone runs at `e713dcb`: example validates with 0 errors and 0 warnings, the REQ-016 ignore check passes, every subcommand ran end to end, and `20-areas/` checksums were unchanged. `task check:node` gave 291 pass, and the mutation check was repeated: 1 test failed, then reverted.
+- Session (DES-006) verified with `-p` and resumed turns using the launcher's exact flags (REQ-009, REQ-011). A live interactive run (VER-011) and the Obsidian render (VER-018) are pending.
+
+### 2026-11-14 — compass-labs:test — note: Session tool limits are wider than the spike recorded
+- With `--tools Bash --allowedTools "Bash(node src/mycelia.ts goals save-draft <year>:*)" --permission-mode dontAsk`, every write or delete was denied without a prompt, and so were reads outside the repo. REQ-015 holds.
+- These ran without a prompt: read-only commands inside the repo (`cat`, `grep`, `git status`) and `echo … | save-draft`. That contradicts the spike notes in the `src/goals/adapters/session.ts` header, the Implement spike log entry, and `format.md`'s "only tool". Correcting those statements needs a decision.
+
+### 2026-11-14 — main — decision: correct the session tool-limit statements; keep the behaviour
+- Operator delegated the remaining gates ("go all the way to PR, I'll review after"). Read-only commands inside the repo are harmless and the agent reads areas anyway, so the limits stay; the claims are corrected to match what Test observed.
+- `src/goals/adapters/session.ts` header and `docs/reference/year-goals/format.md` (`goals session` row) now say writes go only through `save-draft` and read-only repo commands are allowed. The Implement spike entry above stands as recorded; this entry supersedes its "denies anything else" claim. `task check:node`: 291 pass, 0 fail.
 

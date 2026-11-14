@@ -15,13 +15,17 @@
 // - `--tools Bash` limits the built-in tool set to Bash. Read, Write, Edit and
 //   the rest aren't offered.
 // - `--allowedTools "Bash(<prefix>:*)"` with `--permission-mode dontAsk` runs a
-//   command that starts with the prefix, without a prompt, and denies anything
-//   else outright, with no prompt the operator could approve by mistake:
-//   `touch x`, `<allowed> && touch x`, and the allowed command fed by a heredoc
-//   or a pipe were all denied. A single quoted argument is allowed, including
-//   JSON with spaces, double quotes, and an apostrophe written as '\''. So the
-//   agent passes the draft as one argument (save-draft also reads stdin, for the
-//   operator).
+//   command that starts with the prefix, without a prompt, and denies every
+//   write or delete outright, with no prompt the operator could approve by
+//   mistake: `touch x`, `<allowed> && touch x`, writes into `20-areas/` and
+//   reads outside the repo were all denied. Claude Code's own read-only command
+//   allowance still applies, so read-only commands inside the repo (`cat`,
+//   `grep`, `git status`) run, and so does `echo … | <allowed>` (a heredoc was denied in the
+//   Implement spike). Re-checked by the Test phase on the same version. The only
+//   write path is still the save step (REQ-015). A single quoted argument is
+//   allowed, including JSON with spaces, double quotes, and an apostrophe
+//   written as '\''. So the agent passes the draft as one argument (save-draft
+//   also reads stdin, for the operator).
 // - `--setting-sources ""` loads no user, project or local settings, so no
 //   permission rule or hook from them can widen the tool set. The login still
 //   works: it isn't a setting.
