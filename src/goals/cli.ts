@@ -15,6 +15,7 @@ import { FsAreaIndex } from "./adapters/areas.ts";
 import { SystemClock } from "./adapters/clock.ts";
 import { GitIgnoreProbe } from "./adapters/ignore.ts";
 import { FsNoteReader } from "./adapters/reader.ts";
+import { defaultSessionDeps, runSession, type SessionDeps } from "./adapters/session.ts";
 import { FsVisionVault } from "./adapters/vault.ts";
 import type { Clock } from "./application/ports.ts";
 import { saveDraft, signOff, validateNote, type DraftBody, type Refusal } from "./application/use-cases.ts";
@@ -31,9 +32,9 @@ export const USAGE = [
 ].join("\n");
 
 export interface Io {
-  out(line: string): void;
-  err(line: string): void;
-  readStdin(): Promise<string>;
+  out: (line: string) => void;
+  err: (line: string) => void;
+  readStdin: () => Promise<string>;
 }
 
 export interface CliDeps {
@@ -43,6 +44,8 @@ export interface CliDeps {
   cwd: string;
   clock: Clock;
   io: Io;
+  /** Overrides for the session launcher's outside world (tests). */
+  session?: Partial<Pick<SessionDeps, "env" | "resolveClaude" | "preflight" | "spawn" | "template">>;
 }
 
 async function readProcessStdin(): Promise<string> {
@@ -171,6 +174,18 @@ async function cmdSignOff(args: string[], deps: CliDeps): Promise<number> {
   return EXIT.ok;
 }
 
+function cmdSession(args: string[], deps: CliDeps): Promise<number> {
+  const base = defaultSessionDeps(deps.root, {
+    areas: new FsAreaIndex(deps.root),
+    vault: new FsVisionVault(deps.root),
+    probe: new GitIgnoreProbe(deps.root),
+    today: () => deps.clock.today(),
+    out: deps.io.out,
+    err: deps.io.err,
+  });
+  return runSession(args, { ...base, ...deps.session });
+}
+
 /** Run one `goals` subcommand. Returns the exit code. */
 export async function run(args: string[], deps: CliDeps = defaultDeps()): Promise<number> {
   const [cmd, ...rest] = args;
@@ -181,6 +196,8 @@ export async function run(args: string[], deps: CliDeps = defaultDeps()): Promis
       return cmdSaveDraft(rest, deps);
     case "sign-off":
       return cmdSignOff(rest, deps);
+    case "session":
+      return cmdSession(rest, deps);
     default:
       deps.io.err(USAGE);
       return EXIT.usage;
