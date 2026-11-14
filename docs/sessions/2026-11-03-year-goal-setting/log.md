@@ -30,6 +30,7 @@ next_step: "Hand off to compass-labs:deploy to record the release in release.md"
 
 ## Key decisions
 
+- **2026-11-14**: Deploy declaration added: `.claude/deploy.json` = `deployment: none` (local framework, released by merge and pull).
 - **2026-11-14**: ✅ Test complete — 24 VER rows, every live REQ passing (`check-traceability.sh` ok); VER-011 live interactive session and VER-018 Obsidian render left pending for the operator.
 - **2026-11-14**: Session tool limits: keep behaviour (writes only via `save-draft`, read-only repo commands allowed); correct the spike notes and `format.md` to say so.
 - **2026-11-14**: ✅ Implement complete — DES-001 to DES-011 built, V1 to V5 accepted; `task check:node` 291 pass, 0 fail.
@@ -210,4 +211,14 @@ next_step: "Hand off to compass-labs:deploy to record the release in release.md"
 
 ### 2026-11-14 — main — handoff: orchestrator → compass-labs:deploy (release record for #36)
 - **Input:** Validate the repo's deploy declaration (or its absence), propose the Deploy tier, and write release.md for this session's change (`mycelia` bin, `src/goals/`, `01-vision/`, docs). Run no setup step that needs the operator; the operator delegated the gate.
+- **Output:** blocked; release.md
+
+### 2026-11-14 — compass-labs:deploy — attempt: Deploy blocked, no deploy declaration
+- check-declaration.sh --plan exited 2 (.claude/deploy.json not found), so nothing was run. release.md was written to the session folder with proposed tier skip (provisional), L1 not needed on the delta (no deployable part), and completeness checked by reading only: pass. VER-011 and VER-018 are recorded as outstanding manual checks. To unblock, declare .claude/deploy.json (for this repo probably {"deployment": "none"}) or confirm the record as it stands at the gate.
+
+### 2026-11-14 — main — decision: declare `.claude/deploy.json` as `deployment: none`
+- Under the operator's delegation ("go all the way to PR, I'll review after"). Mycelia is installed locally and released by merge and pull; nothing is published. The declaration is in the PR for the operator's review.
+
+### 2026-11-14 — main — handoff: orchestrator → compass-labs:deploy (rewrite release.md against the declaration)
+- **Input:** `.claude/deploy.json` now declares `deployment: none`. Re-validate and finalise release.md (tier, Completeness, outstanding VER-011 and VER-018).
 
