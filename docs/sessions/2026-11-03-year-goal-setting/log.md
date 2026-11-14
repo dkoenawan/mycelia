@@ -15,7 +15,7 @@ status: active
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
 milestone: design
 active_agent: main
-next_step: "Hand off to compass-labs:implement to plan and build DES-001 to DES-011"
+next_step: "Implement gate: operator decides V1 to V5, then approve Implement"
 ---
 # Session Log: Year goal setting: primary goal as a Mandala Chart, plus secondary goals (#36)
 
@@ -154,3 +154,17 @@ next_step: "Hand off to compass-labs:implement to plan and build DES-001 to DES-
 ---
 
 ## Phase: Implement
+
+### 2026-11-14 — main — handoff: orchestrator → compass-labs:implement (plan and build DES-001 to DES-011)
+- **Input:** Turn the frozen design/ (DES-001 to DES-011, D1 to D7) into implement/tasks.md and implement/as-built.md, then build each task with unit and component tests under `task check:node`. Constraints: TypeScript on Node (ADR-0007); no new `task` targets (Taskfile install-only); framework/configuration boundary (CLAUDE.md); `01-vision/` ships README-only, content gitignored; stage named files only; commit each completed task with its ticked checkbox.
+- **Output:** done; implement/tasks.md, implement/as-built.md, src/mycelia.ts, src/goals/ (domain, application, adapters, cli, session prompt), test/goals/, docs/reference/year-goals/, 01-vision/README.md, .gitignore, eslint.config.js, package.json, package-lock.json, README.md, CLAUDE.md
+
+### 2026-11-14 — compass-labs:implement — note: Spike of the Claude Code CLI flags for the goal-setting session
+- Tested in `-p` mode against Claude Code 2.1.325, using the flags the interactive session will use: `--tools Bash`, `--allowedTools "Bash(<save command>:*)"`, `--permission-mode dontAsk`, `--setting-sources ""`, `--strict-mcp-config`, `--system-prompt`.
+- The save command ran when the draft JSON was passed as a single quoted argument. Heredocs, pipes, `&&` and any other command were refused without a prompt. The findings are recorded in the header of `src/goals/adapters/session.ts` (V4, V5).
+
+### 2026-11-14 — compass-labs:implement — attempt: implement/ ready for the Implement gate
+- 11 tasks committed one by one (`8b1496c` to `d652e03`). As-built: DES-001, 003, 004, 005 and 006 built with variations V1 to V5; DES-002, 007, 008, 009, 010 and 011 built as designed.
+- `task check:node`: exit 0, 291 tests, 0 failures. Mutation check: with the more-than-3 warning turned into an error, one test failed (then reverted).
+- Handed to Test: DES-006 manual session run, DES-007 and DES-008 fresh-clone checks, DES-009 preview check (REQ-017), DES-011 reading check.
+
