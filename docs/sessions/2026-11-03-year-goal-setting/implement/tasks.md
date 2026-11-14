@@ -16,7 +16,7 @@ budget:
 
 Each task names the `DES-*` item it implements. An item's last task carries its Check.
 
-- [ ] Build the `YearGoals` model, `parse(text)` and `validate(text, knownAreas)` in `src/goals/domain/`, with unit tests in `test/goals/domain.test.ts` [DES-001] — check: the acceptance cases of REQ-002 to REQ-007 and REQ-019 to REQ-021 pass as unit tests; ESLint's domain rule passes
+- [x] Build the `YearGoals` model, `parse(text)` and `validate(text, knownAreas)` in `src/goals/domain/`, with unit tests in `test/goals/domain.test.ts` [DES-001] — check: the acceptance cases of REQ-002 to REQ-007 and REQ-019 to REQ-021 pass as unit tests; ESLint's domain rule passes
 - [ ] Add `01-vision/README.md` and the `.gitignore` rules `01-vision/*` and `!01-vision/README.md`, with a check-ignore test in `test/goals/vision-folder.test.ts` [DES-008] — check: `git ls-files 01-vision/` lists only the README, and neither a note in `01-vision/` nor a draft in `00-inbox/` shows in `git status --porcelain`
 - [ ] Write `docs/reference/year-goals/format.md`, `template.md` and `example-2027-goals.md`, with tests in `test/goals/docs.test.ts` [DES-009] (depends on: 1) — check: the validator gives 0 errors and 0 warnings on the example with the default area set, and 0 errors on the template
 - [ ] Build `renderDraft(model, dates)` in `src/goals/domain/render.ts` and the text-preserving sign-off edits in `src/goals/domain/edit.ts`, with unit tests in `test/goals/render-edit.test.ts` [DES-002] (depends on: 1, 3) — check: `parse(renderDraft(parse(example)))` equals `parse(example)` on the documented elements; a sign-off edit on a note with a quarterly breakdown keeps the breakdown byte for byte

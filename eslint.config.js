@@ -7,6 +7,8 @@ const IO_MODULES = ["fs", "fs/promises", "child_process", "net", "http", "https"
   .flatMap((m) => [m, `node:${m}`]);
 // From integration/<name>/src/**, the repo's src/ is three or more levels up.
 const REPO_SRC = "^(\\.\\./){3,}src/";
+// From src/goals/{domain,application}/*, anything outside src/goals/ is two or more levels up.
+const GOALS_OUT = "^(\\.\\./){2,}";
 
 export default tseslint.config(
   { ignores: ["node_modules/", "graphify-out/", "handoff/"] },
@@ -56,6 +58,20 @@ export default tseslint.config(
         patterns: [
           { regex: "(^|/)adapters/|(^|/)cli\\.ts$", message: "application/ may not import adapters/ or cli.ts; depend on a port in ports.ts (D8)." },
           { regex: REPO_SRC, message: "Only adapters/ may import from the repo's src/ (D8)." },
+        ],
+      }],
+    },
+  },
+  // The same layer rule for src/goals/ (#36, D5): domain/ is pure and may not
+  // reach outside src/goals/ (two or more "../" from src/goals/domain/).
+  {
+    files: ["src/goals/domain/**/*.ts"],
+    rules: {
+      "no-restricted-imports": ["error", {
+        paths: IO_MODULES.map((name) => ({ name, message: "domain/ is pure: do I/O in an adapter behind a port." })),
+        patterns: [
+          { regex: "(^|/)(application|adapters)/|(^|/)cli\\.ts$", message: "domain/ may not import application/, adapters/ or cli.ts (D5)." },
+          { regex: GOALS_OUT, message: "Only adapters/ and cli.ts may import from outside src/goals/ (D5)." },
         ],
       }],
     },
