@@ -77,6 +77,17 @@ export default tseslint.config(
     },
   },
   {
+    files: ["src/goals/application/**/*.ts"],
+    rules: {
+      "no-restricted-imports": ["error", {
+        patterns: [
+          { regex: "(^|/)adapters/|(^|/)cli\\.ts$", message: "application/ may not import adapters/ or cli.ts; depend on a port in ports.ts (D5)." },
+          { regex: GOALS_OUT, message: "Only adapters/ and cli.ts may import from outside src/goals/ (D5)." },
+        ],
+      }],
+    },
+  },
+  {
     files: ["**/*.js"],
     ...tseslint.configs.disableTypeChecked,
   },
