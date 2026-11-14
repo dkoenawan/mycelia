@@ -42,6 +42,7 @@ it is why mycelia starts there.
 ```
 mycelia/
 ├── 00-inbox/       # the only queue you triage
+├── 01-vision/      # your signed-off year goals, one note per year
 ├── 10-projects/    # PARA: active, time-bound
 ├── 20-areas/       # PARA: ongoing responsibility — life admin included
 ├── 30-resources/   # PARA: reference, standards, captured corrections
@@ -49,7 +50,7 @@ mycelia/
 ├── daily/          # agent-written daily notes
 ├── control/        # the estate registry, the areas manifest, and their schemas
 ├── scripts/        # bash runners, and the shared library they build on
-├── src/            # TypeScript runners (the inbox ingester) and their shared library
+├── src/            # TypeScript runners (the inbox ingester, year goals, the `mycelia` command) and their shared library
 ├── test/           # tests for src/, run by `task check:node`
 ├── integration/    # optional third-party connectors (Notion phone capture), with their tests
 ├── docs/           # ADRs, research briefs, and Diátaxis docs (tutorials, how-to, reference, explanation)
@@ -81,6 +82,9 @@ with no plugins; `.obsidian/app.json` is committed so the config is reproducible
    ```bash
    task deps:node
    ```
+
+   Taskfile is for installation. Runtime commands run as `npx mycelia <group> …` from the
+   repository (or `mycelia …` after `npm link`).
 
 5. Verify the install:
 
@@ -117,6 +121,35 @@ ship with only a README explaining what belongs inside them.
 Keep that boundary if you fork this. It is what lets you pull framework updates without
 merge conflicts against your own notes, and what keeps paths, client names, and personal
 material out of a public repository.
+
+## Year goals
+
+Set each year's goals with an agent: one or more **main goals**, each drafted as a Mandala
+Chart (a centre goal, up to 8 pillars, up to 8 actions per pillar), plus a short list of
+**secondary goals**, each linked to the areas it touches. The goal-pursuit features steer by
+them. Nothing counts until you sign it off, and the notes stay local in `01-vision/`.
+
+```bash
+npx mycelia goals session 2027      # talk it through with the agent; the draft lands in 00-inbox/2027-goals.md
+npx mycelia goals sign-off 2027     # make the draft 2027's goals, in 01-vision/; an earlier one moves to 40-archive/vision/
+npx mycelia goals validate <path>   # check a note: errors, warnings and what it found
+```
+
+**Needs:** Node.js 22.18 or later (`task deps:node`), and for the session, Claude Code
+installed and logged in. The session's agent can only save the draft; it can't write
+anywhere else, and nothing writes to `20-areas/`.
+
+- **Reference:** [the note format, its errors and warnings, the commands and their exit
+  codes](docs/reference/year-goals/format.md), with a [template](docs/reference/year-goals/template.md)
+  and a [complete example](docs/reference/year-goals/example-2027-goals.md); [the `mycelia`
+  command](docs/reference/mycelia-command.md)
+- **Explanation:** [why year goals exist, the session, sign-off and how code reads the
+  goals](docs/explanation/year-goals/overview.md)
+- **Decisions:** [ADR-0009](docs/adr/0009-interactive-goal-setting-session-outside-the-agent-provider-seam.md),
+  the session as interactive Claude Code; [ADR-0010](docs/adr/0010-taskfile-install-only-and-the-mycelia-command.md),
+  Taskfile install-only and the `mycelia` command
+
+Origin: #36
 
 ## Inbox ingestion
 
@@ -262,12 +295,12 @@ A self-growing agent that supports one person in achieving their goals. It learn
 
 ### Mission
 
-Mycelia is an installable framework: vault conventions, an estate registry and runner tooling. With it, scheduled agents run a loop for the operator. They link each project to the areas it serves, work out what the operator still needs to know or own, research it into cited resources, and turn that into plans. Yearly goals (a Mandala Chart with a primary goal plus secondary goals) and quarterly focus and retros steer where that effort goes. Everything lands in plain Markdown behind machine-checkable gates. Decisions that are the operator's go to the inbox, and what the operator prunes teaches the agents what not to grow.
+Mycelia is an installable framework: vault conventions, an estate registry and runner tooling. With it, scheduled agents run a loop for the operator. They link each project to the areas it serves, work out what the operator still needs to know or own, research it into cited resources, and turn that into plans. Yearly goals (one or more main goals, each a Mandala Chart, plus secondary goals) and quarterly focus and retros steer where that effort goes. Everything lands in plain Markdown behind machine-checkable gates. Decisions that are the operator's go to the inbox, and what the operator prunes teaches the agents what not to grow.
 
 ### Scope
 
 - Vault structure and conventions: PARA directories, note format and linking, as plain Markdown in git, readable without mycelia.
-- Area profiles (state, goals and inventories) and a structure that grows from evidence: new areas, sub-areas and resource branches are proposed, then accepted or pruned by the operator.
+- A structure that grows from evidence: areas hold the knowledge that accumulates over the year, and new areas, sub-areas and resource branches are proposed, then accepted or pruned by the operator. The operator's goals and direction live in the goal-pursuit layer, not in areas.
 - Proactive support: project → area linking, gap detection, web research into cited resources, and plan generation.
 - Goal pursuit: yearly goal setting, quarterly focus, in-quarter guidance, and agent-drafted quarterly retros and year reviews built from vault evidence.
 - Agents that advance the operator's code projects in their own repositories, landing work behind gates.
