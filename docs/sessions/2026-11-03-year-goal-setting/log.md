@@ -30,6 +30,7 @@ next_step: "Implement gate: operator decides V1 to V5, then approve Implement"
 
 ## Key decisions
 
+- **2026-11-14**: Implement variations: V1, V2, V3, V4 and V5 all accepted as built; no rework.
 - **2026-11-14**: ✅ Design complete — DES-001 to DES-011 approved as drafted over all 20 live REQs; `check-design.sh` ok.
 - **2026-11-03**: Design settled: DES-001 to DES-011 over all 20 live REQs; `src/mycelia.ts` dispatcher with `goals` group (session, save-draft, sign-off, validate); layered `src/goals/`; ADRs flagged for Close: D1 (session outside the AgentProvider seam), D7 (Taskfile install-only).
 - **2026-11-03**: Taskfile is for installation only; runtime commands are TypeScript under one `mycelia` command (`mycelia goals session|sign-off <year>`). Draft written through a deterministic save step; sign-off is a separate command.
@@ -167,4 +168,7 @@ next_step: "Implement gate: operator decides V1 to V5, then approve Implement"
 - 11 tasks committed one by one (`8b1496c` to `d652e03`). As-built: DES-001, 003, 004, 005 and 006 built with variations V1 to V5; DES-002, 007, 008, 009, 010 and 011 built as designed.
 - `task check:node`: exit 0, 291 tests, 0 failures. Mutation check: with the more-than-3 warning turned into an error, one test failed (then reverted).
 - Handed to Test: DES-006 manual session run, DES-007 and DES-008 fresh-clone checks, DES-009 preview check (REQ-017), DES-011 reading check.
+
+### 2026-11-14 — main — decision: Implement variations accepted
+- V1 accepted (layer rule added with DES-001, also blocks imports from outside `src/goals/`); V2 accepted (fifth port `NoteReader`); V3 accepted (archive name reused if identical, `-2`/`-3` suffix if different); V4 accepted (`save-draft` JSON as a single argument, stdin fallback); V5 accepted (agent runs `node src/mycelia.ts goals save-draft <year>`). No rework.
 
