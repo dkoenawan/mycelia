@@ -4,7 +4,7 @@ type: feature
 issue: 36
 # branch: the session branch, written once when the session opens, read by Resume.
 branch: feat/36-year-goal-setting
-phase: deploy
+phase: close
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -13,9 +13,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: test
+milestone: deploy
 active_agent: main
-next_step: "Hand off to compass-labs:deploy to record the release in release.md"
+next_step: "Hand off to compass-labs:close to fold the session into as-built docs"
 ---
 # Session Log: Year goal setting: primary goal as a Mandala Chart, plus secondary goals (#36)
 
@@ -30,6 +30,7 @@ next_step: "Hand off to compass-labs:deploy to record the release in release.md"
 
 ## Key decisions
 
+- **2026-11-14**: ✅ Deploy complete — tier skip (declared `deployment: none`); release is the operator's merge and pull; VER-011 and VER-018 outstanding.
 - **2026-11-14**: Deploy declaration added: `.claude/deploy.json` = `deployment: none` (local framework, released by merge and pull).
 - **2026-11-14**: ✅ Test complete — 24 VER rows, every live REQ passing (`check-traceability.sh` ok); VER-011 live interactive session and VER-018 Obsidian render left pending for the operator.
 - **2026-11-14**: Session tool limits: keep behaviour (writes only via `save-draft`, read-only repo commands allowed); correct the spike notes and `format.md` to say so.
@@ -221,4 +222,19 @@ next_step: "Hand off to compass-labs:deploy to record the release in release.md"
 
 ### 2026-11-14 — main — handoff: orchestrator → compass-labs:deploy (rewrite release.md against the declaration)
 - **Input:** `.claude/deploy.json` now declares `deployment: none`. Re-validate and finalise release.md (tier, Completeness, outstanding VER-011 and VER-018).
+- **Output:** done; release.md
+
+### 2026-11-14 — compass-labs:deploy — attempt: Deploy record rewritten for the declared `deployment: none`
+- check-declaration.sh --plan exited 3 ("none: nothing to deploy, per the declaration"; no step runs; tier skip). release.md was rewritten at the skip tier: L1 not needed (no deployable parts declared; delta rows read from design/index.md), L2 nothing to deploy, Completeness says nothing ships, and VER-011 and VER-018 are recorded as outstanding manual checks for the operator. No repo step ran. check-release.sh: ok (skip tier). Ready for the Deploy gate.
+
+### 2026-11-14 — main — milestone: ✅ Deploy complete
+- Gate delegated by the operator. Tier skip confirmed as proposed; Completeness has no gap; `check-release.sh`: ok.
+- After merge (operator): pull `main` in the second-brain checkout, optionally `npm link`, then VER-011 and VER-018.
+
+---
+
+## Phase: Close
+
+### 2026-11-14 — main — handoff: orchestrator → compass-labs:close (fold #36 into as-built docs)
+- **Input:** Fold the session back into as-built docs per the Close standard, including the ADRs flagged at Design: D1 (goal-setting session launched outside the AgentProvider seam) and D7 (Taskfile install-only; runtime through the one `mycelia` command), in `docs/adr/` (next number after 0007). Follow-ups to confirm: moving `ingest-inbox` and `notion:*` under `mycelia` (no issue yet), #46.
 
