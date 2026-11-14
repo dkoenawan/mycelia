@@ -4,7 +4,7 @@ type: feature
 issue: 36
 # branch: the session branch, written once when the session opens, read by Resume.
 branch: feat/36-year-goal-setting
-phase: implement
+phase: test
 status: active
 # milestone: the PHASE KEY of the last completed milestone, not a display
 # label. Allowed values (feature workflow): none | define | design |
@@ -13,9 +13,9 @@ status: active
 # each phase's `order` in workflows/<type>.json, to decide which
 # artifacts are frozen. Display labels (e.g. "Define complete") live only
 # in workflows/<type>.json's `milestone` field, for GitHub comments.
-milestone: design
+milestone: implement
 active_agent: main
-next_step: "Implement gate: operator decides V1 to V5, then approve Implement"
+next_step: "Hand off to compass-labs:test to verify REQ-001 to REQ-021 in verification.md"
 ---
 # Session Log: Year goal setting: primary goal as a Mandala Chart, plus secondary goals (#36)
 
@@ -30,6 +30,7 @@ next_step: "Implement gate: operator decides V1 to V5, then approve Implement"
 
 ## Key decisions
 
+- **2026-11-14**: ✅ Implement complete — DES-001 to DES-011 built, V1 to V5 accepted; `task check:node` 291 pass, 0 fail.
 - **2026-11-14**: Implement variations: V1, V2, V3, V4 and V5 all accepted as built; no rework.
 - **2026-11-14**: ✅ Design complete — DES-001 to DES-011 approved as drafted over all 20 live REQs; `check-design.sh` ok.
 - **2026-11-03**: Design settled: DES-001 to DES-011 over all 20 live REQs; `src/mycelia.ts` dispatcher with `goals` group (session, save-draft, sign-off, validate); layered `src/goals/`; ADRs flagged for Close: D1 (session outside the AgentProvider seam), D7 (Taskfile install-only).
@@ -171,4 +172,15 @@ next_step: "Implement gate: operator decides V1 to V5, then approve Implement"
 
 ### 2026-11-14 — main — decision: Implement variations accepted
 - V1 accepted (layer rule added with DES-001, also blocks imports from outside `src/goals/`); V2 accepted (fifth port `NoteReader`); V3 accepted (archive name reused if identical, `-2`/`-3` suffix if different); V4 accepted (`save-draft` JSON as a single argument, stdin fallback); V5 accepted (agent runs `node src/mycelia.ts goals save-draft <year>`). No rework.
+
+### 2026-11-14 — main — milestone: ✅ Implement complete
+- Operator approved implement/ at the Implement gate. 11 tasks committed (`8b1496c` to `d652e03`); DES-002, 007 to 011 as designed, DES-001, 003 to 006 with V1 to V5, all accepted.
+- `task check:node`: 291 pass, 0 fail.
+
+---
+
+## Phase: Test
+
+### 2026-11-14 — main — handoff: orchestrator → compass-labs:test (verify REQ-001 to REQ-021)
+- **Input:** Write verification.md with a VER-* row per live REQ (REQ-008 struck). Use the automated suite (`task check:node`) and the items Implement handed to Test: DES-006 manual `mycelia goals session` run (REQ-009, REQ-011, agent tool limits), DES-007 and DES-008 fresh-clone checks (REQ-016), DES-009 render check in GitHub and Obsidian (REQ-017), DES-011 reading check of README and CLAUDE.md. Manual checks that need the operator come back as questions.
 
